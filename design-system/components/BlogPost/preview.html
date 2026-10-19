@@ -1,0 +1,34 @@
+<!-- @dsCard group="Pages" height=2600 width=1200 page subtitle="Article, composed from Heading, Text, Aside, Table, CodeBlock, Figure + MarbleDiagram, DecisionRecord" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BlogPost</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+  .bp { max-width: 720px; margin: 0 auto; padding: 64px 0 0; }
+  .bp h1 { margin: var(--space-4) 0; }
+  .bp h2 { margin: 48px 0 var(--space-4); }
+  .bp-meta { display: flex; gap: var(--space-4); align-items: center; flex-wrap: wrap; padding-bottom: var(--space-8); border-bottom: 1px solid var(--line); }
+  .bp-lead { display: grid; grid-template-columns: 1fr auto; gap: var(--space-8); align-items: center; padding-top: var(--space-8); }
+  .bp-lead .el-text { margin: 0; }
+  .bp-next { display: flex; justify-content: space-between; align-items: baseline; padding: var(--space-4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 48px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(()=>{var React=window.React,h=React.createElement,Fragment=React.Fragment,{Page,Nav,Footer,Heading,Text,Label,ChipList,Metric,Aside,CodeBlock,InlineCode,Figure,MarbleDiagram,DecisionRecord,Table,Link}=window.EvinLe,lane=(label,marbles)=>({label,marbles}),pos=[18,50,82];function App(){return h(Page,null,h(Nav,{current:"writing"}),h("article",{className:"bp"},h(Label,null,h(Link,{href:"#"},"writing")," / perf"),h(Heading,{level:1},"combineLatest where zip was correct"),h("div",{className:"bp-meta"},h(Label,{glyph:"cod-history"},"2026-09-12 \xB7 8 MIN READ"),h(ChipList,{items:["rxjs","angular","perf"]})),h("div",{className:"bp-lead"},h(Text,null,"A production scheduling page froze for about 5 seconds on load. The cause was one operator choice on two streams that shared an origin, and the fix was to make the pipeline simpler, not cleverer."),h(Metric,{before:"5s",after:"~1s",label:"PAGE-LOAD FREEZE",compact:!0})),h(Heading,{level:2},"The symptom"),h(Text,null,"Every load did a lot more work than the data needed, and the profiler showed the same downstream handlers running over and over. Nothing was technically wrong with any single subscription, they were just firing more often than they should have."),h(Heading,{level:2},"Why breakpoints didn't help"),h(Text,null,"A breakpoint shows you one emission at a time, and every one of them looked valid on its own. The problem was how many there were, so I instrumented emission counts per operator instead and compared them against the number of source events."),h(Aside,null,"Duplicate emissions are a counting problem, not an inspection problem. A ",h(InlineCode,null,"tap")," that increments a counter per operator shows the extra emissions straight away, where stepping through values that are each individually fine never will."),h(Table,{columns:[{key:"op",label:"Operator",mono:!0},{key:"src",label:"Source events",align:"right"},{key:"emit",label:"Emissions",align:"right"}],rows:[{op:"src$",src:"3",emit:"3"},{op:"map(toRows)",src:"3",emit:"3"},{op:"map(toTotals)",src:"3",emit:"3"},{op:"combineLatest",src:"3",emit:h("span",{className:"el-pink"},"5")},{op:"zip",src:"3",emit:h("span",{className:"el-mint"},"3")}],highlightRow:3,caption:"Emission counts per operator for three source events (illustrative)."}),h(CodeBlock,{label:"Simplified pipeline",highlight:[5],emphasis:["combineLatest"],code:`const rows$ = src$.pipe(map(toRows));
+const totals$ = src$.pipe(map(toTotals));
+
+// both derive from src$, so every src$ event emits twice here
+const view$ = combineLatest([rows$, totals$]).pipe(
+  map(([rows, totals]) => render(rows, totals)),
+);`}),h(Heading,{level:2},"What combineLatest actually does here"),h(Text,null,h(InlineCode,null,"combineLatest")," emits whenever any input emits. With two streams mapped off the same source, each source event updates one input and then the other, so you get an intermediate emission pairing new rows with old totals, and the expensive render runs on it anyway."),h(Figure,{caption:h(Fragment,null,h("span",{className:"el-pink"},"Pink")," marks the mismatched intermediate pairs, which are the wasted renders. zip only emits once both inputs have a value at the same index.")},h(MarbleDiagram,{label:"combineLatest emits a mismatched pair before each matched pair; zip emits only matched pairs",lanes:[lane("a$ = src$.pipe(map(f))",pos.map((p,i)=>({at:p-3,text:"a"+(i+1)}))),lane("b$ = src$.pipe(map(g))",pos.map((p,i)=>({at:p+3,text:"b"+(i+1)}))),lane("combineLatest(a$, b$)",pos.flatMap((p,i)=>[...i?[{at:p-3,text:`${i+1}\xB7${i}`,kind:"bad"}]:[],{at:p+3,text:`${i+1}\xB7${i+1}`,kind:"ok"}])),lane("zip(a$, b$)",pos.map((p,i)=>({at:p+3,text:`${i+1}\xB7${i+1}`,kind:"ok"})))]})),h(Heading,{level:2},"The fix"),h(Text,null,"Swapping to ",h(InlineCode,null,"zip")," fixed the count, but the more useful change was simplifying the relationships between stages so there weren't two parallel streams to reconcile in the first place."),h(CodeBlock,{label:"After",highlight:[2],code:`const view$ = src$.pipe(
+  map((s) => render(toRows(s), toTotals(s))),
+);`}),h(DecisionRecord,{decision:"Derive both values in one stage rather than reach for a smarter operator.",context:"Two streams with a shared origin, combined downstream, on a page with an expensive render.",tradeoff:"One less reusable stream, which does defeat the point of having them separate a bit. Worth it here, because nothing else consumed them.",result:h(Fragment,null,"Load freeze from 5s to ",h("span",{className:"el-mono el-mint"},"~1s"),", and a pipeline the next person can read top to bottom.")}),h("div",{className:"bp-next"},h(Label,null,"NEXT"),h(Link,{href:"#",mono:!0},"Hooks that return a new object every render \u2192"))),h(Footer,null))}window.ReactDOM.createRoot(document.getElementById("root")).render(h(App,null));})();
+
+</script>
+</body>
+</html>

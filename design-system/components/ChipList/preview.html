@@ -1,0 +1,20 @@
+<!-- @dsCard group="Tags" height=90 subtitle="A wrapping row of chips for post tags and stacks" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ChipList</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.ChipList, {items:['react', 'typescript', '.net', 'postgresql', 'azure', 'zod', {label:'ef core', glyph:null}]}));
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!-- @dsCard group="Pages" height=1640 width=1200 page subtitle="Home, composed from Nav, Terminal, Metric, Investigation, PostList, Card, Footer" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LandingPage</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+  .lp-hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; padding: 80px 0 48px; }
+  .lp-hero h1 { margin: var(--space-4) 0; }
+  .lp-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); }
+  .lp-pkg { display: grid; grid-template-columns: 1fr auto; gap: var(--space-8); align-items: center; }
+  .lp-pkg-side { text-align: right; display: grid; gap: var(--space-2); justify-items: end; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(()=>{var React=window.React,h=React.createElement,Fragment=React.Fragment,{Page,Nav,Footer,Heading,Text,Label,Button,Terminal,Prompt,Cursor,Section,Metric,Metrics,Investigation,ChipList,PostList,Card,Link}=window.EvinLe;function App(){return h(Page,null,h(Nav,{current:"home"}),h("header",{className:"lp-hero"},h("div",null,h(Label,null,"FULL STACK ENGINEER \xB7 BRISBANE"),h(Heading,{level:1},"Finding out why it's slow, then fixing that."),h(Text,{variant:"lead"},"Four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. I write up the problems I've dug into here, mostly performance and front-end architecture, with the dead ends left in."),h("div",{className:"lp-actions"},h(Button,{variant:"primary",href:"#",glyphEnd:"cod-arrow_right"},"read the writing"),h(Button,{href:"#"},"about me"))),h(Terminal,null,h(Prompt,null,"git log --oneline --grep=perf"),h("span",{className:"el-blue"},"a41f0c2")," ef core: split join, filter first",`
+`,"        ",h("span",{className:"el-pink"},"7-10s")," ",h("span",{className:"el-muted"},"\u2192")," ",h("span",{className:"el-mint"},"~500ms"),`
+`,h("span",{className:"el-blue"},"9be3d17")," rxjs: zip, not combineLatest",`
+`,"        ",h("span",{className:"el-pink"},"5s")," ",h("span",{className:"el-muted"},"\u2192")," ",h("span",{className:"el-mint"},"~1s"),`
+`,h("span",{className:"el-blue"},"3c07a5e")," tests: AAA, minimal mocking",`
+`,"        ",h("span",{className:"el-pink"},"8%")," ",h("span",{className:"el-muted"},"\u2192")," ",h("span",{className:"el-mint"},"40%")," coverage",`
+`,h("span",{className:"el-muted"},"$ "),h(Cursor,null))),h(Section,{title:"Measured, not estimated",id:"results"},h(Metrics,null,h(Metric,{before:"7-10s",after:"~500ms",label:"Shift-scheduling query in EF Core, working set from 100k+ rows to ~200"}),h(Metric,{before:"5s",after:"~1s",label:"Page-load freeze from duplicate RxJS emissions"}),h(Metric,{before:"8%",after:"40%",label:"Test coverage, raised during continuous feature delivery"}))),h(Section,{title:"Featured investigation",id:"featured",action:h(ChipList,{items:[{label:"ef core",glyph:null},"postgresql",".net"]})},h(Investigation,{title:"The query that loaded 100k rows to keep 200",symptom:"A shift-scheduling query on a roster tool took 7-10s on every load.",cause:"Override-priority resolution was loading 100k+ rows before filtering any of them out.",fix:"Split the join into two round trips (cheap here, because backend and database share a VPC) and moved the filter into the first query.",result:h(Fragment,null,"~200 rows in the working set and ",h("span",{className:"el-mint el-mono"},"~500ms")," end to end.")})),h(Section,{title:"Recent writing",id:"writing",action:h(Link,{href:"#",mono:!0},"all posts \u2192")},h(PostList,{posts:[{date:"2026-09-12",title:"combineLatest where zip was correct",summary:"Breakpoints can't isolate duplicate emissions, so I counted them per operator instead.",tags:["rxjs","angular","perf"],minutes:8},{date:"2026-07-30",title:"Hooks that return a new object every render",summary:"Slice hooks returning fresh object identities, the infinite render loops that followed, and splitting volatile state from stable setters.",tags:["react","redux"],minutes:11},{date:"2026-05-04",title:"Config by pointer, data by snapshot",summary:"30+ live git branches each holding stale config, and moving it to a shared branch without a data migration.",tags:["architecture","git"],minutes:9}]})),h(Section,{title:"Open source",id:"oss"},h(Card,{padding:"lg",className:"lp-pkg"},h("div",null,h(Heading,{level:3,prefix:!1},"@evinle/gas-p"),h(Text,{variant:"lead"},"Local development tooling for Google Apps Script. Shims GAS services at three fidelity levels (live calls, local mocks, and unit-test fakes with store writes and cascade deletes) so projects run and get tested outside the Apps Script editor."),h(ChipList,{items:["typescript","npm",{label:"MIT",glyph:null}]})),h("div",{className:"lp-pkg-side"},h("div",{className:"el-metric-vals lp-installs"},h("span",{className:"el-metric-after"},"~160")),h(Label,null,"WEEKLY INSTALLS"),h(Terminal,{title:"install"},h(Prompt,null,"npm i @evinle/gas-p"))))),h(Footer,null))}window.ReactDOM.createRoot(document.getElementById("root")).render(h(App,null));})();
+
+</script>
+</body>
+</html>

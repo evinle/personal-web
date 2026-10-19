@@ -1,0 +1,20 @@
+<!-- @dsCard group="Containers" height=170 subtitle="Level-2 heading with an optional right-aligned action" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Section</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Section, {title:'Recent writing', id:'s1', action:h(E.Link, {href:'#', mono:true}, 'all posts →')}, h(E.Text, {variant:'lead'}, 'Section content goes here.')));
+</script>
+</body>
+</html>

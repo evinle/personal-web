@@ -1,0 +1,20 @@
+<!-- @dsCard group="Foundations" height=90 subtitle="Inline code in running text" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>InlineCode</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('p', {className:'body'}, 'Swapping to ', h(E.InlineCode, null, 'zip'), ' fixed the count, and ', h(E.InlineCode, null, 'useAuthenticatedQuery'), ' took the auth logic out of every hook.'));
+</script>
+</body>
+</html>

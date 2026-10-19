@@ -1,0 +1,20 @@
+<!-- @dsCard group="Diagrams" height=200 subtitle="Square diagram frame with a caption" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Figure, {caption:'Pink marks wasted work; mint marks the correct path. Say what the colours mean.'}, h('svg', {viewBox:'0 0 600 80', role:'img', 'aria-label':'Three boxes in a row'}, h('rect', {x:0,y:20,width:160,height:40,className:'mb-src'}), h('rect', {x:220,y:20,width:160,height:40,className:'mb-bad'}), h('rect', {x:440,y:20,width:160,height:40,className:'mb-ok'}))));
+</script>
+</body>
+</html>

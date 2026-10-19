@@ -1,0 +1,20 @@
+<!-- @dsCard group="Foundations" height=100 subtitle="Inline links, mono links and external links" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Link</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('p', {className:'body'}, 'Read the ', h(E.Link, {href:'#'}, 'ADR on query keys'), ', the ', h(E.Link, {href:'#', mono:true}, 'all posts →'), ' index, or the ', h(E.Link, {href:'#', external:true}, 'React Query docs'), '.'));
+</script>
+</body>
+</html>

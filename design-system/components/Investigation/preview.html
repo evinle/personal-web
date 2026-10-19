@@ -1,0 +1,20 @@
+<!-- @dsCard group="Content" height=300 subtitle="Symptom → root cause → fix → result, each step deeper" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Investigation</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Investigation, {title:'The query that loaded 100k rows to keep 200', symptom:'A shift-scheduling query took 7-10s on every load.', cause:'Override-priority resolution was loading 100k+ rows before filtering any of them out.', fix:'Split the join into two round trips (cheap, because backend and database share a VPC) and moved the filter into the first query.', result:'~200 rows in the working set and ~500ms end to end.'}));
+</script>
+</body>
+</html>

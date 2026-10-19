@@ -1,0 +1,20 @@
+<!-- @dsCard group="Content" height=300 subtitle="Writing index rows" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PostList</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.PostList, {posts:[{date:'2026-09-12', title:'combineLatest where zip was correct', summary:"Breakpoints can't isolate duplicate emissions, so I counted them per operator instead.", tags:['rxjs','angular','perf'], minutes:8}, {date:'2026-07-30', title:'Hooks that return a new object every render', summary:'Fresh object identities and the render loops that followed.', tags:['react','redux'], minutes:11}]}));
+</script>
+</body>
+</html>

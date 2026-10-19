@@ -1,0 +1,73 @@
+/* Generated from design-system/tokens.json. Dark is the primary theme. */
+:root {
+  --surface: #1b1e28;
+  --surface-raised: #14161d;
+  --line: #303340;
+  --ink: #e4f0fb;
+  --ink-muted: #a6accd;
+  --mint: #5de4c7;
+  --mint-soft: #1d3b3a;
+  --pink: #f087bd;
+  --blue: #add7ff;
+  --cream: #fffac2;
+  --mint-fill: var(--mint);
+  --pink-fill: var(--pink);
+  --blue-fill: var(--blue);
+  --cream-fill: var(--cream);
+  --on-fill: #1b1e28;
+  --link: var(--mint);
+  --font-mono: "SauceCodePro NF Web", "SauceCodePro NF", "Source Code Pro", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --space-1: 4px; --space-2: 8px; --space-4: 16px; --space-8: 32px;
+  --radius-none: 0px; --radius-xs: 2px; --radius-sm: 4px; --radius-md: 6px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --surface: #fefeff;
+    --surface-raised: #f2f4f9;
+    --line: #dfe3ee;
+    --ink: #1b1e28;
+    --ink-muted: #585e7c;
+    --mint: #007a63;
+    --mint-soft: #d6f8f0;
+    --pink: #c2186f;
+    --blue: #0a6aa1;
+    --cream: #7a6100;
+    --mint-fill: #01dab2;
+    --pink-fill: #ff2090;
+    --blue-fill: #0ebfff;
+    --cream-fill: #ffd467;
+    --on-fill: #1b1e28;
+    --link: var(--mint);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --surface: #fefeff;
+  --surface-raised: #f2f4f9;
+  --line: #dfe3ee;
+  --ink: #1b1e28;
+  --ink-muted: #585e7c;
+  --mint: #007a63;
+  --mint-soft: #d6f8f0;
+  --pink: #c2186f;
+  --blue: #0a6aa1;
+  --cream: #7a6100;
+  --mint-fill: #01dab2;
+  --pink-fill: #ff2090;
+  --blue-fill: #0ebfff;
+  --cream-fill: #ffd467;
+  --on-fill: #1b1e28;
+  --link: var(--mint);
+  color-scheme: light;
+}
+
+/* Type styles named in tokens.json */
+.display { font-family: var(--font-mono); font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; }
+.heading { font-family: var(--font-mono); font-size: 22px; line-height: 30px; font-weight: 600; letter-spacing: -0.01em; }
+.label { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.code { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.small { font-family: var(--font-sans); font-size: 14px; line-height: 22px; font-weight: 400; }
+.nf { font-style: normal; }

@@ -1,0 +1,404 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-19T01:13:55Z"
+  },
+  "title": "Evin Le",
+  "namespace": "EvinLe",
+  "libraries": [
+    {
+      "name": "react",
+      "version": "18"
+    },
+    {
+      "name": "react-dom",
+      "version": "18"
+    }
+  ],
+  "sections": {},
+  "groups": [
+    "Stack logos",
+    "UI icons"
+  ],
+  "assetGroups": {
+    "Stack logos": {
+      "name": "Stack logos",
+      "tile": "s",
+      "order": [
+        "angular.svg",
+        "aws.svg",
+        "azure.svg",
+        "csharp.svg",
+        "databricks.svg",
+        "dotnet.svg",
+        "git.svg",
+        "github.svg",
+        "google-apps-script.svg",
+        "hono.svg",
+        "javascript.svg",
+        "mongodb.svg",
+        "mui.svg",
+        "nodejs.svg",
+        "npm.svg",
+        "playwright.svg",
+        "postgresql.svg",
+        "prisma.svg",
+        "react-query.svg",
+        "react.svg",
+        "redux.svg",
+        "rxjs.svg",
+        "snowflake.svg",
+        "sql-server.svg",
+        "typescript.svg",
+        "zod.svg"
+      ],
+      "files": {
+        "angular.svg": {
+          "name": "angular.svg",
+          "blob": "77a75de8772da46bcd201b5a84204db6",
+          "size": 313,
+          "type": "image/svg+xml"
+        },
+        "aws.svg": {
+          "name": "aws.svg",
+          "blob": "da33581bfb6e8f496b142d5d220e6308",
+          "size": 3758,
+          "type": "image/svg+xml"
+        },
+        "azure.svg": {
+          "name": "azure.svg",
+          "blob": "de3556c29015bcc97d53dd5ce1dd89ba",
+          "size": 798,
+          "type": "image/svg+xml"
+        },
+        "csharp.svg": {
+          "name": "csharp.svg",
+          "blob": "8602cf466627fa77d5c3f5738fee041f",
+          "size": 751,
+          "type": "image/svg+xml"
+        },
+        "databricks.svg": {
+          "name": "databricks.svg",
+          "blob": "0e49707d2d8c8533fcbbff0c1235c915",
+          "size": 437,
+          "type": "image/svg+xml"
+        },
+        "dotnet.svg": {
+          "name": "dotnet.svg",
+          "blob": "37c359e4d2ff9107768168d408cefd78",
+          "size": 549,
+          "type": "image/svg+xml"
+        },
+        "git.svg": {
+          "name": "git.svg",
+          "blob": "6dc5bd799306b293cd0581f0c18b1348",
+          "size": 441,
+          "type": "image/svg+xml"
+        },
+        "github.svg": {
+          "name": "github.svg",
+          "blob": "dc3179be7827455e1e469226c5e5e7fc",
+          "size": 837,
+          "type": "image/svg+xml"
+        },
+        "google-apps-script.svg": {
+          "name": "google-apps-script.svg",
+          "blob": "703dfea8a316d57189c5d3dd4f5344eb",
+          "size": 1829,
+          "type": "image/svg+xml"
+        },
+        "hono.svg": {
+          "name": "hono.svg",
+          "blob": "a8ab03164ed30e7ace3f401a0fc249db",
+          "size": 777,
+          "type": "image/svg+xml"
+        },
+        "javascript.svg": {
+          "name": "javascript.svg",
+          "blob": "634360b16fb4d89b72a5a66ed20dd91c",
+          "size": 989,
+          "type": "image/svg+xml"
+        },
+        "mongodb.svg": {
+          "name": "mongodb.svg",
+          "blob": "82a3b35e01d0e536a826b11368263122",
+          "size": 542,
+          "type": "image/svg+xml"
+        },
+        "mui.svg": {
+          "name": "mui.svg",
+          "blob": "9067d9e96c4fea23f82b8d0f6379f615",
+          "size": 1575,
+          "type": "image/svg+xml"
+        },
+        "nodejs.svg": {
+          "name": "nodejs.svg",
+          "blob": "45495bfb9500a174ef1cf7898ea55e86",
+          "size": 1623,
+          "type": "image/svg+xml"
+        },
+        "npm.svg": {
+          "name": "npm.svg",
+          "blob": "a4ad6dca8d6b636587bd9fae173f6120",
+          "size": 332,
+          "type": "image/svg+xml"
+        },
+        "playwright.svg": {
+          "name": "playwright.svg",
+          "blob": "9ec0bb146ef28d3cfb4d7047bd78dc3e",
+          "size": 1817,
+          "type": "image/svg+xml"
+        },
+        "postgresql.svg": {
+          "name": "postgresql.svg",
+          "blob": "c4385da10bd417d2f5e2d7a195fcf393",
+          "size": 5220,
+          "type": "image/svg+xml"
+        },
+        "prisma.svg": {
+          "name": "prisma.svg",
+          "blob": "7c50214b4c3aa614a8e2fda94f49d101",
+          "size": 583,
+          "type": "image/svg+xml"
+        },
+        "react-query.svg": {
+          "name": "react-query.svg",
+          "blob": "048412c7beae8512918d7c967c88052a",
+          "size": 4241,
+          "type": "image/svg+xml"
+        },
+        "react.svg": {
+          "name": "react.svg",
+          "blob": "95873ab11380fa7b80037b3ab4357c20",
+          "size": 2941,
+          "type": "image/svg+xml"
+        },
+        "redux.svg": {
+          "name": "redux.svg",
+          "blob": "afc58f516a713c48b148c36c75d35421",
+          "size": 1444,
+          "type": "image/svg+xml"
+        },
+        "rxjs.svg": {
+          "name": "rxjs.svg",
+          "blob": "e3ed00402735811e2bc288deb0577e48",
+          "size": 2757,
+          "type": "image/svg+xml"
+        },
+        "snowflake.svg": {
+          "name": "snowflake.svg",
+          "blob": "10f4cfefe181de4b1ee8a435ecf1e976",
+          "size": 2474,
+          "type": "image/svg+xml"
+        },
+        "sql-server.svg": {
+          "name": "sql-server.svg",
+          "blob": "f0f93c933f0a39b3f2a8128f1bda5e38",
+          "size": 10803,
+          "type": "image/svg+xml"
+        },
+        "typescript.svg": {
+          "name": "typescript.svg",
+          "blob": "a579fbf4b687217c38137759870d2120",
+          "size": 1309,
+          "type": "image/svg+xml"
+        },
+        "zod.svg": {
+          "name": "zod.svg",
+          "blob": "9e1544458d738c6fad8004ecaf9343e9",
+          "size": 530,
+          "type": "image/svg+xml"
+        }
+      }
+    },
+    "UI icons": {
+      "name": "UI icons",
+      "tile": "s",
+      "order": [
+        "arrow-right.svg",
+        "arrow-up-right.svg",
+        "bug.svg",
+        "check.svg",
+        "chevron-right.svg",
+        "clock.svg",
+        "copy.svg",
+        "external-link.svg",
+        "file-code.svg",
+        "flame.svg",
+        "folder-tree.svg",
+        "gauge.svg",
+        "git-commit-horizontal.svg",
+        "layers.svg",
+        "link.svg",
+        "mail.svg",
+        "menu.svg",
+        "moon.svg",
+        "rss.svg",
+        "search.svg",
+        "sun.svg",
+        "tag.svg",
+        "terminal.svg",
+        "x.svg"
+      ],
+      "files": {
+        "arrow-right.svg": {
+          "name": "arrow-right.svg",
+          "blob": "fae5b211f79d494187f639f8e6782861",
+          "size": 340,
+          "type": "image/svg+xml"
+        },
+        "arrow-up-right.svg": {
+          "name": "arrow-up-right.svg",
+          "blob": "d4c4d7ecb2bdade6a77c1d1e0959fed5",
+          "size": 342,
+          "type": "image/svg+xml"
+        },
+        "bug.svg": {
+          "name": "bug.svg",
+          "blob": "4203fc327505550bc53de20c8a3135d6",
+          "size": 686,
+          "type": "image/svg+xml"
+        },
+        "check.svg": {
+          "name": "check.svg",
+          "blob": "f8d0664067e7bceafe717294da3ac24f",
+          "size": 312,
+          "type": "image/svg+xml"
+        },
+        "chevron-right.svg": {
+          "name": "chevron-right.svg",
+          "blob": "789b419b5e765f9a340ceef7175e4beb",
+          "size": 318,
+          "type": "image/svg+xml"
+        },
+        "clock.svg": {
+          "name": "clock.svg",
+          "blob": "1ff10e42b80301a83d859178eceae52f",
+          "size": 344,
+          "type": "image/svg+xml"
+        },
+        "copy.svg": {
+          "name": "copy.svg",
+          "blob": "a22f474be8c4b6c5b476fcf68c3e1722",
+          "size": 411,
+          "type": "image/svg+xml"
+        },
+        "external-link.svg": {
+          "name": "external-link.svg",
+          "blob": "eb09ed0940f066d3a6c6ae337642aec2",
+          "size": 413,
+          "type": "image/svg+xml"
+        },
+        "file-code.svg": {
+          "name": "file-code.svg",
+          "blob": "a46f37102931179095b8c394146156f6",
+          "size": 521,
+          "type": "image/svg+xml"
+        },
+        "flame.svg": {
+          "name": "flame.svg",
+          "blob": "c7e9c69e74870d3c9e53acf9e4cec9d7",
+          "size": 387,
+          "type": "image/svg+xml"
+        },
+        "folder-tree.svg": {
+          "name": "folder-tree.svg",
+          "blob": "fc44fc690bb8d574cc572d3486c3f662",
+          "size": 628,
+          "type": "image/svg+xml"
+        },
+        "gauge.svg": {
+          "name": "gauge.svg",
+          "blob": "988675273c8a82073324a7c44c751fb5",
+          "size": 351,
+          "type": "image/svg+xml"
+        },
+        "git-commit-horizontal.svg": {
+          "name": "git-commit-horizontal.svg",
+          "blob": "010137483b26fd27d09e59dfac2f5e71",
+          "size": 416,
+          "type": "image/svg+xml"
+        },
+        "layers.svg": {
+          "name": "layers.svg",
+          "blob": "334ee511e694701e006e3ad9da94c2d0",
+          "size": 584,
+          "type": "image/svg+xml"
+        },
+        "link.svg": {
+          "name": "link.svg",
+          "blob": "ad967acd0ae51b93061ff30c3d5dbebf",
+          "size": 431,
+          "type": "image/svg+xml"
+        },
+        "mail.svg": {
+          "name": "mail.svg",
+          "blob": "1ff87b18e2ba2f121bcee35c51766dd8",
+          "size": 388,
+          "type": "image/svg+xml"
+        },
+        "menu.svg": {
+          "name": "menu.svg",
+          "blob": "f0283181b60f4f6b74c295bf7b68c0ee",
+          "size": 351,
+          "type": "image/svg+xml"
+        },
+        "moon.svg": {
+          "name": "moon.svg",
+          "blob": "26dcda7a67c6daaeff6db4942f741e22",
+          "size": 406,
+          "type": "image/svg+xml"
+        },
+        "rss.svg": {
+          "name": "rss.svg",
+          "blob": "339471a9222ce4b41cfe5f9e8134a3a3",
+          "size": 386,
+          "type": "image/svg+xml"
+        },
+        "search.svg": {
+          "name": "search.svg",
+          "blob": "dde65e1a75394e7cd004c29154a51bc9",
+          "size": 349,
+          "type": "image/svg+xml"
+        },
+        "sun.svg": {
+          "name": "sun.svg",
+          "blob": "032824f6fbb71600a9ea6f183225b323",
+          "size": 556,
+          "type": "image/svg+xml"
+        },
+        "tag.svg": {
+          "name": "tag.svg",
+          "blob": "aa942eeb40aaae73e899f181cb69964d",
+          "size": 501,
+          "type": "image/svg+xml"
+        },
+        "terminal.svg": {
+          "name": "terminal.svg",
+          "blob": "42d4d35d6d30cd7d2af788db8ac787f8",
+          "size": 337,
+          "type": "image/svg+xml"
+        },
+        "x.svg": {
+          "name": "x.svg",
+          "blob": "2365434c22c34099bde1f4189a107fc9",
+          "size": 329,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": {
+    "by": "Evin",
+    "at": "2026-10-19T02:50:05Z",
+    "via": "Cowork",
+    "note": "Wordmark /home/evinle; new JsonOutput component; About whoami terminal shows the command and jq output, aligned with the intro text."
+  }
+}

@@ -1,0 +1,56 @@
+---
+import '../../design-system/tokens.css';
+import '../../design-system/components/bundle.css';
+import ThemeToggle from '../components/ThemeToggle';
+
+interface Props {
+  title: string;
+  current?: string;
+}
+const { title, current } = Astro.props;
+const links = [
+  { label: 'home', href: '/' },
+  { label: 'writing', href: '/writing' },
+  { label: 'projects', href: '/projects' },
+  { label: 'about', href: '/about' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body style="margin:0;background:var(--surface);color:var(--ink)">
+    <div class="el-page">
+      <div class="el-wrap">
+        <nav class="el-nav" aria-label="Main">
+          <a class="el-mark" href="/"><b>/home/</b>evinle</a>
+          <ul class="label">
+            {links.map((l) => (
+              <li><a href={l.href} aria-current={l.label === current ? 'page' : undefined}>{l.label}</a></li>
+            ))}
+            <li class="el-nav-tools"><ThemeToggle client:load /></li>
+          </ul>
+        </nav>
+        <slot />
+        <footer class="el-footer">
+          <span class="label el-muted">© 2026 EVIN LE</span>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

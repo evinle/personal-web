@@ -1,0 +1,20 @@
+<!-- @dsCard group="Containers" height=170 subtitle="Raised surface with hairline border" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Card</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px'}}, h(E.Card, null, h(E.Heading, {level:3}, h('span', {className:'el-blue'}, '01'), ' measure first'), h(E.Text, {variant:'lead'}, "Count emissions, rows and round trips before changing anything.")), h(E.Card, {padding:'lg'}, h(E.Heading, {level:3}, '@evinle/gas-p'), h(E.Text, {variant:'lead'}, 'Local tooling for Google Apps Script.'))));
+</script>
+</body>
+</html>

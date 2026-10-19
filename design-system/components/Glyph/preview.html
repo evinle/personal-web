@@ -1,0 +1,22 @@
+<!-- @dsCard group="Foundations" height=520 subtitle="Every glyph in the font subset: Devicons for the stack, Codicons for the interface" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Glyph</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+  .gl-grid { display: grid; grid-template-columns: repeat(8, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .gl-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink-muted); font-family: var(--font-mono); font-size: 10px; text-align: center; }
+  .gl-cell .nf { color: var(--ink); }
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div', {style:{display:'grid',gap:'16px'}}, h('div', {className:'label el-muted'}, 'STACK'), h('div', {className:'gl-grid'}, ["dev-typescript", "dev-javascript", "md-language_csharp", "md-dot_net", "dev-react", "dev-angular", "dev-rxjs", "dev-redux", "dev-prisma", "md-nodejs", "dev-postgresql", "dev-microsoftsqlserver", "dev-mongodb", "dev-azure", "fa-aws", "dev-playwright", "dev-git", "cod-github", "dev-npm", "md-material_ui"].map(function(n){ return h('div', {key:n, className:'gl-cell'}, h(E.Glyph, {name:n, size:26}), h('span', null, n)); })), h('div', {className:'label el-muted'}, 'INTERFACE (CODICONS)'), h('div', {className:'gl-grid'}, ["cod-terminal", "cod-copy", "cod-history", "cod-watch", "cod-arrow_right", "cod-link_external", "cod-mail", "cod-github", "cod-color_mode", "cod-search", "cod-tag", "cod-dashboard", "cod-flame", "cod-bug", "cod-layers", "cod-git_commit", "cod-git_branch", "cod-file_code", "cod-list_tree", "cod-menu", "cod-close", "cod-check", "cod-rss", "cod-pulse", "cod-graph_line", "cod-debug", "cod-chevron_right", "cod-symbol_namespace", "cod-circle_filled", "cod-error", "cod-warning", "cod-pass"].map(function(n){ return h('div', {key:n, className:'gl-cell'}, h(E.Glyph, {name:n, size:20}), h('span', null, n.slice(4))); }))));
+</script>
+</body>
+</html>

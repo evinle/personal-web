@@ -1,0 +1,20 @@
+<!-- @dsCard group="Actions" height=110 subtitle="Primary (mint fill) and outline, with glyphs" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Button</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div', {style:{display:'flex',gap:'12px',flexWrap:'wrap',alignItems:'center'}}, h(E.Button, {variant:'primary', glyphEnd:'cod-arrow_right'}, 'read the writing'), h(E.Button, null, 'about me'), h(E.Button, {glyph:'cod-github', href:'#'}, 'github.com/evinle'), h(E.Button, {glyph:'cod-copy'}, 'npm i @evinle/gas-p')));
+</script>
+</body>
+</html>

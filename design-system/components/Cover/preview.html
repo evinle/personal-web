@@ -1,0 +1,93 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evin Le</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--surface); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:640px; height:288px; }
+  .blue { fill:var(--blue-fill); }
+  .pink { fill:var(--pink-fill); }
+  .mint { fill:var(--mint-fill); }
+  .cream { fill:var(--cream-fill); }
+  .dot { fill:var(--surface); }
+  .blk { rx:var(--radius-md); }
+  .cur { rx:var(--radius-xs); }
+  .words { position:absolute; left:var(--space-8); bottom:var(--space-8); max-width:440px; }
+  .name { margin:0; font-family:var(--font-mono); font-size:96px; line-height:.92; font-weight:600; letter-spacing:-.03em; color:var(--ink); }
+  .tag { margin:var(--space-2) 0 0 4px; font-size:14px; line-height:20px; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 640 288" width="640" height="288">
+<!--
+  blocks      blue-fill, pink-fill, mint-fill bands 56 tall, each bleeding off the right edge; cream-fill 24x48 once (the cursor; cream is signal, kept small) ~27% of 960x288
+  arrangement a stack trace: three bands, each one level deeper, indented right by space-8 with space-2 gaps; mint (the fix) is the deepest; the cream cursor waits one more level down. The three fills are the Poimandres triad plus its ice blue.
+  pattern     dot grid, from "4px grid, everything snaps to it" and the mono/terminal voice: 45 dots at a space-4 pitch, cut into the top band in surface
+  scales      indent space-8, gaps space-2, pitch space-4; corners radius-md on bands, radius-xs on the cursor
+-->
+<rect class="blue blk" x="16" y="24" width="640" height="56" rx="6"/>
+<rect class="pink blk" x="48" y="88" width="640" height="56" rx="6"/>
+<rect class="mint blk" x="80" y="152" width="640" height="56" rx="6"/>
+<rect class="cream cur" x="112" y="216" width="24" height="48" rx="2"/>
+<circle class="dot" cx="240" cy="40" r="2"/>
+<circle class="dot" cx="256" cy="40" r="2"/>
+<circle class="dot" cx="272" cy="40" r="2"/>
+<circle class="dot" cx="288" cy="40" r="2"/>
+<circle class="dot" cx="304" cy="40" r="2"/>
+<circle class="dot" cx="320" cy="40" r="2"/>
+<circle class="dot" cx="336" cy="40" r="2"/>
+<circle class="dot" cx="352" cy="40" r="2"/>
+<circle class="dot" cx="368" cy="40" r="2"/>
+<circle class="dot" cx="384" cy="40" r="2"/>
+<circle class="dot" cx="400" cy="40" r="2"/>
+<circle class="dot" cx="416" cy="40" r="2"/>
+<circle class="dot" cx="432" cy="40" r="2"/>
+<circle class="dot" cx="448" cy="40" r="2"/>
+<circle class="dot" cx="464" cy="40" r="2"/>
+<circle class="dot" cx="240" cy="56" r="2"/>
+<circle class="dot" cx="256" cy="56" r="2"/>
+<circle class="dot" cx="272" cy="56" r="2"/>
+<circle class="dot" cx="288" cy="56" r="2"/>
+<circle class="dot" cx="304" cy="56" r="2"/>
+<circle class="dot" cx="320" cy="56" r="2"/>
+<circle class="dot" cx="336" cy="56" r="2"/>
+<circle class="dot" cx="352" cy="56" r="2"/>
+<circle class="dot" cx="368" cy="56" r="2"/>
+<circle class="dot" cx="384" cy="56" r="2"/>
+<circle class="dot" cx="400" cy="56" r="2"/>
+<circle class="dot" cx="416" cy="56" r="2"/>
+<circle class="dot" cx="432" cy="56" r="2"/>
+<circle class="dot" cx="448" cy="56" r="2"/>
+<circle class="dot" cx="464" cy="56" r="2"/>
+<circle class="dot" cx="240" cy="72" r="2"/>
+<circle class="dot" cx="256" cy="72" r="2"/>
+<circle class="dot" cx="272" cy="72" r="2"/>
+<circle class="dot" cx="288" cy="72" r="2"/>
+<circle class="dot" cx="304" cy="72" r="2"/>
+<circle class="dot" cx="320" cy="72" r="2"/>
+<circle class="dot" cx="336" cy="72" r="2"/>
+<circle class="dot" cx="352" cy="72" r="2"/>
+<circle class="dot" cx="368" cy="72" r="2"/>
+<circle class="dot" cx="384" cy="72" r="2"/>
+<circle class="dot" cx="400" cy="72" r="2"/>
+<circle class="dot" cx="416" cy="72" r="2"/>
+<circle class="dot" cx="432" cy="72" r="2"/>
+<circle class="dot" cx="448" cy="72" r="2"/>
+<circle class="dot" cx="464" cy="72" r="2"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Evin Le</h1>
+<p class="tag">Go one layer deeper, then make it faster.</p>
+</div>
+</div>
+</body>
+</html>

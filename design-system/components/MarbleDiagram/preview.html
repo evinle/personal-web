@@ -1,0 +1,20 @@
+<!-- @dsCard group="Diagrams" height=240 subtitle="Stream marble diagram" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MarbleDiagram</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Figure, {caption:'combineLatest emits a mismatched pair (pink) before each matched pair.'}, h(E.MarbleDiagram, {label:'Marble diagram', lanes:[{label:'a$', marbles:[{at:15,text:'a1'},{at:47,text:'a2'},{at:79,text:'a3'}]},{label:'b$', marbles:[{at:21,text:'b1'},{at:53,text:'b2'},{at:85,text:'b3'}]},{label:'combineLatest(a$, b$)', marbles:[{at:21,text:'1·1',kind:'ok'},{at:47,text:'2·1',kind:'bad'},{at:53,text:'2·2',kind:'ok'},{at:79,text:'3·2',kind:'bad'},{at:85,text:'3·3',kind:'ok'}]}]})));
+</script>
+</body>
+</html>

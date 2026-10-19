@@ -1,0 +1,20 @@
+<!-- @dsCard group="Foundations" height=200 subtitle="Body, lead and small prose in IBM Plex Sans" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Text</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div', {style:{display:'grid',gap:'16px'}}, h(E.Text, null, 'The cache miss rate dropped from 18% to 3% once the struct fit in one line, because the hot loop stopped touching two of them.'), h(E.Text, {variant:'lead'}, 'Four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL.'), h(E.Text, {variant:'small', muted:true}, 'Measured on a Ryzen 7, median of 30 runs.')));
+</script>
+</body>
+</html>

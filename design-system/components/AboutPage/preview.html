@@ -1,0 +1,28 @@
+<!-- @dsCard group="Pages" height=1900 width=1200 page subtitle="About, composed from Terminal + KeyValueList, Gantt, Card, ChipList, Button" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AboutPage</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+  .ab-head { padding: 64px 0 0; }
+  .ab-head h1 { margin: var(--space-4) 0 var(--space-4); }
+  .ab-intro { display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: start; }
+  .ab-principles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .ab-principles .el-text { margin: 0; }
+  .ab-stack { display: grid; grid-template-columns: 120px 1fr; gap: var(--space-2) var(--space-4); margin: 0; }
+  .ab-stack dt { color: var(--ink-muted); line-height: 22px; }
+  .ab-stack dd { margin: 0; }
+  .ab-contact { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(()=>{var React=window.React,h=React.createElement,Fragment=React.Fragment,{Page,Nav,Footer,Heading,Text,Label,Terminal,Prompt,Cursor,JsonOutput,Section,Gantt,Card,ChipList,Button}=window.EvinLe,stack=[["languages",["typescript","javascript","c#","sql"]],["react",["react","react query","redux toolkit","zustand","mui","hono","prisma","zod"]],["angular",["angular","rxjs","angular material"]],["ui",["ag grid","highcharts","bryntum gantt","json schema forms"]],[".net",[".net","ef core","linq","mediatr","fluent validation"]],["data",["postgresql","sql server","mongodb","snowflake","databricks"]],["cloud",["azure","aws","git","github"]],["testing",["playwright","bdd specs","aaa"]]],principles=[["measure first","Count emissions, rows and round trips before changing anything, because a fix you can't measure is a guess."],["tests people keep","AAA structure and minimal mocking, so the tests still make sense to whoever touches the code next."],["write it down","Conventions live in ADRs and context files, so the patterns get picked up without me in the room."],["know what a refactor costs","A better structure is only worth it against the deadline it's competing with, and sometimes it isn't."]];function App(){return h(Page,null,h(Nav,{current:"about"}),h("header",{className:"ab-head"},h(Label,null,"ABOUT"),h(Heading,{level:1},"Evin Le")),h("div",{className:"ab-intro"},h("div",null,h(Text,null,"I'm a full stack engineer in Brisbane, four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. Most of my work has been scheduling and planning tools for tier 1 mining clients, which means big datasets, Gantt charts and a lot of reasons for things to be slow."),h(Text,null,"I lead front-end architecture and I care about how a team writes code, so testing people actually maintain, and conventions written down as ADRs and context files. I use AI tools heavily, with intention, to learn and get better rather than to lean on.")),h(Terminal,null,h(Prompt,null,"whoami --json | jq"),h(JsonOutput,{highlight:["status"],data:{name:"Evin Le",role:"full stack engineer",at:"Visagio Australia",since:2022,based:"Brisbane, QLD",studied:{degree:"BSc Computing",at:"Curtin",grade:"HD"},certs:["AZ-900","Databricks DE Associate"],status:"open to a chat"}}),h("span",{className:"el-muted"},"$ "),h(Cursor,null))),h(Section,{title:"Experience",id:"exp",action:h(Label,null,"4 OF 7 PROJECTS \xB7 2022 - NOW")},h(Gantt,{label:"Timeline of projects at Visagio Australia from June 2022 to now: simulation-manager-p in 2022, production-scheduling 2023 to 2025, simulation-manager-i in 2025, roster-reconciliation 2025 to now.",start:"2022-01",end:"2026-12",now:"2026-10-19",parent:{name:"visagio-australia/",subtitle:"Full stack engineer",start:"2022-06"},rows:[{name:"simulation-manager-p",chips:["angular","ag grid"],start:"2022-06",end:"2022-12",tone:"blue",note:"JSON Schema UI, 30+ model types"},{name:"production-scheduling",chips:["angular",".net","mongodb"],start:"2023-01",end:"2025-01",tone:"blue",note:h(Fragment,null,h("span",{className:"el-pink"},"5s")," \u2192 ",h("span",{className:"el-mint"},"~1s")," \xB7 FE lead, team of 4")},{name:"simulation-manager-i",chips:["react","prisma","hono"],start:"2025-03",end:"2025-09",tone:"mint",note:"Gantt logic, schema \u2192 Zod \u2192 client",noteSide:"left"},{name:"roster-reconciliation",chips:["react",".net","postgresql"],start:"2025-09",tone:"mint",note:h(Fragment,null,h("span",{className:"el-pink"},"7-10s")," \u2192 ",h("span",{className:"el-mint"},"~500ms")," \xB7 coverage 8% \u2192 40%"),noteSide:"left"}],legend:[{label:"angular",tone:"blue"},{label:"react",tone:"mint"}]})),h(Section,{title:"How I work",id:"how"},h("div",{className:"ab-principles"},principles.map(([t,d],i)=>h(Card,{key:t},h(Heading,{level:3,prefix:!1},h("span",{className:"el-blue"},"0",i+1)," ",t),h(Text,{variant:"lead"},d))))),h(Section,{title:"Stack",id:"stack"},h("dl",{className:"ab-stack code"},stack.map(([k,items])=>h(Fragment,{key:k},h("dt",null,k),h("dd",null,h(ChipList,{items})))))),h(Section,{title:"Get in touch",id:"contact"},h("div",{className:"ab-contact"},h(Button,{variant:"primary",href:"#",glyph:"cod-mail"},"imevinle@gmail.com"),h(Button,{href:"#",glyph:"cod-github"},"github.com/evinle"),h(Button,{href:"#",glyph:"dev-npm"},"npmjs.com/~evinle"))),h(Footer,null))}window.ReactDOM.createRoot(document.getElementById("root")).render(h(App,null));})();
+
+</script>
+</body>
+</html>

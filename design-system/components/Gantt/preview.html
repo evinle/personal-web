@@ -1,0 +1,20 @@
+<!-- @dsCard group="Diagrams" height=420 subtitle="Projects as tracks under a parent summary bar" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gantt</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Gantt, {label:'Projects at Visagio, 2022 to now', start:'2022-01', end:'2026-12', now:'2026-10-19', parent:{name:'visagio-australia/', subtitle:'Full stack engineer', start:'2022-06'}, rows:[{name:'simulation-manager-p', chips:['angular'], start:'2022-06', end:'2022-12', tone:'blue', note:'30+ model types'},{name:'production-scheduling', chips:['angular','.net'], start:'2023-01', end:'2025-01', tone:'blue', note:'5s → ~1s'},{name:'roster-reconciliation', chips:['react','postgresql'], start:'2025-09', tone:'mint', note:'7-10s → ~500ms', noteSide:'left'}], legend:[{label:'angular',tone:'blue'},{label:'react',tone:'mint'}]}));
+</script>
+</body>
+</html>

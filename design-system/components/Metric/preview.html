@@ -1,0 +1,20 @@
+<!-- @dsCard group="Content" height=150 subtitle="Measured before → after pairs" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Metric</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div id="root" class="el-page" style="padding:24px"></div>
+<script>
+var E = window.EvinLe, h = React.createElement, F = React.Fragment;
+ReactDOM.createRoot(document.getElementById('root')).render(h(E.Metrics, null, h(E.Metric, {before:'7-10s', after:'~500ms', label:'Shift-scheduling query, 100k+ rows to ~200'}), h(E.Metric, {before:'5s', after:'~1s', label:'Page-load freeze from duplicate emissions'}), h(E.Metric, {before:'8%', after:'40%', label:'Test coverage during feature delivery'})));
+</script>
+</body>
+</html>
