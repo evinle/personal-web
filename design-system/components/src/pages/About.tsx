@@ -1,3 +1,5 @@
+export {};
+
 const React: any = (window as any).React;
 const h = React.createElement, Fragment = React.Fragment;
 const { Page, Nav, Footer, Heading, Text, Label, Terminal, Prompt, Cursor, JsonOutput, Section, Gantt, Card, ChipList, Button } = (window as any).EvinLe;
