@@ -1,10 +1,9 @@
-export {};
+import { mount } from '../mount';
 
-const React: any = (window as any).React;
-const h = React.createElement, Fragment = React.Fragment;
-const { Page, Nav, Footer, Heading, Text, Label, Terminal, Prompt, Cursor, JsonOutput, Section, Gantt, Card, ChipList, Button } = (window as any).EvinLe;
+const { Fragment } = window.React;
+const { Page, Nav, Footer, Heading, Text, Label, Terminal, Prompt, Cursor, JsonOutput, Section, Gantt, Card, ChipList, Button } = window.EvinLe;
 
-const stack: Array<[string, any[]]> = [
+const stack: Array<[string, string[]]> = [
   ['languages', ['typescript', 'javascript', 'c#', 'sql']],
   ['react', ['react', 'react query', 'redux toolkit', 'zustand', 'mui', 'hono', 'prisma', 'zod']],
   ['angular', ['angular', 'rxjs', 'angular material']],
@@ -21,6 +20,25 @@ const principles = [
   ['know what a refactor costs', "A better structure is only worth it against the deadline it's competing with, and sometimes it isn't."],
 ];
 
+function ExperienceSection() {
+  return (
+    <Section title="Experience" id="exp" action={<Label>4 OF 7 PROJECTS · 2022 - NOW</Label>}>
+      <Gantt
+        label="Timeline of projects at Visagio Australia from June 2022 to now: simulation-manager-p in 2022, production-scheduling 2023 to 2025, simulation-manager-i in 2025, roster-reconciliation 2025 to now."
+        start="2022-01" end="2026-12" now="2026-10-19"
+        parent={{ name: 'visagio-australia/', subtitle: 'Full stack engineer', start: '2022-06' }}
+        rows={[
+          { name: 'simulation-manager-p', chips: ['angular', 'ag grid'], start: '2022-06', end: '2022-12', tone: 'blue', note: 'JSON Schema UI, 30+ model types' },
+          { name: 'production-scheduling', chips: ['angular', '.net', 'mongodb'], start: '2023-01', end: '2025-01', tone: 'blue', note: <Fragment><span className="el-pink">5s</span> → <span className="el-mint">~1s</span> · FE lead, team of 4</Fragment> },
+          { name: 'simulation-manager-i', chips: ['react', 'prisma', 'hono'], start: '2025-03', end: '2025-09', tone: 'mint', note: 'Gantt logic, schema → Zod → client', noteSide: 'left' },
+          { name: 'roster-reconciliation', chips: ['react', '.net', 'postgresql'], start: '2025-09', tone: 'mint', note: <Fragment><span className="el-pink">7-10s</span> → <span className="el-mint">~500ms</span> · coverage 8% → 40%</Fragment>, noteSide: 'left' },
+        ]}
+        legend={[{ label: 'angular', tone: 'blue' }, { label: 'react', tone: 'mint' }]}
+      />
+    </Section>
+  );
+}
+
 function App() {
   return (
     <Page>
@@ -31,7 +49,7 @@ function App() {
       </header>
       <div className="ab-intro">
         <div>
-          <Text>I'm a full stack engineer in Brisbane, four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. Most of my work has been scheduling and planning tools for tier 1 mining clients, which means big datasets, Gantt charts and a lot of reasons for things to be slow.</Text>
+          <Text>I&apos;m a full stack engineer in Brisbane, four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. Most of my work has been scheduling and planning tools for tier 1 mining clients, which means big datasets, Gantt charts and a lot of reasons for things to be slow.</Text>
           <Text>I lead front-end architecture and I care about how a team writes code, so testing people actually maintain, and conventions written down as ADRs and context files. I use AI tools heavily, with intention, to learn and get better rather than to lean on.</Text>
         </div>
         <Terminal>
@@ -45,20 +63,7 @@ function App() {
         </Terminal>
       </div>
 
-      <Section title="Experience" id="exp" action={<Label>4 OF 7 PROJECTS · 2022 - NOW</Label>}>
-        <Gantt
-          label="Timeline of projects at Visagio Australia from June 2022 to now: simulation-manager-p in 2022, production-scheduling 2023 to 2025, simulation-manager-i in 2025, roster-reconciliation 2025 to now."
-          start="2022-01" end="2026-12" now="2026-10-19"
-          parent={{ name: 'visagio-australia/', subtitle: 'Full stack engineer', start: '2022-06' }}
-          rows={[
-            { name: 'simulation-manager-p', chips: ['angular', 'ag grid'], start: '2022-06', end: '2022-12', tone: 'blue', note: 'JSON Schema UI, 30+ model types' },
-            { name: 'production-scheduling', chips: ['angular', '.net', 'mongodb'], start: '2023-01', end: '2025-01', tone: 'blue', note: <Fragment><span className="el-pink">5s</span> → <span className="el-mint">~1s</span> · FE lead, team of 4</Fragment> },
-            { name: 'simulation-manager-i', chips: ['react', 'prisma', 'hono'], start: '2025-03', end: '2025-09', tone: 'mint', note: 'Gantt logic, schema → Zod → client', noteSide: 'left' },
-            { name: 'roster-reconciliation', chips: ['react', '.net', 'postgresql'], start: '2025-09', tone: 'mint', note: <Fragment><span className="el-pink">7-10s</span> → <span className="el-mint">~500ms</span> · coverage 8% → 40%</Fragment>, noteSide: 'left' },
-          ]}
-          legend={[{ label: 'angular', tone: 'blue' }, { label: 'react', tone: 'mint' }]}
-        />
-      </Section>
+      <ExperienceSection />
 
       <Section title="How I work" id="how">
         <div className="ab-principles">
@@ -88,4 +93,4 @@ function App() {
     </Page>
   );
 }
-(window as any).ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+mount(<App />);

@@ -1,11 +1,41 @@
-export {};
+import { mount } from '../mount';
 
-const React: any = (window as any).React;
-const h = React.createElement, Fragment = React.Fragment;
-const { Page, Nav, Footer, Heading, Text, Label, ChipList, Metric, Aside, CodeBlock, InlineCode, Figure, MarbleDiagram, DecisionRecord, Table, Link } = (window as any).EvinLe;
+const { Fragment } = window.React;
+const { Page, Nav, Footer, Heading, Text, Label, ChipList, Metric, Aside, CodeBlock, InlineCode, Figure, MarbleDiagram, DecisionRecord, Table, Link } = window.EvinLe;
 
-const lane = (label: string, marbles: any[]) => ({ label, marbles });
+const lane = (label: string, marbles: Array<{ at: number; text: string; kind?: 'bad' | 'ok' }>) => ({ label, marbles });
+const marble = (at: number, text: string, kind: 'bad' | 'ok') => ({ at, text, kind });
 const pos = [18, 50, 82];
+
+function EmissionsTable() {
+  return (
+    <Table
+      columns={[{ key: 'op', label: 'Operator', mono: true }, { key: 'src', label: 'Source events', align: 'right' }, { key: 'emit', label: 'Emissions', align: 'right' }]}
+      rows={[
+        { op: 'src$', src: '3', emit: '3' },
+        { op: 'map(toRows)', src: '3', emit: '3' },
+        { op: 'map(toTotals)', src: '3', emit: '3' },
+        { op: 'combineLatest', src: '3', emit: <span className="el-pink">5</span> },
+        { op: 'zip', src: '3', emit: <span className="el-mint">3</span> },
+      ]}
+      highlightRow={3}
+      caption="Emission counts per operator for three source events (illustrative)."
+    />
+  );
+}
+
+function CombineLatestFigure() {
+  return (
+    <Figure caption={<Fragment><span className="el-pink">Pink</span> marks the mismatched intermediate pairs, which are the wasted renders. zip only emits once both inputs have a value at the same index.</Fragment>}>
+      <MarbleDiagram label="combineLatest emits a mismatched pair before each matched pair; zip emits only matched pairs" lanes={[
+        lane('a$ = src$.pipe(map(f))', pos.map((p, i) => ({ at: p - 3, text: 'a' + (i + 1) }))),
+        lane('b$ = src$.pipe(map(g))', pos.map((p, i) => ({ at: p + 3, text: 'b' + (i + 1) }))),
+        lane('combineLatest(a$, b$)', pos.flatMap((p, i) => [...(i ? [marble(p - 3, `${i + 1}·${i}`, 'bad')] : []), marble(p + 3, `${i + 1}·${i + 1}`, 'ok')])),
+        lane('zip(a$, b$)', pos.map((p, i) => ({ at: p + 3, text: `${i + 1}·${i + 1}`, kind: 'ok' }))),
+      ]} />
+    </Figure>
+  );
+}
 
 function App() {
   return (
@@ -27,22 +57,11 @@ function App() {
         <Heading level={2}>The symptom</Heading>
         <Text>Every load did a lot more work than the data needed, and the profiler showed the same downstream handlers running over and over. Nothing was technically wrong with any single subscription, they were just firing more often than they should have.</Text>
 
-        <Heading level={2}>Why breakpoints didn't help</Heading>
+        <Heading level={2}>Why breakpoints didn&apos;t help</Heading>
         <Text>A breakpoint shows you one emission at a time, and every one of them looked valid on its own. The problem was how many there were, so I instrumented emission counts per operator instead and compared them against the number of source events.</Text>
         <Aside>Duplicate emissions are a counting problem, not an inspection problem. A <InlineCode>tap</InlineCode> that increments a counter per operator shows the extra emissions straight away, where stepping through values that are each individually fine never will.</Aside>
 
-        <Table
-          columns={[{ key: 'op', label: 'Operator', mono: true }, { key: 'src', label: 'Source events', align: 'right' }, { key: 'emit', label: 'Emissions', align: 'right' }]}
-          rows={[
-            { op: 'src$', src: '3', emit: '3' },
-            { op: 'map(toRows)', src: '3', emit: '3' },
-            { op: 'map(toTotals)', src: '3', emit: '3' },
-            { op: 'combineLatest', src: '3', emit: <span className="el-pink">5</span> },
-            { op: 'zip', src: '3', emit: <span className="el-mint">3</span> },
-          ]}
-          highlightRow={3}
-          caption="Emission counts per operator for three source events (illustrative)."
-        />
+        <EmissionsTable />
 
         <CodeBlock label="Simplified pipeline" highlight={[5]} emphasis={['combineLatest']} code={`const rows$ = src$.pipe(map(toRows));
 const totals$ = src$.pipe(map(toTotals));
@@ -55,17 +74,10 @@ const view$ = combineLatest([rows$, totals$]).pipe(
         <Heading level={2}>What combineLatest actually does here</Heading>
         <Text><InlineCode>combineLatest</InlineCode> emits whenever any input emits. With two streams mapped off the same source, each source event updates one input and then the other, so you get an intermediate emission pairing new rows with old totals, and the expensive render runs on it anyway.</Text>
 
-        <Figure caption={<Fragment><span className="el-pink">Pink</span> marks the mismatched intermediate pairs, which are the wasted renders. zip only emits once both inputs have a value at the same index.</Fragment>}>
-          <MarbleDiagram label="combineLatest emits a mismatched pair before each matched pair; zip emits only matched pairs" lanes={[
-            lane('a$ = src$.pipe(map(f))', pos.map((p, i) => ({ at: p - 3, text: 'a' + (i + 1) }))),
-            lane('b$ = src$.pipe(map(g))', pos.map((p, i) => ({ at: p + 3, text: 'b' + (i + 1) }))),
-            lane('combineLatest(a$, b$)', pos.flatMap((p, i) => [...(i ? [{ at: p - 3, text: `${i + 1}·${i}`, kind: 'bad' }] : []), { at: p + 3, text: `${i + 1}·${i + 1}`, kind: 'ok' }])),
-            lane('zip(a$, b$)', pos.map((p, i) => ({ at: p + 3, text: `${i + 1}·${i + 1}`, kind: 'ok' }))),
-          ]} />
-        </Figure>
+        <CombineLatestFigure />
 
         <Heading level={2}>The fix</Heading>
-        <Text>Swapping to <InlineCode>zip</InlineCode> fixed the count, but the more useful change was simplifying the relationships between stages so there weren't two parallel streams to reconcile in the first place.</Text>
+        <Text>Swapping to <InlineCode>zip</InlineCode> fixed the count, but the more useful change was simplifying the relationships between stages so there weren&apos;t two parallel streams to reconcile in the first place.</Text>
         <CodeBlock label="After" highlight={[2]} code={`const view$ = src$.pipe(
   map((s) => render(toRows(s), toTotals(s))),
 );`} />
@@ -86,4 +98,4 @@ const view$ = combineLatest([rows$, totals$]).pipe(
     </Page>
   );
 }
-(window as any).ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+mount(<App />);

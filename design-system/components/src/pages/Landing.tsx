@@ -1,34 +1,39 @@
-export {};
+import { mount } from '../mount';
 
-const React: any = (window as any).React;
-const h = React.createElement, Fragment = React.Fragment;
-const { Page, Nav, Footer, Heading, Text, Label, Button, Terminal, Prompt, Cursor, Section, Metric, Metrics, Investigation, ChipList, PostList, Card, Link } = (window as any).EvinLe;
+const { Fragment } = window.React;
+const { Page, Nav, Footer, Heading, Text, Label, Button, Terminal, Prompt, Cursor, Section, Metric, Metrics, Investigation, ChipList, PostList, Card, Link } = window.EvinLe;
+
+function Hero() {
+  return (
+    <header className="lp-hero">
+      <div>
+        <Label>FULL STACK ENGINEER · BRISBANE</Label>
+        <Heading level={1}>Finding out why it&apos;s slow, then fixing that.</Heading>
+        <Text variant="lead">Four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. I write up the problems I&apos;ve dug into here, mostly performance and front-end architecture, with the dead ends left in.</Text>
+        <div className="lp-actions">
+          <Button variant="primary" href="#" glyphEnd="cod-arrow_right">read the writing</Button>
+          <Button href="#">about me</Button>
+        </div>
+      </div>
+      <Terminal>
+        <Prompt>git log --oneline --grep=perf</Prompt>
+        <span className="el-blue">a41f0c2</span> ef core: split join, filter first{'\n'}
+        {'        '}<span className="el-pink">7-10s</span> <span className="el-muted">→</span> <span className="el-mint">~500ms</span>{'\n'}
+        <span className="el-blue">9be3d17</span> rxjs: zip, not combineLatest{'\n'}
+        {'        '}<span className="el-pink">5s</span> <span className="el-muted">→</span> <span className="el-mint">~1s</span>{'\n'}
+        <span className="el-blue">3c07a5e</span> tests: AAA, minimal mocking{'\n'}
+        {'        '}<span className="el-pink">8%</span> <span className="el-muted">→</span> <span className="el-mint">40%</span> coverage{'\n'}
+        <span className="el-muted">$ </span><Cursor />
+      </Terminal>
+    </header>
+  );
+}
 
 function App() {
   return (
     <Page>
       <Nav current="home" />
-      <header className="lp-hero">
-        <div>
-          <Label>FULL STACK ENGINEER · BRISBANE</Label>
-          <Heading level={1}>Finding out why it's slow, then fixing that.</Heading>
-          <Text variant="lead">Four years in, strongest on the front end in React and Angular and comfortable in .NET and SQL. I write up the problems I've dug into here, mostly performance and front-end architecture, with the dead ends left in.</Text>
-          <div className="lp-actions">
-            <Button variant="primary" href="#" glyphEnd="cod-arrow_right">read the writing</Button>
-            <Button href="#">about me</Button>
-          </div>
-        </div>
-        <Terminal>
-          <Prompt>git log --oneline --grep=perf</Prompt>
-          <span className="el-blue">a41f0c2</span> ef core: split join, filter first{'\n'}
-          {'        '}<span className="el-pink">7-10s</span> <span className="el-muted">→</span> <span className="el-mint">~500ms</span>{'\n'}
-          <span className="el-blue">9be3d17</span> rxjs: zip, not combineLatest{'\n'}
-          {'        '}<span className="el-pink">5s</span> <span className="el-muted">→</span> <span className="el-mint">~1s</span>{'\n'}
-          <span className="el-blue">3c07a5e</span> tests: AAA, minimal mocking{'\n'}
-          {'        '}<span className="el-pink">8%</span> <span className="el-muted">→</span> <span className="el-mint">40%</span> coverage{'\n'}
-          <span className="el-muted">$ </span><Cursor />
-        </Terminal>
-      </header>
+      <Hero />
 
       <Section title="Measured, not estimated" id="results">
         <Metrics>
@@ -77,4 +82,4 @@ function App() {
     </Page>
   );
 }
-(window as any).ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+mount(<App />);

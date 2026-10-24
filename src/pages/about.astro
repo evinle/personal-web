@@ -5,10 +5,15 @@ import QualificationIcon from '../components/QualificationIcon.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
 
-const whoami = (await getEntry('whoami', 'index'))!.data;
-const qualifications = (await getEntry('qualifications', 'index'))!.data;
-const contact = (await getEntry('contact', 'index'))!.data;
-const introEntry = (await getEntry('intro', 'index'))!;
+function required<T>(entry: T | undefined, label: string): T {
+  if (entry === undefined) throw new Error(`Missing required content entry: ${label}`);
+  return entry;
+}
+
+const whoami = required(await getEntry('whoami', 'index'), 'whoami/index').data;
+const qualifications = required(await getEntry('qualifications', 'index'), 'qualifications/index').data;
+const contact = required(await getEntry('contact', 'index'), 'contact/index').data;
+const introEntry = required(await getEntry('intro', 'index'), 'intro/index');
 const { Content: Intro } = await render(introEntry);
 
 const principles = (await getCollection('principles')).sort((a, b) => a.data.order - b.data.order);
@@ -22,6 +27,18 @@ function ym(s: string) {
 }
 
 const projects = (await getCollection('projects')).sort((a, b) => ym(a.data.start) - ym(b.data.start));
+
+// Computed here, not inside the template's {projects.map(...)} block: astro-eslint-parser's
+// tag-aware tokenizer misreads the `<NonNullable<typeof t>>` generic as an HTML tag when it
+// appears inside a template expression, desyncing it for the rest of the file.
+const projectTechnologiesById = new Map(
+  projects.map((project) => [
+    project.id,
+    project.data.technologies
+      .map((ref) => technologyById.get(ref.id))
+      .filter((t): t is NonNullable<typeof t> => t != null),
+  ])
+);
 
 const today = new Date().toISOString().slice(0, 10);
 const projectEnds = projects.map((p) => (p.data.end ? ym(p.data.end) : ym(today)));
@@ -89,15 +106,13 @@ const parent = {
       {projects.map((project) => {
         const s = pct(project.data.start);
         const e = project.data.end ? pct(project.data.end) : nowPct;
-        const projectTechnologies = project.data.technologies
-          .map((ref) => technologyById.get(ref.id))
-          .filter(Boolean);
+        const projectTechnologies = projectTechnologiesById.get(project.id) ?? [];
         return (
           <div class="el-gantt-row">
             <div class="el-gantt-label child">
               <span class="name">{project.data.name}</span>
               <span class="el-chips">
-                {projectTechnologies.map((t) => <Chip label={t!.label} icon={t!.icon} />)}
+                {projectTechnologies.map((t) => <Chip label={t.label} icon={t.icon} />)}
               </span>
             </div>
             <div class="el-gantt-track">

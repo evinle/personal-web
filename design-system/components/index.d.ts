@@ -14,6 +14,7 @@ export interface CardProps { padding?: 'md' | 'lg'; children?: Node; className?:
 export interface SectionProps { title: Node; id?: string; action?: Node; children?: Node }
 export interface TerminalProps { title?: string; children?: Node; pre?: boolean }
 export interface KeyValueListProps { items: Array<[string, Node]>; highlight?: string }
+export interface JsonOutputProps { data: unknown; highlight?: string[]; indent?: number }
 export interface CodeBlockProps { code: string; highlight?: number[]; emphasis?: string[]; label?: string }
 export interface MetricProps { before: Node; after: Node; label?: Node; compact?: boolean }
 export interface InvestigationProps { title: Node; symptom: Node; cause: Node; fix: Node; result: Node }
@@ -47,6 +48,7 @@ export declare function Terminal(props: TerminalProps): React.ReactElement;
 export declare function Prompt(props: { children?: Node }): React.ReactElement;
 export declare function Cursor(): React.ReactElement;
 export declare function KeyValueList(props: KeyValueListProps): React.ReactElement;
+export declare function JsonOutput(props: JsonOutputProps): React.ReactElement;
 export declare function CodeBlock(props: CodeBlockProps): React.ReactElement;
 export declare function Metric(props: MetricProps): React.ReactElement;
 export declare function Metrics(props: { children?: Node }): React.ReactElement;
@@ -61,4 +63,4 @@ export declare function Gantt(props: GanttProps): React.ReactElement;
 export declare function Nav(props: NavProps): React.ReactElement;
 export declare function Footer(props: FooterProps): React.ReactElement;
 export declare function Page(props: { children?: Node }): React.ReactElement;
-declare global { interface Window { EvinLe: { glyphFor: typeof glyphFor; Glyph: typeof Glyph; Button: typeof Button; IconButton: typeof IconButton; Link: typeof Link; Heading: typeof Heading; Text: typeof Text; Label: typeof Label; InlineCode: typeof InlineCode; Chip: typeof Chip; ChipList: typeof ChipList; Card: typeof Card; Section: typeof Section; Terminal: typeof Terminal; Prompt: typeof Prompt; Cursor: typeof Cursor; KeyValueList: typeof KeyValueList; CodeBlock: typeof CodeBlock; Metric: typeof Metric; Metrics: typeof Metrics; Investigation: typeof Investigation; PostList: typeof PostList; Aside: typeof Aside; DecisionRecord: typeof DecisionRecord; Table: typeof Table; Figure: typeof Figure; MarbleDiagram: typeof MarbleDiagram; Gantt: typeof Gantt; Nav: typeof Nav; Footer: typeof Footer; Page: typeof Page } } }
+declare global { interface Window { EvinLe: { glyphFor: typeof glyphFor; Glyph: typeof Glyph; Button: typeof Button; IconButton: typeof IconButton; Link: typeof Link; Heading: typeof Heading; Text: typeof Text; Label: typeof Label; InlineCode: typeof InlineCode; Chip: typeof Chip; ChipList: typeof ChipList; Card: typeof Card; Section: typeof Section; Terminal: typeof Terminal; Prompt: typeof Prompt; Cursor: typeof Cursor; KeyValueList: typeof KeyValueList; JsonOutput: typeof JsonOutput; CodeBlock: typeof CodeBlock; Metric: typeof Metric; Metrics: typeof Metrics; Investigation: typeof Investigation; PostList: typeof PostList; Aside: typeof Aside; DecisionRecord: typeof DecisionRecord; Table: typeof Table; Figure: typeof Figure; MarbleDiagram: typeof MarbleDiagram; Gantt: typeof Gantt; Nav: typeof Nav; Footer: typeof Footer; Page: typeof Page } } }

@@ -5,7 +5,8 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "eslint.config.mjs"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
