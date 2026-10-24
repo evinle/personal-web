@@ -77,4 +77,17 @@ const contact = defineCollection({
   }),
 });
 
-export const collections = { technologies, stack, projects, qualifications, whoami, principles, contact };
+const intro = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/intro' }),
+});
+
+export const collections = {
+  technologies,
+  stack,
+  projects,
+  qualifications,
+  whoami,
+  principles,
+  contact,
+  intro,
+};
