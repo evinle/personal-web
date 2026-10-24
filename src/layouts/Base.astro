@@ -2,6 +2,7 @@
 import '../../design-system/tokens.css';
 import '../../design-system/components/bundle.css';
 import ThemeToggle from '../components/ThemeToggle';
+import { getEntry } from 'astro:content';
 
 interface Props {
   title: string;
@@ -14,6 +15,14 @@ const links = [
   { label: 'projects', href: '/projects' },
   { label: 'about', href: '/about' },
 ];
+const contact = (await getEntry('contact', 'index'))?.data;
+const footerLinks = contact
+  ? [
+      { label: 'github', href: contact.github, glyph: '' },
+      { label: 'npm', href: contact.npm, glyph: '' },
+      { label: 'email', href: `mailto:${contact.email}`, glyph: '' },
+    ]
+  : [];
 ---
 
 <!doctype html>
@@ -49,6 +58,11 @@ const links = [
         <slot />
         <footer class="el-footer">
           <span class="label el-muted">© 2026 EVIN LE</span>
+          <span class="label el-foot-links">
+            {footerLinks.map((l) => (
+              <a href={l.href}><i class="nf" aria-hidden="true">{l.glyph}</i>{l.label}</a>
+            ))}
+          </span>
         </footer>
       </div>
     </div>
