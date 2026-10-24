@@ -6,24 +6,51 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const repoRoot = path.resolve(fileURLToPath(import.meta.url), '../..');
-const stackDir = path.join(repoRoot, 'src/content/stack');
-const brokenFixture = path.join(stackDir, '__broken_fixture__.yaml');
 
 function runBuild() {
   return spawnSync('npm', ['run', 'build'], { cwd: repoRoot, encoding: 'utf8' });
 }
 
-test('build fails when a Stack group references a Technology id that does not exist', () => {
-  mkdirSync(stackDir, { recursive: true });
-  writeFileSync(
-    brokenFixture,
-    'name: broken-fixture\ntechnologies:\n  - nonexistent-technology-id\n'
-  );
-
+function withBrokenFixture(dir, filename, contents, run) {
+  const fullDir = path.join(repoRoot, dir);
+  const fixturePath = path.join(fullDir, filename);
+  mkdirSync(fullDir, { recursive: true });
+  writeFileSync(fixturePath, contents);
   try {
-    const result = runBuild();
-    assert.notEqual(result.status, 0, 'expected astro build to fail on an unknown Technology reference');
+    return run();
   } finally {
-    rmSync(brokenFixture, { force: true });
+    rmSync(fixturePath, { force: true });
   }
+}
+
+test('build fails when a Stack group references a Technology id that does not exist', () => {
+  const result = withBrokenFixture(
+    'src/content/stack',
+    '__broken_fixture__.yaml',
+    'name: broken-fixture\ntechnologies:\n  - nonexistent-technology-id\n',
+    runBuild
+  );
+  assert.notEqual(result.status, 0, 'expected astro build to fail on an unknown Technology reference');
+});
+
+test('build fails when a Project references a Technology id that does not exist', () => {
+  const result = withBrokenFixture(
+    'src/content/projects',
+    '__broken_fixture__.yaml',
+    [
+      'name: broken-fixture',
+      'start: "2024-01"',
+      'tone: blue',
+      'note: a note',
+      'detail:',
+      '  problem: a problem',
+      '  fix: a fix',
+      '  result: a result',
+      'technologies:',
+      '  - nonexistent-technology-id',
+      '',
+    ].join('\n'),
+    runBuild
+  );
+  assert.notEqual(result.status, 0, 'expected astro build to fail on an unknown Technology reference');
 });

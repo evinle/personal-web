@@ -22,16 +22,21 @@ function readYamlEntries(dir) {
 
 const technologyIds = new Set(readYamlIds(path.join(repoRoot, 'src/content/technologies')));
 
-const errors = [];
-for (const { id, data } of readYamlEntries(path.join(repoRoot, 'src/content/stack'))) {
-  for (const technologyId of data.technologies ?? []) {
-    if (!technologyIds.has(technologyId)) {
-      errors.push(
-        `stack/${id}.yaml references unknown Technology id "${technologyId}"`
-      );
+function checkTechnologyReferences(collection) {
+  const errors = [];
+  for (const { id, data } of readYamlEntries(path.join(repoRoot, `src/content/${collection}`))) {
+    for (const technologyId of data.technologies ?? []) {
+      if (!technologyIds.has(technologyId)) {
+        errors.push(
+          `${collection}/${id}.yaml references unknown Technology id "${technologyId}"`
+        );
+      }
     }
   }
+  return errors;
 }
+
+const errors = [...checkTechnologyReferences('stack'), ...checkTechnologyReferences('projects')];
 
 if (errors.length > 0) {
   for (const error of errors) {

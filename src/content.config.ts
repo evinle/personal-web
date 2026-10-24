@@ -18,4 +18,21 @@ const stack = defineCollection({
   }),
 });
 
-export const collections = { technologies, stack };
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/projects' }),
+  schema: z.object({
+    name: z.string(),
+    start: z.string(),
+    end: z.string().optional(),
+    tone: z.enum(['blue', 'mint']),
+    note: z.string(),
+    detail: z.object({
+      problem: z.string(),
+      fix: z.string(),
+      result: z.string(),
+    }),
+    technologies: z.array(reference('technologies')),
+  }),
+});
+
+export const collections = { technologies, stack, projects };
