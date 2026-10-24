@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Chip from '../components/Chip.astro';
 import { getCollection, getEntry, render } from 'astro:content';
+import { testIds } from '../test-ids';
 
 const whoami = (await getEntry('whoami', 'index'))!.data;
 const contact = (await getEntry('contact', 'index'))!.data;
@@ -58,6 +59,9 @@ const parent = {
       class="el-gantt"
       role="img"
       aria-label={`Timeline of projects at ${whoami.at} from ${projects[0].data.start} to now.`}
+      data-testid={testIds.aboutGantt}
+      data-axis-start={axisStart}
+      data-axis-span={span}
     >
       <div class="el-gantt-axis">
         <div class="el-gantt-label"><span class="label">PROJECT</span></div>
@@ -65,7 +69,7 @@ const parent = {
           {years.map((y) => (
             <span class="el-gantt-year" style={`left:${y.left}%`}>{y.year}</span>
           ))}
-          <div class="el-now" style={`--n:${nowPct}`}><span>now</span></div>
+          <div class="el-now" data-testid={testIds.aboutGanttNowMarker} style={`--n:${nowPct}`}><span>now</span></div>
         </div>
       </div>
 
@@ -75,7 +79,8 @@ const parent = {
           <span class="small el-muted">{parent.subtitle}</span>
         </div>
         <div class="el-gantt-track">
-          <div class="el-bar-summary" style={`--s:${pct(parent.start)};--e:${nowPct}`} />
+          <div class="el-bar-summary" data-end="now" style={`--s:${pct(parent.start)};--e:${nowPct}`} />
+          <div class="el-now" style={`--n:${nowPct}`} />
         </div>
       </div>
 
@@ -96,23 +101,50 @@ const parent = {
             <div class="el-gantt-track">
               <div
                 class={`el-bar ${project.data.tone === 'mint' ? 'react' : ''} ${project.data.end ? '' : 'ongoing'}`}
+                data-end={project.data.end ? undefined : 'now'}
+                data-testid={project.data.end ? undefined : testIds.aboutGanttOngoingBar}
                 style={`--s:${s};--e:${e}`}
                 title={project.data.name}
               />
               {project.data.note && (
                 <span
                   class={`el-bar-note ${project.data.noteSide === 'left' ? 'left' : ''}`}
+                  data-end={project.data.end ? undefined : 'now'}
                   style={`--s:${s};--e:${e}`}
                 >
                   {project.data.note}
                 </span>
               )}
+              <div class="el-now" style={`--n:${nowPct}`} />
             </div>
           </div>
         );
       })}
     </div>
   </section>
+
+  <script>
+    (function correctGanttToLiveDate() {
+      function ym(s: string) {
+        const [y, m = '1', d = '1'] = s.split('-');
+        return Number(y) * 12 + (Number(m) - 1) + (Number(d) - 1) / 30;
+      }
+
+      document.querySelectorAll<HTMLElement>('.el-gantt[data-axis-start]').forEach((gantt) => {
+        const axisStart = Number(gantt.dataset.axisStart);
+        const span = Number(gantt.dataset.axisSpan);
+        const today = new Date().toISOString().slice(0, 10);
+        const pct = Math.max(0, Math.min(100, ((ym(today) - axisStart) / span) * 100));
+
+        gantt.querySelectorAll<HTMLElement>('.el-now').forEach((el) => {
+          el.style.setProperty('--n', String(pct));
+        });
+        gantt.querySelectorAll<HTMLElement>('[data-end="now"]').forEach((el) => {
+          el.style.setProperty('--e', String(pct));
+        });
+      });
+    })();
+  </script>
 
   <section class="el-section" aria-labelledby="how">
     <div class="el-section-head">
