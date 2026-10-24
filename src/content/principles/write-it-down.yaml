@@ -1,0 +1,3 @@
+order: 3
+title: write it down
+description: "Conventions live in ADRs and context files, so the patterns get picked up without me in the room."

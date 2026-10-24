@@ -1,0 +1,3 @@
+order: 2
+title: tests people keep
+description: "AAA structure and minimal mocking, so the tests still make sense to whoever touches the code next."
