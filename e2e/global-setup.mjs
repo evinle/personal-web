@@ -21,6 +21,6 @@ export default async function globalSetup() {
     // no server was running
   }
   execSync('npm run build', { stdio: 'inherit' });
-  execSync('npx astro preview', { stdio: 'inherit' });
-  await waitForServer('http://localhost:4321/', 15_000);
+  execSync('npx astro preview --port 4322', { stdio: 'inherit' });
+  await waitForServer('http://localhost:4322/', 15_000);
 }

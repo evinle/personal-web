@@ -136,8 +136,8 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <a class="el-btn el-btn-primary" href={`mailto:${contact.email}`}>{contact.email}</a>
-      <a class="el-btn" href={contact.github}>{contact.github.replace('https://', '')}</a>
-      <a class="el-btn" href={contact.npm}>{contact.npm.replace('https://www.', '').replace('https://', '')}</a>
+      <a class="el-btn" href={contact.github} target="_blank" rel="noreferrer">{contact.github.replace('https://', '')}</a>
+      <a class="el-btn" href={contact.npm} target="_blank" rel="noreferrer">{contact.npm.replace('https://www.', '').replace('https://', '')}</a>
     </div>
   </section>
 </Base>

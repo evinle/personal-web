@@ -5,6 +5,6 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.mjs',
   globalTeardown: './e2e/global-teardown.mjs',
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: 'http://localhost:4322',
   },
 });
