@@ -68,4 +68,13 @@ const principles = defineCollection({
   }),
 });
 
-export const collections = { technologies, stack, projects, qualifications, whoami, principles };
+const contact = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/contact' }),
+  schema: z.object({
+    email: z.string().email(),
+    github: z.string().url(),
+    npm: z.string().url(),
+  }),
+});
+
+export const collections = { technologies, stack, projects, qualifications, whoami, principles, contact };
