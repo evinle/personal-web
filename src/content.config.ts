@@ -35,4 +35,16 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { technologies, stack, projects };
+const qualifications = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/qualifications' }),
+  schema: z.object({
+    studied: z.object({
+      degree: z.string(),
+      at: z.string(),
+      grade: z.string(),
+    }),
+    certs: z.array(z.string()),
+  }),
+});
+
+export const collections = { technologies, stack, projects, qualifications };
