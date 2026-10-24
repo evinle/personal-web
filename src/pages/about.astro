@@ -1,10 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import Chip from '../components/Chip.astro';
+import QualificationIcon from '../components/QualificationIcon.astro';
 import { getCollection, getEntry, render } from 'astro:content';
-import { testIds } from '../test-ids';
+import { testIds } from '../testIds';
 
 const whoami = (await getEntry('whoami', 'index'))!.data;
+const qualifications = (await getEntry('qualifications', 'index'))!.data;
 const contact = (await getEntry('contact', 'index'))!.data;
 const introEntry = (await getEntry('intro', 'index'))!;
 const { Content: Intro } = await render(introEntry);
@@ -162,6 +164,46 @@ const parent = {
     </div>
   </section>
 
+  <section class="el-section" aria-labelledby="qualifications">
+    <div class="el-section-head">
+      <h2 id="qualifications" class="heading el-h"><span class="el-hash">## </span>Qualifications</h2>
+    </div>
+
+    <div class="qual-sub">
+      <span class="label el-muted qual-sub-label">EDUCATION</span>
+      <div class="qual-list">
+        <div class="qual-row">
+          <div class="qual-icon">
+            <QualificationIcon kind="diploma" />
+          </div>
+          <div class="qual-body">
+            <h3 class="el-h3 el-h">{qualifications.studied.degree}</h3>
+            <p class="body el-text">
+              Studied at {qualifications.studied.at}, graduating with {qualifications.studied.grade}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qual-sub">
+      <span class="label el-muted qual-sub-label">CERTIFICATIONS</span>
+      <div class="qual-list">
+        {qualifications.certs.map((cert) => (
+          <div class="qual-row cert">
+            <div class="qual-icon">
+              <QualificationIcon kind="badge" />
+            </div>
+            <div class="qual-body">
+              <h3 class="el-h3 el-h">{cert.name}</h3>
+              <p class="body el-text el-muted">{cert.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="el-section" aria-labelledby="stack">
     <div class="el-section-head">
       <h2 id="stack" class="heading el-h"><span class="el-hash">## </span>Stack</h2>
@@ -187,6 +229,7 @@ const parent = {
     <div class="el-section-head">
       <h2 id="contact" class="heading el-h"><span class="el-hash">## </span>Get in touch</h2>
     </div>
+    <p class="small el-text el-muted" style="margin:0 0 16px">Status: {whoami.status}.</p>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <a class="el-btn el-btn-primary" href={`mailto:${contact.email}`}>{contact.email}</a>
       <a class="el-btn" href={contact.github} target="_blank" rel="noreferrer">{contact.github.replace('https://', '')}</a>
@@ -194,3 +237,51 @@ const parent = {
     </div>
   </section>
 </Base>
+
+<style>
+  .qual-sub {
+    margin-top: var(--space-8);
+  }
+  .qual-sub:first-of-type {
+    margin-top: var(--space-4);
+  }
+  .qual-sub-label {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .qual-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .qual-row {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: var(--space-4);
+    align-items: stretch;
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .qual-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .qual-icon {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+  .qual-row.cert .qual-icon {
+    color: var(--mint);
+  }
+  .qual-body .el-h3 {
+    margin: 0 0 4px;
+  }
+  .qual-body .body {
+    margin: 0;
+  }
+</style>

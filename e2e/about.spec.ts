@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { testIds } from '../src/test-ids';
+import { testIds } from '../src/testIds';
 
 test('About page renders its content from the data', async ({ page }) => {
   await page.goto('/about');

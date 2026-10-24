@@ -44,7 +44,12 @@ const qualifications = defineCollection({
       at: z.string(),
       grade: z.string(),
     }),
-    certs: z.array(z.string()),
+    certs: z.array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+      })
+    ),
   }),
 });
 
