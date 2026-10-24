@@ -1,0 +1,12 @@
+name: simulation-manager-p
+start: "2022-06"
+end: "2022-12"
+tone: blue
+note: "JSON Schema UI, 30+ model types"
+detail:
+  problem: Planners needed a UI for 30+ simulation model types, each with its own shape, without hand-building a form per model.
+  fix: Built a JSON Schema-driven UI in Angular with AG Grid, generating forms and grids straight from each model's schema.
+  result: One UI covers all 30+ model types; new models need a schema, not new screens.
+technologies:
+  - angular
+  - ag-grid

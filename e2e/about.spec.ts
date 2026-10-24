@@ -12,7 +12,7 @@ test('About page renders its content from the data', async ({ page }) => {
 
   await expect(page.getByRole('heading', { name: /measure first/ })).toBeVisible();
 
-  await expect(page.getByText('typescript', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('typescript', { exact: false }).first()).toBeVisible();
 
   await expect(page.getByText('roster-reconciliation', { exact: true })).toBeVisible();
 

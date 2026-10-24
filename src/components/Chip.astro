@@ -1,0 +1,13 @@
+---
+import { glyphChar } from '../lib/glyphs';
+
+interface Props {
+  label: string;
+  icon?: string;
+}
+
+const { label, icon } = Astro.props;
+const char = glyphChar(icon);
+---
+
+<span class="el-stack">{char && <i class="nf" aria-hidden="true">{char}</i>}{label.toLowerCase()}</span>

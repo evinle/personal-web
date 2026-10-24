@@ -26,6 +26,7 @@ const projects = defineCollection({
     end: z.string().optional(),
     tone: z.enum(['blue', 'mint']),
     note: z.string(),
+    noteSide: z.enum(['left']).optional(),
     detail: z.object({
       problem: z.string(),
       fix: z.string(),

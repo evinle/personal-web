@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Chip from '../components/Chip.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 
 const whoami = (await getEntry('whoami', 'index'))!.data;
@@ -11,17 +12,17 @@ const principles = (await getCollection('principles')).sort((a, b) => a.data.ord
 const stackGroups = await getCollection('stack');
 const technologies = await getCollection('technologies');
 const technologyById = new Map(technologies.map((t) => [t.id, t.data]));
-const projects = await getCollection('projects');
 
 function ym(s: string) {
   const [y, m = '1', d = '1'] = s.split('-');
   return Number(y) * 12 + (Number(m) - 1) + (Number(d) - 1) / 30;
 }
 
+const projects = (await getCollection('projects')).sort((a, b) => ym(a.data.start) - ym(b.data.start));
+
 const today = new Date().toISOString().slice(0, 10);
-const projectStarts = projects.map((p) => ym(p.data.start));
 const projectEnds = projects.map((p) => (p.data.end ? ym(p.data.end) : ym(today)));
-const axisStart = Math.min(...projectStarts);
+const axisStart = ym(projects[0].data.start);
 const axisEnd = Math.max(ym(today), ...projectEnds) + 1;
 const span = axisEnd - axisStart;
 const pct = (s: string) => Math.max(0, Math.min(100, ((ym(s) - axisStart) / span) * 100));
@@ -31,6 +32,12 @@ const years: Array<{ year: number; left: number }> = [];
 for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
   years.push({ year: y, left: ((y * 12 - axisStart) / span) * 100 });
 }
+
+const parent = {
+  name: `${whoami.at.toLowerCase().replace(/\s+/g, '-')}/`,
+  subtitle: whoami.role,
+  start: projects[0].data.start,
+};
 ---
 
 <Base title="Evin Le — About" current="about">
@@ -39,18 +46,18 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
     <h1 class="display el-h" style="margin:16px 0">{whoami.name}</h1>
   </header>
 
-  <div style="display:grid;grid-template-columns:1fr;gap:16px">
+  <div class="body el-text" style="display:grid;grid-template-columns:1fr;gap:16px">
     <Intro />
   </div>
 
   <section class="el-section" aria-labelledby="exp">
     <div class="el-section-head">
-      <h2 id="exp" class="heading el-h">Experience</h2>
+      <h2 id="exp" class="heading el-h"><span class="el-hash">## </span>Experience</h2>
     </div>
     <div
       class="el-gantt"
       role="img"
-      aria-label={`Timeline of projects from ${projects[0]?.data.start} to now.`}
+      aria-label={`Timeline of projects at ${whoami.at} from ${projects[0].data.start} to now.`}
     >
       <div class="el-gantt-axis">
         <div class="el-gantt-label"><span class="label">PROJECT</span></div>
@@ -61,6 +68,17 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
           <div class="el-now" style={`--n:${nowPct}`}><span>now</span></div>
         </div>
       </div>
+
+      <div class="el-gantt-row">
+        <div class="el-gantt-label">
+          <span class="name">{parent.name}</span>
+          <span class="small el-muted">{parent.subtitle}</span>
+        </div>
+        <div class="el-gantt-track">
+          <div class="el-bar-summary" style={`--s:${pct(parent.start)};--e:${nowPct}`} />
+        </div>
+      </div>
+
       {projects.map((project) => {
         const s = pct(project.data.start);
         const e = project.data.end ? pct(project.data.end) : nowPct;
@@ -69,12 +87,10 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
           .filter(Boolean);
         return (
           <div class="el-gantt-row">
-            <div class="el-gantt-label">
+            <div class="el-gantt-label child">
               <span class="name">{project.data.name}</span>
               <span class="el-chips">
-                {projectTechnologies.map((t) => (
-                  <span class="el-stack">{t!.label.toLowerCase()}</span>
-                ))}
+                {projectTechnologies.map((t) => <Chip label={t!.label} icon={t!.icon} />)}
               </span>
             </div>
             <div class="el-gantt-track">
@@ -84,7 +100,12 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
                 title={project.data.name}
               />
               {project.data.note && (
-                <span class="el-bar-note" style={`--s:${s};--e:${e}`}>{project.data.note}</span>
+                <span
+                  class={`el-bar-note ${project.data.noteSide === 'left' ? 'left' : ''}`}
+                  style={`--s:${s};--e:${e}`}
+                >
+                  {project.data.note}
+                </span>
               )}
             </div>
           </div>
@@ -95,7 +116,7 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
 
   <section class="el-section" aria-labelledby="how">
     <div class="el-section-head">
-      <h2 id="how" class="heading el-h">How I work</h2>
+      <h2 id="how" class="heading el-h"><span class="el-hash">## </span>How I work</h2>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
       {principles.map((p, i) => (
@@ -111,7 +132,7 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
 
   <section class="el-section" aria-labelledby="stack">
     <div class="el-section-head">
-      <h2 id="stack" class="heading el-h">Stack</h2>
+      <h2 id="stack" class="heading el-h"><span class="el-hash">## </span>Stack</h2>
     </div>
     <dl class="code" style="display:grid;grid-template-columns:120px 1fr;gap:8px 16px;margin:0">
       {stackGroups.map((group) => (
@@ -121,7 +142,7 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
             <span class="el-chips">
               {group.data.technologies.map((ref) => {
                 const tech = technologyById.get(ref.id);
-                return tech ? <span class="el-stack">{tech.label.toLowerCase()}</span> : null;
+                return tech ? <Chip label={tech.label} icon={tech.icon} /> : null;
               })}
             </span>
           </dd>
@@ -132,7 +153,7 @@ for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
 
   <section class="el-section" aria-labelledby="contact">
     <div class="el-section-head">
-      <h2 id="contact" class="heading el-h">Get in touch</h2>
+      <h2 id="contact" class="heading el-h"><span class="el-hash">## </span>Get in touch</h2>
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <a class="el-btn el-btn-primary" href={`mailto:${contact.email}`}>{contact.email}</a>

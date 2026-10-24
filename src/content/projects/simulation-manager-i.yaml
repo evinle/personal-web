@@ -1,0 +1,14 @@
+name: simulation-manager-i
+start: "2025-03"
+end: "2025-09"
+tone: mint
+note: "Gantt logic, schema to Zod to client"
+noteSide: left
+detail:
+  problem: simulation-manager-p's Angular/AG Grid stack didn't fit the next iteration's Gantt-heavy UI or the move to a React front end.
+  fix: Rebuilt in React with Prisma and Hono, carrying the JSON Schema models through to Zod validation shared by server and client.
+  result: Gantt logic and schema validation now live in one typed path from database to browser.
+technologies:
+  - react
+  - prisma
+  - hono

@@ -1,0 +1,13 @@
+name: production-scheduling
+start: "2023-01"
+end: "2025-01"
+tone: blue
+note: "5s to ~1s, FE lead, team of 4"
+detail:
+  problem: The scheduling screen took ~5s to recompute and re-render after an edit, on datasets with thousands of scheduled tasks.
+  fix: Led a front-end team of 4 rebuilding the hot path in Angular and .NET, with MongoDB backing the schedule store, profiling each recompute step.
+  result: Recompute down to ~1s.
+technologies:
+  - angular
+  - dotnet
+  - mongodb

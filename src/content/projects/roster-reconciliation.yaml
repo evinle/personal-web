@@ -2,9 +2,12 @@ name: roster-reconciliation
 start: "2025-09"
 tone: mint
 note: "7-10s to ~500ms, coverage 8% to 40%"
+noteSide: left
 detail:
   problem: Roster reconciliation ran as a nightly batch and routinely took 7-10s per run, with low test coverage.
   fix: Rebuilt the hot path in React and .NET against PostgreSQL, with Playwright coverage added alongside it.
   result: Runtime down to ~500ms, coverage up from 8% to 40%.
 technologies:
-  - typescript
+  - react
+  - dotnet
+  - postgresql
