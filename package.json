@@ -7,15 +7,17 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/check-content-references.mjs && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.0",
     "astro": "^7.4.0",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
