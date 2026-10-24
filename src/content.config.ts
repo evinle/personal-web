@@ -47,4 +47,16 @@ const qualifications = defineCollection({
   }),
 });
 
-export const collections = { technologies, stack, projects, qualifications };
+const whoami = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/whoami' }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    at: z.string(),
+    since: z.number(),
+    based: z.string(),
+    status: z.string(),
+  }),
+});
+
+export const collections = { technologies, stack, projects, qualifications, whoami };
