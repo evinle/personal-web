@@ -45,6 +45,28 @@ Headings may carry a markdown-style prefix in `cream` (`## `) to keep the editor
 
 A 4px grid (`space-1` 4, `space-2` 8, `space-4` 16, `space-8` 32). Corners are tight. Code-adjacent surfaces are square (`radius-none`): the terminal panel, code blocks, inline code, diagrams and stack chips. Otherwise `radius-xs` 2px for tags, `radius-sm` 4px for controls, `radius-md` 6px for cards.
 
+## Responsive
+
+Two breakpoints, cascading mobile-first from the desktop layout (nothing below ~900px wide has ever had a rule until now):
+
+- `--below-tablet` — `max-width: 899px`
+- `--below-phone` — `max-width: 599px`
+
+Both are `@custom-media` declarations in `tokens.css`, expanded at build time by `postcss-custom-media` (wired into the root `postcss.config.mjs`, not Astro's `vite.css.postcss` — Astro's own scoped-`<style>` transform only reads the root config) into plain `@media (max-width: ...)`. Reuse the name, don't repeat the number:
+
+```css
+.el-gantt-row { grid-template-columns: 320px 1fr; }
+
+@media (--below-tablet) {
+  .el-gantt-row { grid-template-columns: 180px 1fr; }
+}
+@media (--below-phone) {
+  .el-gantt-row { grid-template-columns: 110px 1fr; }
+}
+```
+
+This works in `bundle.css` and in any Astro component's scoped `<style>` block — same plugin, same two names. If a third breakpoint is ever needed, add it next to these two in `tokens.css`, not inline in a component.
+
 ## Iconography and logo
 
 No logo yet: the wordmark is `/home/evinle` set in the mono face at 600, the `/home/` in `ink-muted`. Terminal title bars read `zsh · /home/evinle`.

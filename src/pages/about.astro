@@ -74,6 +74,7 @@ const parent = {
     <div class="el-section-head">
       <h2 id="exp" class="heading el-h"><span class="el-hash">## </span>Experience</h2>
     </div>
+    <div class="el-gantt-scroll">
     <div
       class="el-gantt"
       role="img"
@@ -116,15 +117,20 @@ const parent = {
               </span>
             </div>
             <div class="el-gantt-track">
-              <div
+              <button
+                type="button"
                 class={`el-bar ${project.data.tone === 'mint' ? 'react' : ''} ${project.data.end ? '' : 'ongoing'}`}
                 data-end={project.data.end ? undefined : 'now'}
                 data-testid={project.data.end ? undefined : testIds.aboutGanttOngoingBar}
                 style={`--s:${s};--e:${e}`}
                 title={project.data.name}
+                aria-expanded="false"
+                aria-controls={`gantt-note-${project.id}`}
+                aria-label={`${project.data.name}: show details`}
               />
               {project.data.note && (
                 <span
+                  id={`gantt-note-${project.id}`}
                   class={`el-bar-note ${project.data.noteSide === 'left' ? 'left' : ''}`}
                   data-end={project.data.end ? undefined : 'now'}
                   style={`--s:${s};--e:${e}`}
@@ -137,6 +143,7 @@ const parent = {
           </div>
         );
       })}
+    </div>
     </div>
   </section>
 
@@ -161,13 +168,32 @@ const parent = {
         });
       });
     })();
+
+    (function enableGanttNoteToggle() {
+      document.querySelectorAll<HTMLElement>('.el-gantt').forEach((gantt) => {
+        gantt.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLElement)) return;
+
+          const button = target.closest<HTMLButtonElement>('.el-bar[aria-controls]');
+          if (!button) return;
+
+          const noteId = button.getAttribute('aria-controls');
+          const note = noteId ? document.getElementById(noteId) : null;
+          if (!note) return;
+
+          const isOpen = note.classList.toggle('is-open');
+          button.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
+    })();
   </script>
 
   <section class="el-section" aria-labelledby="how">
     <div class="el-section-head">
       <h2 id="how" class="heading el-h"><span class="el-hash">## </span>How I work</h2>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="el-tiles">
       {principles.map((p, i) => (
         <div class="el-card">
           <h3 class="el-h3 el-h">
@@ -252,51 +278,3 @@ const parent = {
     </div>
   </section>
 </Base>
-
-<style>
-  .qual-sub {
-    margin-top: var(--space-8);
-  }
-  .qual-sub:first-of-type {
-    margin-top: var(--space-4);
-  }
-  .qual-sub-label {
-    display: block;
-    margin-bottom: var(--space-2);
-  }
-  .qual-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-  .qual-row {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: var(--space-4);
-    align-items: stretch;
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--line);
-  }
-  .qual-row:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .qual-icon {
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--line);
-    color: var(--blue);
-    flex-shrink: 0;
-  }
-  .qual-row.cert .qual-icon {
-    color: var(--mint);
-  }
-  .qual-body .el-h3 {
-    margin: 0 0 4px;
-  }
-  .qual-body .body {
-    margin: 0;
-  }
-</style>

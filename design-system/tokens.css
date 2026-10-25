@@ -63,6 +63,14 @@
   color-scheme: light;
 }
 
+/* Breakpoints (hand-authored here, not generated from tokens.json — there's no
+   Figma equivalent of a CSS media query). Single source of truth for responsive
+   rules across bundle.css and component <style> blocks; see design-system/README.md
+   #responsive. `postcss-custom-media` (wired in astro.config.mjs) expands these to
+   plain `@media (max-width: ...)` at build time, so devtools show the real value. */
+@custom-media --below-tablet (max-width: 899px);
+@custom-media --below-phone (max-width: 599px);
+
 /* Type styles named in tokens.json */
 .display { font-family: var(--font-mono); font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; }
 .heading { font-family: var(--font-mono); font-size: 22px; line-height: 30px; font-weight: 600; letter-spacing: -0.01em; }
@@ -71,3 +79,13 @@
 .body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
 .small { font-family: var(--font-sans); font-size: 14px; line-height: 22px; font-weight: 400; }
 .nf { font-style: normal; }
+
+@media (--below-tablet) {
+  .display { font-size: 32px; line-height: 38px; }
+  .heading { font-size: 20px; line-height: 27px; }
+}
+@media (--below-phone) {
+  .display { font-size: 26px; line-height: 32px; }
+  .heading { font-size: 18px; line-height: 24px; }
+  .body { font-size: 15px; line-height: 23px; }
+}

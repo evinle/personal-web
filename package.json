@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@csstools/postcss-global-data": "^4.0.0",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
@@ -36,6 +37,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-sonarjs": "^4.2.2",
+    "postcss-custom-media": "^12.0.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.0"
   }

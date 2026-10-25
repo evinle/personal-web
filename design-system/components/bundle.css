@@ -45,7 +45,7 @@
 .el-page a.el-btn-primary, .el-btn-primary { background: var(--mint-fill); border-color: var(--mint-fill); color: var(--on-fill); }
 
 /* terminal panel */
-.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; }
+.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; max-width: 480px; width: 100%; }
 .el-term-bar { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line); }
 .el-term-body { padding: var(--space-4); margin: 0; white-space: pre; overflow-x: auto; }
 
@@ -163,14 +163,15 @@ code.el-inline { font-family: var(--font-mono); font-size: .9em; background: var
 .el-gantt { border: 1px solid var(--line); background: var(--surface-raised); }
 .el-gantt-row { display: grid; grid-template-columns: 320px 1fr; border-top: 1px solid var(--line); min-height: 56px; }
 .el-gantt-row:first-child { border-top: 0; }
-.el-gantt-label { padding: var(--space-2) var(--space-4); border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: var(--space-1); }
-.el-gantt-label .name { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink); }
+.el-gantt-label { padding: var(--space-2) var(--space-4); border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: var(--space-1); min-width: 0; }
+.el-gantt-label .name { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink); overflow-wrap: break-word; }
 .el-gantt-label .el-chips { gap: var(--space-1); }
 .el-gantt-track { position: relative; background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: 20% 100%; background-repeat: repeat-x; }
 .el-gantt-axis { display: grid; grid-template-columns: 320px 1fr; border-bottom: 1px solid var(--line); }
 .el-gantt-axis .el-gantt-track { height: 32px; background-image: linear-gradient(to right, var(--ink-muted) 1px, transparent 1px); background-size: 20% 100%; background-repeat: repeat-x; }
 .el-gantt-year { position: absolute; bottom: 10px; transform: translateX(6px); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
 .el-bar { position: absolute; top: 50%; height: 20px; transform: translateY(-50%); left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--blue-fill); border-radius: var(--radius-none); }
+button.el-bar { border: 0; padding: 0; margin: 0; font: inherit; appearance: none; background: var(--blue-fill); cursor: pointer; }
 .el-bar.react { background: var(--mint-fill); }
 .el-bar.ongoing { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); }
 .el-bar-summary { position: absolute; top: 50%; height: 6px; transform: translateY(-50%); left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--ink-muted); }
@@ -187,6 +188,9 @@ code.el-inline { font-family: var(--font-mono); font-size: .9em; background: var
 /* component additions */
 .el-card { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-4); }
 .el-card-lg { padding: var(--space-8); }
+/* 2-up tile grid, e.g. the About page's "How I work" cards — was a raw
+   inline style with no way to hold a media query; now a real class. */
+.el-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 .el-h3 { font-family: var(--font-mono); font-size: 16px; line-height: 24px; font-weight: 600; margin: 0 0 var(--space-2); }
 h3.el-h { margin: 0; }
 .el-text { margin: 0 0 var(--space-4); max-width: 70ch; }
@@ -207,6 +211,16 @@ h3.el-h { margin: 0; }
 .el-table tr.hl td { background: var(--mint-soft); }
 
 .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-8)); }
+.qual-sub { margin-top: var(--space-8); }
+.qual-sub:first-of-type { margin-top: var(--space-4); }
+.qual-sub-label { display: block; margin-bottom: var(--space-2); }
+.qual-list { display: flex; flex-direction: column; gap: var(--space-4); }
+.qual-row { display: grid; grid-template-columns: 40px 1fr; gap: var(--space-4); align-items: stretch; padding-bottom: var(--space-4); border-bottom: 1px solid var(--line); }
+.qual-row:last-child { border-bottom: none; padding-bottom: 0; }
+.qual-icon { width: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); color: var(--blue); flex-shrink: 0; }
+.qual-row.cert .qual-icon { color: var(--mint); }
+.qual-body .el-h3 { margin: 0 0 4px; }
+.qual-body .body { margin: 0; }
 
 /* jq-style JSON output */
 .js-k { color: var(--blue); }
@@ -215,3 +229,69 @@ h3.el-h { margin: 0; }
 .js-b { color: var(--pink); }
 .js-p { color: var(--ink-muted); }
 .js-hl { color: var(--mint); }
+
+/* ============ responsive ============ */
+/* Breakpoints come from design-system/tokens.css (--below-tablet / --below-phone),
+   expanded at build time by postcss-custom-media. See design-system/README.md#responsive. */
+
+@media (--below-tablet) {
+  .el-gantt-row, .el-gantt-axis { grid-template-columns: 180px 1fr; }
+  .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-4)); }
+  /* Project name and tech chips always show — the label column just shrinks
+     and wraps the chip row instead of hiding it. Bar-note text (the "5s → ~1s"
+     style annotations) stays visible here too; it's only tap-to-reveal below
+     --below-phone, where the chart itself needs to scroll horizontally. */
+}
+
+@media (--below-phone) {
+  .el-wrap { padding: 0 var(--space-4); }
+
+  .el-nav { padding: var(--space-2) 0; flex-wrap: wrap; }
+  .el-nav ul { order: 3; flex-basis: 100%; gap: var(--space-4); padding-top: var(--space-2); margin-top: var(--space-2); border-top: 1px solid var(--line); overflow-x: auto; }
+
+  .el-term-body { font-size: 13px; padding: var(--space-2); }
+
+  /* Gantt: a 320px label column leaves ~55px of track on a 375px phone, which
+     makes the chart unreadable. Rather than crushing the label further, scroll
+     the timeline horizontally and pin the (now-narrower) label column instead —
+     the whole multi-year span stays legible and nothing gets cropped out. */
+  .el-gantt-scroll { overflow-x: auto; }
+  .el-gantt { min-width: 480px; }
+  .el-gantt-row, .el-gantt-axis { grid-template-columns: 110px 1fr; }
+  .el-gantt-label { position: sticky; left: 0; background: var(--surface-raised); z-index: 2; padding: var(--space-2); }
+  .el-gantt-label.child { padding-left: var(--space-2); }
+
+  /* Bar-note collapses to tap-to-reveal: the track is too narrow here to show
+     it inline without overlapping neighboring bars. .el-bar is a <button>
+     (reset above) that JS toggles .is-open on; ::after below just enlarges
+     its tap target past the bar's own thin visual height. */
+  /* Unbounded nowrap text positioned off a percentage of a 370px-ish track
+     reliably runs into the sticky label (e.g. an early bar's note starts at
+     left:calc(0% + 8px) and just keeps going left of that with no edge to stop
+     at). Opened notes become a bounded callout instead: pinned to the track's
+     own box (which the label sits outside of), wrapping instead of overflowing. */
+  .el-bar-note { display: none; }
+  .el-bar-note.is-open {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: none;
+    margin-top: var(--space-1);
+    width: auto;
+    white-space: normal;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    padding: var(--space-1) var(--space-2);
+    font-size: 11px;
+    line-height: 15px;
+    z-index: 3;
+  }
+  .el-bar::after { content: ''; position: absolute; inset: -14px 0; }
+
+  .el-tiles { grid-template-columns: 1fr; }
+
+  .qual-row { grid-template-columns: 32px 1fr; gap: var(--space-2); }
+  .qual-icon { width: 32px; }
+}
