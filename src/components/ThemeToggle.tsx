@@ -1,19 +1,18 @@
-import { useState } from 'react';
-
 type Theme = 'dark' | 'light';
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(() =>
-    typeof document === 'undefined' || document.documentElement.dataset.theme !== 'light' ? 'dark' : 'light',
-  );
+function currentTheme(): Theme {
+  const set = document.documentElement.dataset.theme;
+  if (set === 'light' || set === 'dark') return set;
+  return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
 
+export default function ThemeToggle() {
   function toggle() {
-    const next: Theme = theme === 'dark' ? 'light' : 'dark';
+    const next: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem('theme', next);
     } catch {}
-    setTheme(next);
   }
 
   return (
