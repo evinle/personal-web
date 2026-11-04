@@ -1,14 +1,15 @@
 name: simulation-manager-i
-start: "2025-03"
-end: "2025-09"
+start: "2025-08"
+end: "2026-02"
 tone: mint
 note: "Gantt logic, schema to Zod to client"
 noteSide: left
 detail:
-  problem: simulation-manager-p's Angular/AG Grid stack didn't fit the next iteration's Gantt-heavy UI or the move to a React front end.
-  fix: Rebuilt in React with Prisma and Hono, carrying the JSON Schema models through to Zod validation shared by server and client.
-  result: Gantt logic and schema validation now live in one typed path from database to browser.
+  problem: Bryntum's scheduler interpreted constraints and lead times differently from the many-to-one domain model the modellers worked in.
+  fix: Owned the Gantt scheduling logic in a team of 10+ and worked directly with the modellers to reconcile the two. Built type-safe Hono endpoints over Prisma, with types flowing from schema through Zod validation to the React client.
+  result: Rendered schedules matched the computed model exactly, and a schema change surfaces as a compile error rather than a runtime failure.
 technologies:
   - react
-  - prisma
+  - typescript
   - hono
+  - prisma

@@ -45,7 +45,7 @@
 .el-page a.el-btn-primary, .el-btn-primary { background: var(--mint-fill); border-color: var(--mint-fill); color: var(--on-fill); }
 
 /* terminal panel */
-.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; max-width: 480px; width: 100%; }
+.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; box-sizing: border-box; max-width: 480px; width: 100%; }
 .el-term-bar { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line); }
 .el-term-body { padding: var(--space-4); margin: 0; white-space: pre; overflow-x: auto; }
 
@@ -199,6 +199,23 @@ h3.el-h { margin: 0; }
 .el-link .nf { margin-right: var(--space-1); }
 .el-link .el-link-ext { margin: 0 0 0 2px; font-size: .9em; }
 .el-term-pad { padding: var(--space-4); }
+
+/* Interactive terminal: command buttons over a screen whose cells share one grid
+   area, so the panel is always as tall as its longest output and never shifts the page. */
+.el-term-cmds { display: flex; flex-wrap: wrap; gap: var(--space-1); padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line); }
+.el-term-cmd { position: relative; overflow: hidden; padding: 2px var(--space-2); background: none; border: 1px solid var(--ink-muted); border-radius: var(--radius-none); font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--ink-muted); cursor: pointer; }
+.el-term-cmd:disabled { cursor: default; }
+.el-term-cmd.is-active { color: var(--mint); border-color: var(--mint); }
+.el-term-cmd-bar { position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--mint-fill); transform-origin: left; animation: el-term-shrink linear forwards; }
+.el-term-cmd-bar.is-paused { animation-play-state: paused; }
+@keyframes el-term-shrink { to { transform: scaleX(0); } }
+.el-term-screen { display: grid; white-space: pre-wrap; overflow-wrap: anywhere; }
+.el-term-cell { grid-area: 1 / 1; }
+.el-cursor.is-pressed { display: inline-block; opacity: 0.4; transform: scaleY(0.7); transform-origin: bottom; }
+.el-term-cell.is-inactive, .el-term-cell .is-unrevealed { visibility: hidden; }
+
+.el-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: var(--space-8); align-items: start; }
+.el-intro-prose { display: grid; gap: var(--space-4); }
 .el-wrap-narrow { max-width: 720px; }
 .el-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-none); margin: var(--space-4) 0; }
 .el-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 14px; line-height: 22px; }
@@ -229,6 +246,10 @@ h3.el-h { margin: 0; }
 .js-b { color: var(--pink); }
 .js-p { color: var(--ink-muted); }
 .js-hl { color: var(--mint); }
+/* Indent by nesting and hang wrapped lines under their key, rather than wrapping to column 0. */
+.js-entry { display: block; margin-left: 2ch; padding-left: 2ch; text-indent: -2ch; }
+.js-entry .js-entry { margin-left: 0; }
+.js-entry .js-close { margin-left: -2ch; }
 
 /* ============ responsive ============ */
 /* Breakpoints come from design-system/tokens.css (--below-tablet / --below-phone),
@@ -241,6 +262,10 @@ h3.el-h { margin: 0; }
      and wraps the chip row instead of hiding it. Bar-note text (the "5s → ~1s"
      style annotations) stays visible here too; it's only tap-to-reveal below
      --below-phone, where the chart itself needs to scroll horizontally. */
+}
+
+@media (--below-tablet) {
+  .el-intro { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (--below-phone) {
@@ -257,7 +282,7 @@ h3.el-h { margin: 0; }
      the whole multi-year span stays legible and nothing gets cropped out. */
   .el-gantt-scroll { overflow-x: auto; }
   .el-gantt { min-width: 480px; }
-  .el-gantt-row, .el-gantt-axis { grid-template-columns: 110px 1fr; }
+  .el-gantt-row, .el-gantt-axis { grid-template-columns: 140px 1fr; }
   .el-gantt-label { position: sticky; left: 0; background: var(--surface-raised); z-index: 2; padding: var(--space-2); }
   .el-gantt-label.child { padding-left: var(--space-2); }
 

@@ -1,0 +1,11 @@
+order: 2
+name: react
+technologies:
+  - react
+  - react-query
+  - redux-toolkit
+  - zustand
+  - mui
+  - hono
+  - prisma
+  - zod

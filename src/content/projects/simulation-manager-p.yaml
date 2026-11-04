@@ -4,9 +4,13 @@ end: "2022-12"
 tone: blue
 note: "JSON Schema UI, 30+ model types"
 detail:
-  problem: Planners needed a UI for 30+ simulation model types, each with its own shape, without hand-building a form per model.
-  fix: Built a JSON Schema-driven UI in Angular with AG Grid, generating forms and grids straight from each model's schema.
-  result: One UI covers all 30+ model types; new models need a schema, not new screens.
+  problem: Non-technical users needed to define new data shapes without a developer, across 30+ model types at any nesting depth.
+  fix: Built a JSON Schema-driven UI layer in Angular Material and AG Grid that generates forms and editable grids, with validation and custom cell editors, from each model's schema.
+  result: One UI covers 30+ model types, and new data shapes need a schema rather than a developer.
 technologies:
   - angular
+  - typescript
+  - dotnet
+  - ms-sql
   - ag-grid
+  - angular-material

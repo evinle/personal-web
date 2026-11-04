@@ -13,6 +13,7 @@ const technologies = defineCollection({
 const stack = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/stack' }),
   schema: z.object({
+    order: z.number(),
     name: z.string(),
     technologies: z.array(reference('technologies')),
   }),

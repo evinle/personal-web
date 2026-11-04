@@ -1,0 +1,7 @@
+order: 7
+name: testing
+technologies:
+  - playwright
+  - bdd-specs
+  - aaa-structure
+  - minimal-mocking

@@ -1,13 +1,14 @@
 name: production-scheduling
 start: "2023-01"
-end: "2025-01"
+end: "2025-08"
 tone: blue
 note: "5s to ~1s, FE lead, team of 4"
 detail:
-  problem: The scheduling screen took ~5s to recompute and re-render after an edit, on datasets with thousands of scheduled tasks.
-  fix: Led a front-end team of 4 rebuilding the hot path in Angular and .NET, with MongoDB backing the schedule store, profiling each recompute step.
-  result: Recompute down to ~1s.
+  problem: Pages froze for 5s on load, and breakpoints cannot isolate duplicate emissions.
+  fix: As front-end lead for a team of 4, instrumented emission counts per operator and found combineLatest used where zip was correct on streams sharing an origin. Simplified the relationships between pipeline stages instead of building a cleverer operator chain.
+  result: Page-load freeze down from 5s to ~1s.
 technologies:
   - angular
+  - typescript
   - dotnet
   - mongodb

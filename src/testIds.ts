@@ -5,4 +5,8 @@ export const testIds = {
   aboutGantt: 'about-gantt',
   aboutGanttNowMarker: 'about-gantt-now-marker',
   aboutGanttOngoingBar: 'about-gantt-ongoing-bar',
+  aboutTerminalScreen: 'about-terminal-screen',
+  aboutTerminalProgress: 'about-terminal-progress',
+  aboutTerminalTyped: 'about-terminal-typed',
+  aboutTerminalCursor: 'about-terminal-cursor',
 } as const;

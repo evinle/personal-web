@@ -1,0 +1,6 @@
+order: 3
+name: angular
+technologies:
+  - angular
+  - rxjs
+  - angular-material

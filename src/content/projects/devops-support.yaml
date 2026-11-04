@@ -1,0 +1,15 @@
+name: devops-support
+start: "2026-09"
+tone: blue
+note: "~7s to ~2s saves, 5 production tools"
+noteSide: left
+detail:
+  problem: Saves in one of 5 production tools took ~7s. Each save runs a git push, and libgit2 enumerated ~600 refs before and after every push, around 6k syscalls that are near-free on local disk but often hit the network on the Azure Files share holding the repo.
+  fix: Moved the push into a custom module that skips both passes.
+  result: Save time down from ~7s to ~2s.
+technologies:
+  - angular
+  - dotnet
+  - kubernetes
+  - solace
+  - azure

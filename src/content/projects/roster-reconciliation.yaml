@@ -1,13 +1,15 @@
 name: roster-reconciliation
-start: "2025-09"
+start: "2026-02"
+end: "2026-09"
 tone: mint
 note: "7-10s to ~500ms, coverage 8% to 40%"
 noteSide: left
 detail:
-  problem: Roster reconciliation ran as a nightly batch and routinely took 7-10s per run, with low test coverage.
-  fix: Rebuilt the hot path in React and .NET against PostgreSQL, with Playwright coverage added alongside it.
-  result: Runtime down to ~500ms, coverage up from 8% to 40%.
+  problem: A shift-scheduling query took 7-10s because it loaded 100k+ rows to work out which roster override applied, then filtered.
+  fix: Split it into two EF Core queries with the filter in the first, so the second handles ~200 rows. The extra round trip is cheap because the API and database share a VPC.
+  result: Query down to ~500ms. Test coverage also rose from 8% to 40% during feature delivery.
 technologies:
   - react
+  - typescript
   - dotnet
   - postgresql
