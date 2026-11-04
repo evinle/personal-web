@@ -59,9 +59,14 @@ const footerLinks = contact
         <footer class="el-footer">
           <span class="label el-muted">© 2026 EVIN LE</span>
           <span class="label el-foot-links">
-            {footerLinks.map((l) => (
-              <a href={l.href}><i class="nf" aria-hidden="true">{l.glyph}</i>{l.label}</a>
-            ))}
+            {footerLinks.map((l) => {
+              const external = l.href.startsWith('http');
+              return (
+                <a href={l.href} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}>
+                  <i class="nf" aria-hidden="true">{l.glyph}</i>{l.label}
+                </a>
+              );
+            })}
           </span>
         </footer>
       </div>

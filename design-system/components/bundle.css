@@ -282,7 +282,11 @@ h3.el-h { margin: 0; }
 @media (--below-phone) {
   .el-wrap { padding: 0 var(--space-4); }
 
-  .el-nav { padding: var(--space-2) 0; flex-wrap: wrap; }
+  /* Links take their own scrolling row, so the theme switch moves up beside the wordmark to stay
+     on screen. It's positioned against the nav, so the row's overflow doesn't clip it. */
+  .el-nav { position: relative; padding: var(--space-2) 0; flex-wrap: wrap; }
+  .el-mark { line-height: 32px; }
+  .el-nav-tools { position: absolute; top: var(--space-2); right: 0; margin-left: 0; }
   .el-nav ul { order: 3; flex-basis: 100%; gap: var(--space-4); padding-top: var(--space-2); margin-top: var(--space-2); border-top: 1px solid var(--line); overflow-x: auto; }
 
   .el-term-body { font-size: 13px; padding: var(--space-2); }
