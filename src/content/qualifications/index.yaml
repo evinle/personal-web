@@ -1,9 +1,9 @@
 studied:
-  degree: BSc Computing
-  at: Curtin
+  degree: Bachelor of Science (Computing)
+  at: Curtin University, WA
   grade: HD
 certs:
   - name: AZ-900
     description: Microsoft Azure Fundamentals certification.
-  - name: Databricks DE Associate
+  - name: Databricks Data Engineer Associate
     description: Databricks Certified Data Engineer Associate.

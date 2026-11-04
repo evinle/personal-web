@@ -1,0 +1,8 @@
+order: 5
+name: ".net"
+technologies:
+  - dotnet
+  - ef-core
+  - linq
+  - mediatr
+  - fluent-validation

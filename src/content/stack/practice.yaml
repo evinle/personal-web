@@ -1,0 +1,7 @@
+order: 8
+name: practice
+technologies:
+  - adrs
+  - agent-context-files
+  - code-review
+  - pair-programming

@@ -45,7 +45,7 @@
 .el-page a.el-btn-primary, .el-btn-primary { background: var(--mint-fill); border-color: var(--mint-fill); color: var(--on-fill); }
 
 /* terminal panel */
-.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; max-width: 480px; width: 100%; }
+.el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; box-sizing: border-box; max-width: 480px; width: 100%; }
 .el-term-bar { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line); }
 .el-term-body { padding: var(--space-4); margin: 0; white-space: pre; overflow-x: auto; }
 
@@ -161,7 +161,7 @@ code.el-inline { font-family: var(--font-mono); font-size: .9em; background: var
 
 /* gantt: projects as tracks under a parent summary bar. Bars take --s and --e as % of the axis. */
 .el-gantt { border: 1px solid var(--line); background: var(--surface-raised); }
-.el-gantt-row { display: grid; grid-template-columns: 320px 1fr; border-top: 1px solid var(--line); min-height: 56px; }
+.el-gantt-row { display: grid; grid-template-columns: 320px 1fr; border-top: 1px solid var(--line); min-height: 64px; }
 .el-gantt-row:first-child { border-top: 0; }
 .el-gantt-label { padding: var(--space-2) var(--space-4); border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: var(--space-1); min-width: 0; }
 .el-gantt-label .name { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink); overflow-wrap: break-word; }
@@ -169,19 +169,28 @@ code.el-inline { font-family: var(--font-mono); font-size: .9em; background: var
 .el-gantt-track { position: relative; background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: 20% 100%; background-repeat: repeat-x; }
 .el-gantt-axis { display: grid; grid-template-columns: 320px 1fr; border-bottom: 1px solid var(--line); }
 .el-gantt-axis .el-gantt-track { height: 32px; background-image: linear-gradient(to right, var(--ink-muted) 1px, transparent 1px); background-size: 20% 100%; background-repeat: repeat-x; }
-.el-gantt-year { position: absolute; bottom: 10px; transform: translateX(6px); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
+/* Real dividing lines at each year's true position, replacing the even 20% pattern above. */
+.el-gantt-track-years, .el-gantt-axis .el-gantt-track-years { background-image: none; }
+.el-gantt-yearline { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line); pointer-events: none; }
+.el-gantt-axis .el-gantt-yearline { border-left-color: var(--ink-muted); }
+.el-gantt-year { position: absolute; bottom: 10px; transform: translateX(6px); white-space: nowrap; font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
+.el-gantt-year-first { transform: none; }
 .el-bar { position: absolute; top: 50%; height: 20px; transform: translateY(-50%); left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--blue-fill); border-radius: var(--radius-none); }
-button.el-bar { border: 0; padding: 0; margin: 0; font: inherit; appearance: none; background: var(--blue-fill); cursor: pointer; }
+button.el-bar { border: 0; padding: 0; margin: 0; font: inherit; appearance: none; background: var(--blue-fill); }
 .el-bar.react { background: var(--mint-fill); }
-.el-bar.ongoing { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); }
+.el-bar.ongoing { background: linear-gradient(to right, var(--blue-fill) 85%, transparent); }
+.el-bar.react.ongoing { background: linear-gradient(to right, var(--mint-fill) 85%, transparent); }
 .el-bar-summary { position: absolute; top: 50%; height: 6px; transform: translateY(-50%); left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--ink-muted); }
 .el-bar-summary::before, .el-bar-summary::after { content: ""; position: absolute; top: 0; width: 0; height: 0; border-style: solid; }
 .el-bar-summary::before { left: 0; border-width: 0 6px 8px 0; border-color: transparent var(--ink-muted) transparent transparent; top: 6px; transform: scaleX(-1); }
 .el-bar-summary::after { right: 0; border-width: 0 6px 8px 0; border-color: transparent var(--ink-muted) transparent transparent; top: 6px; }
-.el-bar-note { position: absolute; top: 50%; transform: translateY(-50%); left: calc(var(--e) * 1% + 8px); font-family: var(--font-mono); font-size: 12px; white-space: nowrap; color: var(--ink-muted); }
-.el-bar-note.left { left: auto; right: calc((100 - var(--s)) * 1% + 8px); }
+/* The note sits above its bar (half the bar's 20px height plus a 4px gap), starting at the bar's
+   start. `.left` ends it at the bar's end instead, for bars too close to the right edge to fit it. */
+.el-bar-note { position: absolute; bottom: calc(50% + 14px); left: calc(var(--s) * 1%); font-family: var(--font-mono); font-size: 12px; white-space: nowrap; color: var(--ink-muted); }
+.el-bar-note.left { left: auto; right: calc((100 - var(--e)) * 1%); }
+.el-bar-hint { display: none; }
 .el-now { position: absolute; top: 0; bottom: 0; left: calc(var(--n) * 1%); border-left: 1px dashed var(--cream); pointer-events: none; }
-.el-now span { position: absolute; top: 6px; left: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--cream); }
+.el-now span { position: absolute; top: 6px; right: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--cream); }
 .el-gantt-legend { display: flex; gap: var(--space-4); padding: var(--space-2) var(--space-4); border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
 .el-gantt-legend i.sw { display: inline-block; width: 12px; height: 12px; margin-right: var(--space-1); vertical-align: -1px; }
 
@@ -199,6 +208,23 @@ h3.el-h { margin: 0; }
 .el-link .nf { margin-right: var(--space-1); }
 .el-link .el-link-ext { margin: 0 0 0 2px; font-size: .9em; }
 .el-term-pad { padding: var(--space-4); }
+
+/* Interactive terminal: command buttons over a screen whose cells share one grid
+   area, so the panel is always as tall as its longest output and never shifts the page. */
+.el-term-cmds { display: flex; flex-wrap: wrap; gap: var(--space-1); padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--line); }
+.el-term-cmd { position: relative; overflow: hidden; padding: 2px var(--space-2); background: none; border: 1px solid var(--ink-muted); border-radius: var(--radius-none); font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--ink-muted); cursor: pointer; }
+.el-term-cmd:disabled { cursor: default; }
+.el-term-cmd.is-active { color: var(--mint); border-color: var(--mint); }
+.el-term-cmd-bar { position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--mint-fill); transform-origin: left; animation: el-term-shrink linear forwards; }
+.el-term-cmd-bar.is-paused { animation-play-state: paused; }
+@keyframes el-term-shrink { to { transform: scaleX(0); } }
+.el-term-screen { display: grid; white-space: pre-wrap; overflow-wrap: anywhere; }
+.el-term-cell { grid-area: 1 / 1; }
+.el-cursor.is-pressed { display: inline-block; opacity: 0.4; transform: scaleY(0.7); transform-origin: bottom; }
+.el-term-cell.is-inactive, .el-term-cell .is-unrevealed { visibility: hidden; }
+
+.el-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: var(--space-8); align-items: start; }
+.el-intro-prose { display: grid; gap: var(--space-4); }
 .el-wrap-narrow { max-width: 720px; }
 .el-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-none); margin: var(--space-4) 0; }
 .el-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 14px; line-height: 22px; }
@@ -229,6 +255,10 @@ h3.el-h { margin: 0; }
 .js-b { color: var(--pink); }
 .js-p { color: var(--ink-muted); }
 .js-hl { color: var(--mint); }
+/* Indent by nesting and hang wrapped lines under their key, rather than wrapping to column 0. */
+.js-entry { display: block; margin-left: 2ch; padding-left: 2ch; text-indent: -2ch; }
+.js-entry .js-entry { margin-left: 0; }
+.js-entry .js-close { margin-left: -2ch; }
 
 /* ============ responsive ============ */
 /* Breakpoints come from design-system/tokens.css (--below-tablet / --below-phone),
@@ -241,6 +271,12 @@ h3.el-h { margin: 0; }
      and wraps the chip row instead of hiding it. Bar-note text (the "5s → ~1s"
      style annotations) stays visible here too; it's only tap-to-reveal below
      --below-phone, where the chart itself needs to scroll horizontally. */
+}
+
+@media (--below-tablet) {
+  .el-intro { grid-template-columns: minmax(0, 1fr); }
+  /* A part-year segment is too short to hold "Jun 2022" here; its shorter width still shows it. */
+  .el-gantt-year-month { display: none; }
 }
 
 @media (--below-phone) {
@@ -257,37 +293,21 @@ h3.el-h { margin: 0; }
      the whole multi-year span stays legible and nothing gets cropped out. */
   .el-gantt-scroll { overflow-x: auto; }
   .el-gantt { min-width: 480px; }
-  .el-gantt-row, .el-gantt-axis { grid-template-columns: 110px 1fr; }
+  .el-gantt-row, .el-gantt-axis { grid-template-columns: 140px 1fr; }
   .el-gantt-label { position: sticky; left: 0; background: var(--surface-raised); z-index: 2; padding: var(--space-2); }
   .el-gantt-label.child { padding-left: var(--space-2); }
 
-  /* Bar-note collapses to tap-to-reveal: the track is too narrow here to show
-     it inline without overlapping neighboring bars. .el-bar is a <button>
-     (reset above) that JS toggles .is-open on; ::after below just enlarges
-     its tap target past the bar's own thin visual height. */
-  /* Unbounded nowrap text positioned off a percentage of a 370px-ish track
-     reliably runs into the sticky label (e.g. an early bar's note starts at
-     left:calc(0% + 8px) and just keeps going left of that with no edge to stop
-     at). Opened notes become a bounded callout instead: pinned to the track's
-     own box (which the label sits outside of), wrapping instead of overflowing. */
+  /* Bar notes collapse to tap-to-reveal, because the visible track is too narrow to read
+     them in one line. A mint [+] above the bar says so, and is part of the bar's button so
+     tapping either works. The open note takes the [+]'s place as a popup: above everything
+     in the chart including the pinned label (z-index 2), and nudged sideways by --shift
+     so it stays in view. Text and a mint border lift it off the panel; flat, so no shadow. */
+  button.el-bar { cursor: pointer; }
+  .el-bar-hint { display: block; position: absolute; bottom: 100%; left: 0; padding: var(--space-1) 0; font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--mint); white-space: nowrap; }
+  .el-bar.note-left .el-bar-hint { left: auto; right: 0; }
+  .el-bar[aria-expanded="true"] .el-bar-hint { display: none; }
   .el-bar-note { display: none; }
-  .el-bar-note.is-open {
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    transform: none;
-    margin-top: var(--space-1);
-    width: auto;
-    white-space: normal;
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    padding: var(--space-1) var(--space-2);
-    font-size: 11px;
-    line-height: 15px;
-    z-index: 3;
-  }
+  .el-bar-note.is-open { display: block; box-sizing: border-box; width: max-content; max-width: calc(100vw - 48px); transform: translateX(var(--shift, 0)); white-space: normal; background: var(--surface); border: 1px solid var(--mint); padding: var(--space-1) var(--space-2); color: var(--ink); line-height: 16px; z-index: 3; }
   .el-bar::after { content: ''; position: absolute; inset: -14px 0; }
 
   .el-tiles { grid-template-columns: 1fr; }

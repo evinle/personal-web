@@ -2,6 +2,9 @@
 import Base from '../layouts/Base.astro';
 import Chip from '../components/Chip.astro';
 import QualificationIcon from '../components/QualificationIcon.astro';
+import GanttYearLines from '../components/GanttYearLines.astro';
+import Terminal from '../components/terminal/Terminal';
+import { buildTerminalCommands } from '../lib/terminalCommands';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
 
@@ -17,7 +20,7 @@ const introEntry = required(await getEntry('intro', 'index'), 'intro/index');
 const { Content: Intro } = await render(introEntry);
 
 const principles = (await getCollection('principles')).sort((a, b) => a.data.order - b.data.order);
-const stackGroups = await getCollection('stack');
+const stackGroups = (await getCollection('stack')).sort((a, b) => a.data.order - b.data.order);
 const technologies = await getCollection('technologies');
 const technologyById = new Map(technologies.map((t) => [t.id, t.data]));
 
@@ -42,15 +45,48 @@ const projectTechnologiesById = new Map(
 
 const today = new Date().toISOString().slice(0, 10);
 const projectEnds = projects.map((p) => (p.data.end ? ym(p.data.end) : ym(today)));
-const axisStart = ym(projects[0].data.start);
+// One month of margin before the first Project, matching the month after "now" at the other end.
+const firstStart = projects[0].data.start;
+const axisStart = ym(firstStart) - 1;
 const axisEnd = Math.max(ym(today), ...projectEnds) + 1;
 const span = axisEnd - axisStart;
 const pct = (s: string) => Math.max(0, Math.min(100, ((ym(s) - axisStart) / span) * 100));
 const nowPct = pct(today);
 
-const years: Array<{ year: number; left: number }> = [];
-for (let y = Math.ceil(axisStart / 12); y * 12 < axisEnd; y++) {
+const firstYear = Number(firstStart.slice(0, 4));
+const firstMonth = new Date(`${firstStart}-01T00:00:00Z`).toLocaleString('en', { month: 'short', timeZone: 'UTC' });
+
+// The first label marks where the first Project starts, so it names the month: that year is only
+// part-way through. It gets no line of its own, which would double up with the label column's divider.
+const years: Array<{ year: number; left: number; month?: string }> = [
+  { year: firstYear, left: pct(firstStart), month: firstMonth },
+];
+for (let y = firstYear + 1; y * 12 < axisEnd; y++) {
   years.push({ year: y, left: ((y * 12 - axisStart) / span) * 100 });
+}
+const yearLines = years.filter((y) => !y.month);
+
+const whoamiSummary = `${whoami.role[0].toUpperCase()}${whoami.role.slice(1)} at ${whoami.at} since ${whoami.since}, based in ${whoami.based}.`;
+
+const terminalCommands = buildTerminalCommands(
+  {
+    whoami,
+    qualifications,
+    stack: stackGroups.map((group) => ({
+      name: group.data.name,
+      technologies: group.data.technologies.flatMap((ref) => technologyById.get(ref.id)?.label.toLowerCase() ?? []),
+    })),
+  },
+  new Date(),
+);
+
+function barClass(project: { tone: string; end?: string; noteSide?: string }) {
+  const modifiers = [
+    project.tone === 'mint' && 'react',
+    !project.end && 'ongoing',
+    project.noteSide === 'left' && 'note-left',
+  ];
+  return ['el-bar', ...modifiers.filter(Boolean)].join(' ');
 }
 
 const parent = {
@@ -64,10 +100,14 @@ const parent = {
   <header style="padding:64px 0 0">
     <span class="label el-muted">ABOUT</span>
     <h1 class="display el-h" style="margin:16px 0">{whoami.name}</h1>
+    <p class="small el-text el-muted" style="margin:0 0 16px">{whoamiSummary}</p>
   </header>
 
-  <div class="body el-text" style="display:grid;grid-template-columns:1fr;gap:16px">
-    <Intro />
+  <div class="el-intro">
+    <div class="body el-text el-intro-prose">
+      <Intro />
+    </div>
+    <Terminal client:load commands={terminalCommands} />
   </div>
 
   <section class="el-section" aria-labelledby="exp">
@@ -85,9 +125,10 @@ const parent = {
     >
       <div class="el-gantt-axis">
         <div class="el-gantt-label"><span class="label">PROJECT</span></div>
-        <div class="el-gantt-track">
+        <div class="el-gantt-track el-gantt-track-years">
+          <GanttYearLines years={yearLines} />
           {years.map((y) => (
-            <span class="el-gantt-year" style={`left:${y.left}%`}>{y.year}</span>
+            <span class={`el-gantt-year${y.month ? ' el-gantt-year-first' : ''}`} style={`left:${y.left}%`}>{y.month && <span class="el-gantt-year-month">{y.month} </span>}{y.year}</span>
           ))}
           <div class="el-now" data-testid={testIds.aboutGanttNowMarker} style={`--n:${nowPct}`}><span>now</span></div>
         </div>
@@ -98,7 +139,8 @@ const parent = {
           <span class="name">{parent.name}</span>
           <span class="small el-muted">{parent.subtitle}</span>
         </div>
-        <div class="el-gantt-track">
+        <div class="el-gantt-track el-gantt-track-years">
+          <GanttYearLines years={yearLines} />
           <div class="el-bar-summary" data-end="now" style={`--s:${pct(parent.start)};--e:${nowPct}`} />
           <div class="el-now" style={`--n:${nowPct}`} />
         </div>
@@ -116,10 +158,11 @@ const parent = {
                 {projectTechnologies.map((t) => <Chip label={t.label} icon={t.icon} />)}
               </span>
             </div>
-            <div class="el-gantt-track">
+            <div class="el-gantt-track el-gantt-track-years">
+              <GanttYearLines years={yearLines} />
               <button
                 type="button"
-                class={`el-bar ${project.data.tone === 'mint' ? 'react' : ''} ${project.data.end ? '' : 'ongoing'}`}
+                class={barClass(project.data)}
                 data-end={project.data.end ? undefined : 'now'}
                 data-testid={project.data.end ? undefined : testIds.aboutGanttOngoingBar}
                 style={`--s:${s};--e:${e}`}
@@ -127,7 +170,9 @@ const parent = {
                 aria-expanded="false"
                 aria-controls={`gantt-note-${project.id}`}
                 aria-label={`${project.data.name}: show details`}
-              />
+              >
+                <span class="el-bar-hint" aria-hidden="true" data-testid={testIds.aboutGanttNoteHint}>[+]</span>
+              </button>
               {project.data.note && (
                 <span
                   id={`gantt-note-${project.id}`}
@@ -170,22 +215,54 @@ const parent = {
     })();
 
     (function enableGanttNoteToggle() {
-      document.querySelectorAll<HTMLElement>('.el-gantt').forEach((gantt) => {
-        gantt.addEventListener('click', (event) => {
-          const target = event.target;
-          if (!(target instanceof HTMLElement)) return;
+      // Matches --below-phone in design-system/tokens.css, the width notes collapse at.
+      const collapsed = matchMedia('(max-width: 599px)');
 
-          const button = target.closest<HTMLButtonElement>('.el-bar[aria-controls]');
-          if (!button) return;
+      function noteOf(bar: Element) {
+        return document.getElementById(bar.getAttribute('aria-controls') ?? '');
+      }
 
-          const noteId = button.getAttribute('aria-controls');
-          const note = noteId ? document.getElementById(noteId) : null;
-          if (!note) return;
-
-          const isOpen = note.classList.toggle('is-open');
-          button.setAttribute('aria-expanded', String(isOpen));
+      function closeAll() {
+        document.querySelectorAll('.el-bar[aria-expanded="true"]').forEach((bar) => {
+          bar.setAttribute('aria-expanded', 'false');
+          noteOf(bar)?.classList.remove('is-open');
         });
+      }
+
+      // Nudges the note rather than scrolling, so the chart doesn't move under the visitor's finger.
+      function keepInChart(note: HTMLElement) {
+        const chart = note.closest('.el-gantt-scroll')?.getBoundingClientRect();
+        if (!chart) return;
+        note.style.setProperty('--shift', '0px');
+        const box = note.getBoundingClientRect();
+        const margin = 8;
+        const overLeft = Math.max(0, chart.left + margin - box.left);
+        const overRight = Math.max(0, box.right - (chart.right - margin));
+        note.style.setProperty('--shift', `${overLeft - overRight}px`);
+        note.scrollIntoView({ block: 'nearest' });
+      }
+
+      function open(bar: Element) {
+        const note = noteOf(bar);
+        if (!note) return;
+        bar.setAttribute('aria-expanded', 'true');
+        note.classList.add('is-open');
+        keepInChart(note);
+      }
+
+      document.addEventListener('click', (event) => {
+        if (!collapsed.matches || !(event.target instanceof Element)) return;
+        const bar = event.target.closest('.el-bar[aria-controls]');
+        const wasOpen = bar?.getAttribute('aria-expanded') === 'true';
+        closeAll();
+        if (bar && !wasOpen) open(bar);
       });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeAll();
+      });
+
+      collapsed.addEventListener('change', closeAll);
     })();
   </script>
 

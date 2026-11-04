@@ -1,4 +1,4 @@
-<!-- @dsCard group="Containers" height=240 subtitle="Square terminal panel with a title bar" -->
+<!-- @dsCard group="Containers" height=320 subtitle="Square terminal panel with a title bar" -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,5 +16,14 @@
 var E = window.EvinLe, h = React.createElement, F = React.Fragment;
 ReactDOM.createRoot(document.getElementById('root')).render(h('div', {style:{maxWidth:'560px'}}, h(E.Terminal, null, h(E.Prompt, null, 'git log --oneline --grep=perf'), h('span', {className:'el-blue'}, 'a41f0c2'), ' ef core: split join, filter first\n        ', h('span', {className:'el-pink'}, '7-10s'), ' → ', h('span', {className:'el-mint'}, '~500ms'), '\n', h('span', {className:'el-muted'}, '$ '), h(E.Cursor))));
 </script>
+<div class="el-page" style="padding:0 24px 24px">
+  <div class="el-term" style="max-width:560px">
+    <div class="el-term-cmds">
+      <button type="button" class="el-term-cmd is-active">whoami<span class="el-term-cmd-bar is-paused" style="animation-duration:5s;animation-delay:-2s"></span></button>
+      <button type="button" class="el-term-cmd">stack</button>
+      <button type="button" class="el-term-cmd">qualifications</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

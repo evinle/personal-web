@@ -1,0 +1,7 @@
+order: 9
+name: cloud
+technologies:
+  - azure
+  - aws
+  - hosted-git
+  - kubernetes
