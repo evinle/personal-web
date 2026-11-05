@@ -2,6 +2,7 @@
 // config the page renders from: which trigger opens which popover, and what a Project's card says.
 
 export const projectPopoverId = (projectId: string) => `project-detail-${projectId}`;
+export const projectTechnologiesPopoverId = (projectId: string) => `project-technologies-${projectId}`;
 export const technologyPopoverId = (technologyId: string) => `technology-note-${technologyId}`;
 
 /** Anchored to a bar, a popover shrinks as the bar scrolls towards an edge. Below this it's no use to read. */
@@ -41,6 +42,11 @@ export function technologyNotes(technologies: ReadonlyArray<{ id: string; data: 
   return technologies.flatMap(({ id, data: { label, note } }) =>
     note ? [{ id: technologyPopoverId(id), title: label, note }] : [],
   );
+}
+
+/** What a Project row says on a small screen, in place of its chips. */
+export function technologyCountLabel(count: number) {
+  return `${count} ${count === 1 ? 'technology' : 'technologies'}`;
 }
 
 interface ProjectDetail {

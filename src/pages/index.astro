@@ -6,7 +6,14 @@ import QualificationIcon from '../components/QualificationIcon.astro';
 import GanttYearLines from '../components/GanttYearLines.astro';
 import Terminal from '../components/terminal/Terminal';
 import { buildGanttAxis, ym } from '../lib/ganttAxis';
-import { projectDetailSections, projectPopoverId, technologyChip, technologyNotes } from '../lib/popovers';
+import {
+  projectDetailSections,
+  projectPopoverId,
+  projectTechnologiesPopoverId,
+  technologyChip,
+  technologyCountLabel,
+  technologyNotes,
+} from '../lib/popovers';
 import { buildTerminalCommands } from '../lib/terminalCommands';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
@@ -151,6 +158,12 @@ const parent = {
                   return chip ? <Chip {...chip} /> : null;
                 })}
               </span>
+              <button
+                type="button"
+                class="el-gantt-tech-count"
+                popovertarget={projectTechnologiesPopoverId(project.id)}
+                aria-label={`${project.data.name}: ${technologyCountLabel(project.data.technologies.length)}`}
+              >{technologyCountLabel(project.data.technologies.length)}</button>
             </div>
             <div class="el-gantt-track el-gantt-track-years">
               <GanttYearLines years={yearLines} />
@@ -193,6 +206,16 @@ const parent = {
             </div>
           ))}
         </dl>
+      </Popover>
+    ))}
+    {projects.map((project) => (
+      <Popover id={projectTechnologiesPopoverId(project.id)} label={`${project.data.name} technologies`}>
+        <span class="el-chips">
+          {project.data.technologies.map((ref) => {
+            const chip = chipById.get(ref.id);
+            return chip ? <Chip {...chip} /> : null;
+          })}
+        </span>
       </Popover>
     ))}
   </section>

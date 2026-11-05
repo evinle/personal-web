@@ -213,6 +213,17 @@ button.el-stack:hover { border-color: var(--ink); color: var(--ink); }
   }
   .el-popover { inset: auto; margin: var(--space-2); max-height: calc(100% - var(--space-4)); position-area: bottom span-all; position-try-fallbacks: --el-popover-above; position-try-order: most-height; }
 }
+/* Only as wide as its content, for something short like a list of chips. */
+.el-popover.el-popover-compact { width: fit-content; max-width: min(280px, calc(100vw - 32px)); padding: var(--space-2); }
+@supports (position-area: bottom) {
+  /* Lined up with the left of its trigger, so it reads as coming from that button rather than the screen edge. */
+  @position-try --el-popover-compact-above {
+    position-area: top span-right;
+    margin-block: calc(var(--nav-height) + var(--space-2)) var(--space-2);
+    max-height: calc(100% - var(--nav-height) - var(--space-4));
+  }
+  .el-popover.el-popover-compact { margin-inline: 0 var(--space-2); position-area: bottom span-right; position-try-fallbacks: --el-popover-compact-above; }
+}
 .el-popover-section { margin: var(--space-4) 0 0; }
 .el-popover-section dt { margin: 0 0 var(--space-1); }
 .el-popover-section dd { margin: 0; }
@@ -292,7 +303,11 @@ h3.el-h { margin: 0; }
 
 .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-8)); }
 .el-gantt-label.branched { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1ch; align-content: center; padding-left: var(--space-4); }
-.el-gantt-label.branched .name, .el-gantt-label.branched .el-chips { grid-column: 2; }
+.el-gantt-label.branched .name, .el-gantt-label.branched .el-chips, .el-gantt-label.branched .el-gantt-tech-count { grid-column: 2; }
+/* Quiet, so the Project's name and bar lead the row: muted text with an underline, and muted chip icons. */
+.el-gantt-tech-count { display: none; justify-self: start; padding: 0; border: 0; background: none; font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--ink-muted); white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.el-gantt-tech-count:hover { color: var(--ink); }
+.el-gantt-label .el-stack .nf, .el-popover .el-stack .nf { color: var(--ink-muted); }
 .el-gantt-branch { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink-muted); white-space: pre; }
 .qual-sub { margin-top: var(--space-8); }
 .qual-sub:first-of-type { margin-top: var(--space-4); }
@@ -325,10 +340,13 @@ h3.el-h { margin: 0; }
   .el-gantt-row, .el-gantt-axis { grid-template-columns: 180px 1fr; }
   .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-4)); }
   .el-gantt-label.branched { padding-left: var(--space-2); }
-  /* Project name and tech chips always show — the label column just shrinks
-     and wraps the chip row instead of hiding it. Bar-note text (the "5s → ~1s"
-     style annotations) stays visible here too; it's only tap-to-reveal below
-     --below-phone, where the chart itself needs to scroll horizontally. */
+  /* A stack of chips makes each row very tall in the narrower column, so a count opens them in their own
+     popover instead. Bar notes stay visible here; they only move to the Project's popover below
+     --below-phone, where the chart itself needs to scroll sideways. */
+  .el-gantt-label .el-chips { display: none; }
+  .el-gantt-tech-count { display: block; }
+  /* Tall enough for the note or [+] above the bar when the name fits on one line. */
+  .el-gantt-row { min-height: 72px; }
 }
 
 @media (--below-tablet) {
@@ -369,7 +387,7 @@ h3.el-h { margin: 0; }
   .el-bar-note { display: none; }
   /* Nearly as wide as the screen, so centred on it rather than on the trigger. */
   @supports (position-area: bottom) {
-    .el-popover { justify-self: center; margin-inline: 0; }
+    .el-popover:not(.el-popover-compact) { justify-self: center; margin-inline: 0; }
   }
   .el-bar::after { content: ''; position: absolute; inset: -14px 0; }
 
