@@ -1,9 +1,20 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
-import type { TerminalCommand } from '../../lib/terminalCommands';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
+import type { EditorOutput, TerminalCommand, TerminalOutput } from '../../lib/terminalCommands';
 import { glyphChar } from '../../lib/glyphs';
 import { testIds } from '../../testIds';
+import EditorScreen from './EditorScreen';
 import JsonOutput from './JsonOutput';
-import { CLEAR_COMMAND, HOLD_MS, INITIAL_STATE, createTimeline, type Phase, type TimelineState } from './timeline';
+import YamlOutput from './YamlOutput';
+import {
+  commandButtonView,
+  displayedState,
+  rotationToggleLabel,
+  screenView,
+  statusMessage,
+  type ScreenView,
+} from './terminalView';
+import { HOLD_MS, INITIAL_STATE, createTimeline } from './timeline';
+import { useProseTriggers } from './useProseTriggers';
 
 const noSubscription = () => () => undefined;
 
@@ -55,69 +66,73 @@ function Cursor({ pressed }: Readonly<{ pressed: boolean }>) {
   );
 }
 
-function Output({ command, revealed }: Readonly<{ command: TerminalCommand; revealed: boolean }>) {
+function ShellOutput({ output }: Readonly<{ output: TerminalOutput }>) {
+  switch (output.kind) {
+    case 'plain':
+      return <>{output.lines.map((line) => <span key={line} className="el-term-line">{line}</span>)}</>;
+    case 'yaml':
+      return <YamlOutput data={output.data} />;
+    case 'json':
+      return <JsonOutput data={output.data} highlight={output.highlight} />;
+    case 'editor':
+      return <></>;
+  }
+}
+
+function ShellCell({ output, view }: Readonly<{ output: TerminalOutput; view: ScreenView }>) {
   return (
-    <span className={revealed ? undefined : 'is-unrevealed'}>
-      {command.headers.map((header) => (
-        <span key={header} className="el-muted">
-          {header}
-          {'\n'}
-        </span>
-      ))}
+    <span className="el-term-cell">
+      <Prompt />
+      <span data-testid={testIds.aboutTerminalTyped}>{view.typed}</span>
+      {view.caret === 'line' && <Cursor pressed={view.caretPressed} />}
       {'\n'}
-      <JsonOutput data={command.body} highlight={command.highlight} />
-      {'\n'}
+      {view.caret === 'below' && <Cursor pressed={false} />}
+      <span className={view.revealed ? undefined : 'is-unrevealed'}>
+        <ShellOutput output={output} />
+        <Prompt />
+        {view.exitTyped !== null && <span>{view.exitTyped}</span>}
+        {view.caret === 'prompt' && <Cursor pressed={view.caretPressed} />}
+      </span>
     </span>
   );
 }
 
-/** Where the caret sits in each phase, and whether the command's output has appeared. */
-const PHASE_VIEWS: Record<Phase, { caret: 'line' | 'below' | 'prompt'; revealed: boolean }> = {
-  typing: { caret: 'line', revealed: false },
-  pressing: { caret: 'line', revealed: false },
-  executing: { caret: 'below', revealed: false },
-  hold: { caret: 'prompt', revealed: true },
-  clearing: { caret: 'prompt', revealed: true },
-  pressingClear: { caret: 'prompt', revealed: true },
-  settled: { caret: 'prompt', revealed: true },
-};
-
-interface ScreenCellProps {
-  command: TerminalCommand;
-  state: TimelineState;
+function LiveEditor({ output, view }: Readonly<{ output: EditorOutput; view: ScreenView }>) {
+  if (view.exitTyped === null) return <EditorScreen output={output} caret={<Cursor pressed={false} />} />;
+  return (
+    <EditorScreen
+      output={output}
+      commandLine={
+        <>
+          <span>{view.exitTyped}</span>
+          <Cursor pressed={view.caretPressed} />
+        </>
+      }
+    />
+  );
 }
 
-function ActiveCell({ command, state }: Readonly<ScreenCellProps>) {
-  const { caret, revealed } = PHASE_VIEWS[state.phase];
-  const showsClear = state.phase === 'clearing' || state.phase === 'pressingClear';
-  const pressed = state.phase === 'pressing' || state.phase === 'pressingClear';
+function ActiveCell({ command, view }: Readonly<{ command: TerminalCommand; view: ScreenView }>) {
+  const { output } = command;
+  if (output.kind !== 'editor') return <ShellCell output={output} view={view} />;
+  if (view.screen === 'editor') return <LiveEditor output={output} view={view} />;
   return (
-    <span className="el-term-cell">
-      <Prompt />
-      <span data-testid={testIds.aboutTerminalTyped}>
-        {state.phase === 'typing' ? command.line.slice(0, state.chars) : command.line}
-      </span>
-      {caret === 'line' && <Cursor pressed={pressed} />}
-      {'\n'}
-      {caret === 'below' && <Cursor pressed={false} />}
-      <Output command={command} revealed={revealed} />
-      <span className={revealed ? undefined : 'is-unrevealed'}>
-        <Prompt />
-        {showsClear && <span>{CLEAR_COMMAND.slice(0, state.chars)}</span>}
-        {caret === 'prompt' && <Cursor pressed={pressed} />}
-      </span>
-    </span>
+    <>
+      <ShellCell output={output} view={view} />
+      <EditorScreen output={output} inactive />
+    </>
   );
 }
 
 /** Rendered in full but invisible, so the panel is always as tall as the longest output. */
 function InactiveCell({ command }: Readonly<{ command: TerminalCommand }>) {
+  if (command.output.kind === 'editor') return <EditorScreen output={command.output} inactive />;
   return (
     <span className="el-term-cell is-inactive">
       <Prompt />
       <span>{command.line}</span>
       {'\n'}
-      <Output command={command} revealed />
+      <ShellOutput output={command.output} />
       <Prompt />
     </span>
   );
@@ -154,52 +169,99 @@ function CommandButton({ name, active, chosen, counting, paused, disabled, onCli
   );
 }
 
+interface RotationToggleProps {
+  rotating: boolean;
+  disabled: boolean;
+  onPause: () => void;
+  onResume: () => void;
+}
+
+function RotationToggle({ rotating, disabled, onPause, onResume }: Readonly<RotationToggleProps>) {
+  const label = rotationToggleLabel(rotating);
+  return (
+    <button
+      type="button"
+      className="el-term-cmd el-term-toggle"
+      aria-label={label}
+      title={label}
+      disabled={disabled}
+      onClick={rotating ? onPause : onResume}
+    >
+      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor" aria-hidden="true">
+        {rotating ? <path d="M2 1h3v10H2zM7 1h3v10H7z" /> : <path d="M2 1l9 5-9 5z" />}
+      </svg>
+    </button>
+  );
+}
+
+function TitleBar() {
+  return (
+    <div className="el-term-bar">
+      <span className="label">
+        <i className="nf" aria-hidden="true">{glyphChar('cod-terminal')}</i> zsh · /home/evinle
+      </span>
+      <span className="label el-muted" aria-hidden="true">●●●</span>
+    </div>
+  );
+}
+
 export default function Terminal({ commands }: Readonly<{ commands: TerminalCommand[] }>) {
-  const [timeline] = useState(() => createTimeline(commands.map((command) => command.line)));
+  const [timeline] = useState(() => createTimeline(commands));
   const liveState = useSyncExternalStore(timeline.subscribe, timeline.getSnapshot, () => INITIAL_STATE);
   const hydrated = useSyncExternalStore(noSubscription, () => true, () => false);
   const reducedMotion = useReducedMotion();
   const panel = useRef<HTMLDivElement>(null);
   const seen = useSeenByVisitor(panel);
   const running = seen && !reducedMotion;
-  const state: TimelineState = reducedMotion ? { ...liveState, phase: 'settled' } : liveState;
+  const state = displayedState(liveState, reducedMotion);
 
   useEffect(() => {
     timeline.setRunning(running);
     return () => timeline.setRunning(false);
   }, [timeline, running]);
 
+  // A phrase can be far from the panel on a phone, where the panel would otherwise stay paused offscreen.
+  const chooseFromProse = useCallback((index: number) => {
+    timeline.takeOver(index);
+    panel.current?.scrollIntoView({ block: 'nearest' });
+  }, [timeline]);
+  useProseTriggers(commands, state.index, chooseFromProse);
+
   return (
     <div className="el-term" ref={panel}>
-      <div className="el-term-bar">
-        <span className="label">
-          <i className="nf" aria-hidden="true">{glyphChar('cod-terminal')}</i> zsh · /home/evinle
-        </span>
-        <span className="label el-muted" aria-hidden="true">●●●</span>
-      </div>
+      <TitleBar />
       <div className="el-term-cmds">
-        {commands.map((command, i) => (
-          <CommandButton
-            key={command.name}
-            name={command.name}
-            active={i === state.index}
-            chosen={i === state.index && !state.rotating}
-            counting={hydrated && i === state.index && state.phase === 'hold'}
-            paused={!running}
-            disabled={!hydrated}
-            onClick={() => timeline.takeOver(i)}
-          />
-        ))}
+        {commands.map((command, i) => {
+          const { active, chosen, counting } = commandButtonView(i, state);
+          return (
+            <CommandButton
+              key={command.name}
+              name={command.name}
+              active={active}
+              chosen={chosen}
+              counting={hydrated && counting}
+              paused={!running}
+              disabled={!hydrated}
+              onClick={() => timeline.takeOver(i)}
+            />
+          );
+        })}
+        {!reducedMotion && (
+          <RotationToggle rotating={state.rotating} disabled={!hydrated} onPause={timeline.pause} onResume={timeline.resume} />
+        )}
       </div>
       <pre className="el-term-body code el-term-screen" aria-hidden="true" data-testid={testIds.aboutTerminalScreen}>
         {commands.map((command, i) =>
           i === state.index ? (
-            <ActiveCell key={command.name} command={command} state={state} />
+            <ActiveCell key={command.name} command={command} view={screenView(command, state)} />
           ) : (
             <InactiveCell key={command.name} command={command} />
           ),
         )}
       </pre>
+      <span className="el-visually-hidden" role="status">
+        {statusMessage(commands[state.index], state.rotating)}
+      </span>
     </div>
   );
 }
