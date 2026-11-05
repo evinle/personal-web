@@ -4,9 +4,15 @@ import {
   projectDetailSections,
   shouldClosePopover,
   technologyChip,
+  technologyCountLabel,
   technologyNotes,
   technologyPopoverId,
 } from './popovers';
+
+test('a Project row counts its Technologies, in the singular for one', () => {
+  expect(technologyCountLabel(1)).toBe('1 technology');
+  expect(technologyCountLabel(5)).toBe('5 technologies');
+});
 
 const VIEW = { top: 65, bottom: 800 };
 const closes = (top: number, height: number, openedHeight = 400) =>

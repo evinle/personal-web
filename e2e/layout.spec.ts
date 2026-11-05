@@ -94,8 +94,8 @@ test('with room to show them, every note sits above its bar and inside the chart
 
 const openPopover = (page: Page) => page.locator('.el-popover:popover-open');
 
-async function expectPopoverFits(page: Page, name: string, { width, height }: { width: number; height: number }) {
-  const trigger = barOf(page, name);
+async function expectPopoverFits(page: Page, trigger: Locator, { width, height }: { width: number; height: number }) {
+  await trigger.scrollIntoViewIfNeeded();
   await trigger.dispatchEvent('click');
   const [box, triggerBox] = [await boxOf(openPopover(page)), await boxOf(trigger)];
 
@@ -115,9 +115,21 @@ test('a Project card opens beside its bar and inside the screen, even on a short
   for (const size of [{ width: 1280, height: 900 }, { width: 800, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
     await page.setViewportSize(size);
     await openHome(page);
+    for (const { name } of PROJECTS) await expectPopoverFits(page, barOf(page, name), size);
+  }
+});
+
+test('a row\'s Technologies open beside their count and inside the screen', async ({ page }) => {
+  for (const size of [{ width: 899, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
+    await page.setViewportSize(size);
+    await openHome(page);
     for (const { name } of PROJECTS) {
-      await barOf(page, name).scrollIntoViewIfNeeded();
-      await expectPopoverFits(page, name, size);
+      const count = labelOf(page, name).getByRole('button', { name: /technologies$/ });
+      await expectPopoverFits(page, count, size);
+
+      await count.dispatchEvent('click');
+      expect((await boxOf(openPopover(page))).left).toBeCloseTo((await boxOf(count)).left, 0);
+      await page.keyboard.press('Escape');
     }
   }
 });
@@ -234,7 +246,7 @@ async function expectBranchAligned(page: Page, name: string) {
   const [branch, nameBox, chips, labelBox] = await Promise.all([
     boxOf(label.getByTestId(testIds.aboutGanttBranch)),
     boxOf(nameOf(page, name)),
-    boxOf(label.locator('.el-chips')),
+    boxOf(label.locator('.el-chips, .el-gantt-tech-count').locator('visible=true')),
     boxOf(label),
   ]);
   expect(branch.left).toBeGreaterThanOrEqual(labelBox.left);
@@ -244,10 +256,27 @@ async function expectBranchAligned(page: Page, name: string) {
   expect(chips.top).toBeGreaterThanOrEqual(nameBox.bottom);
   // Each name has at most one hyphen to break at; a third line means a word was split.
   expect(nameBox.bottom - nameBox.top).toBeLessThanOrEqual(40);
-  for (const chip of await label.locator('.el-chips > *').all()) {
+  for (const chip of await label.locator('.el-chips > *, .el-gantt-tech-count').locator('visible=true').all()) {
     expect((await boxOf(chip)).right).toBeLessThanOrEqual(labelBox.right - 4);
   }
 }
+
+test('below 900px, each Project row is a compact name and count, with room for what sits above its bar', async ({ page }) => {
+  for (const width of [899, 600, 375, 320]) {
+    await openAt(page, width);
+    for (const { name, note } of PROJECTS) {
+      const label = await boxOf(labelOf(page, name));
+      expect(label.bottom - label.top).toBeLessThanOrEqual(96);
+      // One line: a count that wraps is what makes these rows tall.
+      const count = await boxOf(labelOf(page, name).getByRole('button', { name: /technologies$/ }));
+      expect(count.bottom - count.top).toBeLessThan(26);
+      expect(count.right).toBeLessThanOrEqual(label.right);
+
+      const above = width < 600 ? barOf(page, name).getByTestId(testIds.aboutGanttNoteHint) : noteOf(page, note);
+      expect((await boxOf(above)).top).toBeGreaterThanOrEqual(label.top);
+    }
+  }
+});
 
 test('branches sit left of the name, with the name and chips aligned and fitting the column', async ({ page }) => {
   for (const width of [1280, 800, 375, 320]) {

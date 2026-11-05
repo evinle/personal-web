@@ -21,6 +21,8 @@ The browser does the work through the native `popover` attribute, so it works wi
 
 **The sticky nav.** The top layer paints over the whole page, so `z-index` can't put a popover under the nav. A popover opens clear of the nav using `--nav-height`, and `src/lib/popoverEnhancements.ts` closes it if the page scrolls it into the nav or past the bottom of the screen, or squeezes it below 120px against its trigger. One that opened smaller than that, like a short Note, stays open until it shrinks. Without JavaScript it opens normally but can overlap the nav while scrolling.
 
+**Compact.** Add `el-popover-compact` for something short, such as a list of chips. It's only as wide as its content and lines up with the left of its trigger, including on phones. It has no heading, so give it an `aria-label`.
+
 **Rules**
 
 - The trigger is a real `<button>`. Don't offer one when there's nothing to show: a Technology with no Note is a plain chip.

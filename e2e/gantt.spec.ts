@@ -53,6 +53,39 @@ test.describe('without JavaScript', () => {
   });
 });
 
+test('at 900px a row lists its Technologies, with no count, and its card doesn\'t repeat them', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.goto('/');
+  await expect(experience(page).getByRole('button', { name: 'devops-support: 5 technologies' })).toBeHidden();
+  await expect(experience(page).getByTestId(testIds.aboutGantt).getByText('kubernetes', { exact: true })).toBeVisible();
+
+  await nameOf(page).click();
+
+  const popover = page.locator('.el-popover:popover-open');
+  await expect(popover.getByText(DETAIL)).toBeVisible();
+  await expect(popover.getByText('kubernetes', { exact: true })).toHaveCount(0);
+});
+
+test.describe('just below 900px', () => {
+  test.use({ viewport: { width: 899, height: 900 } });
+
+  test('a row\'s count opens only its Technologies, and its bar opens only the detail', async ({ page }) => {
+    await page.goto('/');
+    await expect(experience(page).getByTestId(testIds.aboutGantt).getByText('kubernetes', { exact: true })).toBeHidden();
+    const popover = page.locator('.el-popover:popover-open');
+
+    await page.getByRole('button', { name: 'devops-support: 5 technologies' }).click();
+    await expect(popover.getByText('kubernetes', { exact: true })).toBeInViewport({ ratio: 1 });
+    await expect(popover.getByText('PROBLEM', { exact: true })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(popover).toHaveCount(0);
+
+    await barOf(page).click();
+    await expect(popover.getByText(DETAIL)).toBeVisible();
+    await expect(popover.getByText('kubernetes', { exact: true })).toHaveCount(0);
+  });
+});
+
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 375, height: 800 } });
 

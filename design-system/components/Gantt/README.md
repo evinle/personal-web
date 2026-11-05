@@ -10,4 +10,6 @@ On the home page each bar and Project name is a button that opens the Project's 
 
 Below `--below-phone` the chart scrolls sideways and the notes above the bars are hidden, leaving them to the popover. A mint `[+]` above each bar (`el-bar-hint`, inside the button) says there's more.
 
+Below `--below-tablet` each row swaps its chips for a muted "N technologies" button (`el-gantt-tech-count`), because a stack of chips in the narrower label column made rows very tall. It opens a small popover with only the chips, separate from the Project's detail popover. Chip icons in the rows and the popover are `ink-muted`, so the Project's name and bar lead the row.
+
 The home page draws one dividing line per whole year (`el-gantt-yearline`, on `el-gantt-track-years`) at that year's true position, with the year label just to its right. Its axis starts one month before the first project, matching the month after the now line. The first label lines up with the start of that project's bar and names the month (`Jun 2022`), because that year is only part-way through. It has no dividing line, which would double up with the label column's border. Below `--below-tablet` the label drops to `2022` to fit. The now label sits left of its line so it stays inside the chart.

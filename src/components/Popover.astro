@@ -1,13 +1,15 @@
 ---
+/** With a `title` it's a card. Without one it's compact, and needs a `label` for screen readers. */
 interface Props {
   id: string;
-  title: string;
+  title?: string;
+  label?: string;
 }
 
-const { id, title } = Astro.props;
+const { id, title, label } = Astro.props;
 ---
 
-<div id={id} popover="auto" class="el-popover">
-  <h3 class="el-h3 el-h">{title}</h3>
+<div id={id} popover="auto" class:list={['el-popover', { 'el-popover-compact': !title }]} aria-label={label}>
+  {title && <h3 class="el-h3 el-h">{title}</h3>}
   <slot />
 </div>
