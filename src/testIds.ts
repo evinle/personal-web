@@ -7,6 +7,7 @@ export const testIds = {
   aboutGanttOngoingBar: 'about-gantt-ongoing-bar',
   aboutGanttNoteHint: 'about-gantt-note-hint',
   aboutGanttYearLine: 'about-gantt-year-line',
+  aboutGanttBranch: 'about-gantt-branch',
   aboutTerminalScreen: 'about-terminal-screen',
   aboutTerminalProgress: 'about-terminal-progress',
   aboutTerminalTyped: 'about-terminal-typed',

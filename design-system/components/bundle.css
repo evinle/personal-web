@@ -237,6 +237,9 @@ h3.el-h { margin: 0; }
 .el-table tr.hl td { background: var(--mint-soft); }
 
 .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-8)); }
+.el-gantt-label.branched { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1ch; align-content: center; padding-left: var(--space-4); }
+.el-gantt-label.branched .name, .el-gantt-label.branched .el-chips { grid-column: 2; }
+.el-gantt-branch { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink-muted); white-space: pre; }
 .qual-sub { margin-top: var(--space-8); }
 .qual-sub:first-of-type { margin-top: var(--space-4); }
 .qual-sub-label { display: block; margin-bottom: var(--space-2); }
@@ -267,6 +270,7 @@ h3.el-h { margin: 0; }
 @media (--below-tablet) {
   .el-gantt-row, .el-gantt-axis { grid-template-columns: 180px 1fr; }
   .el-gantt-label.child { padding-left: calc(var(--space-4) + var(--space-4)); }
+  .el-gantt-label.branched { padding-left: var(--space-2); }
   /* Project name and tech chips always show — the label column just shrinks
      and wraps the chip row instead of hiding it. Bar-note text (the "5s → ~1s"
      style annotations) stays visible here too; it's only tap-to-reveal below
@@ -297,7 +301,7 @@ h3.el-h { margin: 0; }
      the whole multi-year span stays legible and nothing gets cropped out. */
   .el-gantt-scroll { overflow-x: auto; }
   .el-gantt { min-width: 480px; }
-  .el-gantt-row, .el-gantt-axis { grid-template-columns: 140px 1fr; }
+  .el-gantt-row, .el-gantt-axis { grid-template-columns: 160px 1fr; }
   .el-gantt-label { position: sticky; left: 0; background: var(--surface-raised); z-index: 2; padding: var(--space-2); }
   .el-gantt-label.child { padding-left: var(--space-2); }
 

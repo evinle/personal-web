@@ -146,13 +146,14 @@ const parent = {
         </div>
       </div>
 
-      {projects.map((project) => {
+      {projects.map((project, i) => {
         const s = pct(project.data.start);
         const e = project.data.end ? pct(project.data.end) : nowPct;
         const projectTechnologies = projectTechnologiesById.get(project.id) ?? [];
         return (
           <div class="el-gantt-row">
-            <div class="el-gantt-label child">
+            <div class="el-gantt-label child branched">
+              <span class="el-gantt-branch" aria-hidden="true" data-testid={testIds.aboutGanttBranch}>{i === projects.length - 1 ? '└─' : '├─'}</span>
               <span class="name">{project.data.name}</span>
               <span class="el-chips">
                 {projectTechnologies.map((t) => <Chip label={t.label} icon={t.icon} />)}

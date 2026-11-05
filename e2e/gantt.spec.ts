@@ -159,6 +159,63 @@ test.describe('on a phone', () => {
   });
 });
 
+function labelOf(page: Page, name: string) {
+  return page.getByText(name, { exact: true }).locator('..');
+}
+
+test('each Project branches off the employer, and the last one closes the tree', async ({ page }) => {
+  await page.goto('/about');
+
+  for (const [i, { name }] of PROJECTS.entries()) {
+    const expected = i === PROJECTS.length - 1 ? '└─' : '├─';
+    await expect(labelOf(page, name).getByTestId(testIds.aboutGanttBranch)).toHaveText(expected);
+  }
+  await expect(page.getByTestId(testIds.aboutGanttBranch)).toHaveCount(PROJECTS.length);
+});
+
+for (const width of [1280, 800, 375, 320]) {
+  test.describe(`branches at ${width}px wide`, () => {
+    test.use({ viewport: { width, height: 900 } });
+
+    test('leave room for names to wrap at their hyphens, and for chips to fit', async ({ page }) => {
+      await page.goto('/about');
+
+      for (const { name } of PROJECTS) {
+        const label = labelOf(page, name);
+        const nameBox = await boxOf(page.getByText(name, { exact: true }));
+        // Each name has at most one hyphen break to take; a third line means a word was split.
+        expect(nameBox.bottom - nameBox.top).toBeLessThanOrEqual(40);
+
+        const labelBox = await boxOf(label);
+        for (const chip of await label.locator('.el-chips > *').all()) {
+          expect((await boxOf(chip)).right).toBeLessThanOrEqual(labelBox.right - 4);
+        }
+      }
+    });
+
+    test('sit on the name\'s first line, left of the name, with the chips under the name', async ({ page }) => {
+      await page.goto('/about');
+
+      for (const { name } of PROJECTS) {
+        const label = labelOf(page, name);
+        const [branch, nameBox, chips, labelBox] = await Promise.all([
+          boxOf(label.getByTestId(testIds.aboutGanttBranch)),
+          boxOf(page.getByText(name, { exact: true })),
+          boxOf(label.locator('.el-chips')),
+          boxOf(label),
+        ]);
+
+        expect(branch.left).toBeGreaterThanOrEqual(labelBox.left);
+        expect(branch.right).toBeLessThanOrEqual(nameBox.left);
+        expect(branch.top).toBeCloseTo(nameBox.top, 0);
+        expect(chips.left).toBeCloseTo(nameBox.left, 0);
+        expect(chips.top).toBeGreaterThanOrEqual(nameBox.bottom);
+        expect(nameBox.right).toBeLessThanOrEqual(labelBox.right);
+      }
+    });
+  });
+}
+
 const YEARS = [2022, 2023, 2024, 2025, 2026];
 
 function yearLines(page: Page, year: number) {
