@@ -1,0 +1,24 @@
+<!-- @dsCard group="Containers" height=320 subtitle="Native popover anchored to its trigger" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Popover</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="el-page" style="padding:24px">
+  <button type="button" class="el-stack" popovertarget="preview-popover">react</button>
+  <div id="preview-popover" popover="auto" class="el-popover">
+    <h3 class="el-h3 el-h">React</h3>
+    <p class="body el-text" style="margin:0">A Technology's Note, opened from its chip. Press Esc or click outside to close it.</p>
+  </div>
+</div>
+<script>
+document.getElementById('preview-popover').showPopover();
+</script>
+</body>
+</html>

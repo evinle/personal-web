@@ -1,10 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import Chip from '../components/Chip.astro';
+import Popover from '../components/Popover.astro';
 import QualificationIcon from '../components/QualificationIcon.astro';
 import GanttYearLines from '../components/GanttYearLines.astro';
 import Terminal from '../components/terminal/Terminal';
 import { buildGanttAxis, ym } from '../lib/ganttAxis';
+import { projectDetailSections, projectPopoverId, technologyChip, technologyNotes } from '../lib/popovers';
 import { buildTerminalCommands } from '../lib/terminalCommands';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
@@ -24,20 +26,9 @@ const principles = (await getCollection('principles')).sort((a, b) => a.data.ord
 const stackGroups = (await getCollection('stack')).sort((a, b) => a.data.order - b.data.order);
 const technologies = await getCollection('technologies');
 const technologyById = new Map(technologies.map((t) => [t.id, t.data]));
+const chipById = new Map(technologies.map((t) => [t.id, technologyChip(t.id, t.data)]));
 
 const projects = (await getCollection('projects')).sort((a, b) => ym(a.data.start) - ym(b.data.start));
-
-// Computed here, not inside the template's {projects.map(...)} block: astro-eslint-parser's
-// tag-aware tokenizer misreads the `<NonNullable<typeof t>>` generic as an HTML tag when it
-// appears inside a template expression, desyncing it for the rest of the file.
-const projectTechnologiesById = new Map(
-  projects.map((project) => [
-    project.id,
-    project.data.technologies
-      .map((ref) => technologyById.get(ref.id))
-      .filter((t): t is NonNullable<typeof t> => t != null),
-  ])
-);
 
 const today = new Date().toISOString().slice(0, 10);
 const { start: axisStart, span, pct, years, yearLines } = buildGanttAxis(
@@ -96,7 +87,7 @@ const parent = {
     <div class="el-gantt-scroll">
     <div
       class="el-gantt"
-      role="img"
+      role="group"
       aria-label={`Timeline of projects at ${whoami.at} from ${projects[0].data.start} to now.`}
       data-testid={testIds.aboutGantt}
       data-axis-start={axisStart}
@@ -128,14 +119,17 @@ const parent = {
       {projects.map((project, i) => {
         const s = pct(project.data.start);
         const e = project.data.end ? pct(project.data.end) : nowPct;
-        const projectTechnologies = projectTechnologiesById.get(project.id) ?? [];
+        const popoverId = projectPopoverId(project.id);
         return (
           <div class="el-gantt-row">
             <div class="el-gantt-label child branched">
               <span class="el-gantt-branch" aria-hidden="true" data-testid={testIds.aboutGanttBranch}>{i === projects.length - 1 ? '└─' : '├─'}</span>
-              <span class="name">{project.data.name}</span>
+              <button type="button" class="name el-gantt-name" popovertarget={popoverId}>{project.data.name}</button>
               <span class="el-chips">
-                {projectTechnologies.map((t) => <Chip label={t.label} icon={t.icon} />)}
+                {project.data.technologies.map((ref) => {
+                  const chip = chipById.get(ref.id);
+                  return chip ? <Chip {...chip} /> : null;
+                })}
               </span>
             </div>
             <div class="el-gantt-track el-gantt-track-years">
@@ -147,15 +141,13 @@ const parent = {
                 data-testid={project.data.end ? undefined : testIds.aboutGanttOngoingBar}
                 style={`--s:${s};--e:${e}`}
                 title={project.data.name}
-                aria-expanded="false"
-                aria-controls={`gantt-note-${project.id}`}
+                popovertarget={popoverId}
                 aria-label={`${project.data.name}: show details`}
               >
                 <span class="el-bar-hint" aria-hidden="true" data-testid={testIds.aboutGanttNoteHint}>[+]</span>
               </button>
               {project.data.note && (
                 <span
-                  id={`gantt-note-${project.id}`}
                   class={`el-bar-note ${project.data.noteSide === 'left' ? 'left' : ''}`}
                   data-end={project.data.end ? undefined : 'now'}
                   style={`--s:${s};--e:${e}`}
@@ -170,14 +162,25 @@ const parent = {
       })}
     </div>
     </div>
+    {projects.map((project) => (
+      <Popover id={projectPopoverId(project.id)} title={project.data.name}>
+        <p class="small el-text el-muted" style="margin:0">{project.data.note}</p>
+        <dl style="margin:0">
+          {projectDetailSections(project.data.detail).map(({ label, tone, text }) => (
+            <div class="el-popover-section">
+              <dt class={`label ${tone}`}>{label}</dt>
+              <dd class="body el-text">{text}</dd>
+            </div>
+          ))}
+        </dl>
+      </Popover>
+    ))}
   </section>
 
   <script>
-    import { correctGanttToLiveDate, enableGanttNoteToggle } from '../lib/ganttEnhancements';
+    import { correctGanttToLiveDate } from '../lib/ganttEnhancements';
 
     correctGanttToLiveDate(document, new Date().toISOString().slice(0, 10));
-    // Matches --below-phone in design-system/tokens.css, the width notes collapse at.
-    enableGanttNoteToggle(document, matchMedia('(max-width: 599px)'));
   </script>
 
   <section class="el-section" aria-labelledby="how">
@@ -247,14 +250,19 @@ const parent = {
           <dd style="margin:0">
             <span class="el-chips">
               {group.data.technologies.map((ref) => {
-                const tech = technologyById.get(ref.id);
-                return tech ? <Chip label={tech.label} icon={tech.icon} /> : null;
+                const chip = chipById.get(ref.id);
+                return chip ? <Chip {...chip} /> : null;
               })}
             </span>
           </dd>
         </>
       ))}
     </dl>
+    {technologyNotes(technologies).map(({ id, title, note }) => (
+      <Popover id={id} title={title}>
+        <p class="body el-text" style="margin:0">{note}</p>
+      </Popover>
+    ))}
   </section>
 
   <section class="el-section" aria-labelledby="contact">

@@ -4,7 +4,7 @@ test('a visitor can read every section of the About page, built from the real co
   await page.goto('/about');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
-  await expect(page.getByRole('region', { name: /Experience/ }).getByText('devops-support', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: /Experience/ }).getByRole('button', { name: 'devops-support', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /measure first/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bachelor of Science (Computing)' })).toBeVisible();
 

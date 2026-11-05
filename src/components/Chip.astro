@@ -4,10 +4,14 @@ import { glyphChar } from '../lib/glyphs';
 interface Props {
   label: string;
   icon?: string;
+  popoverTarget?: string;
 }
 
-const { label, icon } = Astro.props;
+const { label, icon, popoverTarget } = Astro.props;
 const char = glyphChar(icon);
+const name = label.toLowerCase();
 ---
 
-<span class="el-stack">{char && <i class="nf" aria-hidden="true">{char}</i>}{label.toLowerCase()}</span>
+{popoverTarget
+  ? <button type="button" class="el-stack" popovertarget={popoverTarget}>{char && <i class="nf" aria-hidden="true">{char}</i>}{name}</button>
+  : <span class="el-stack">{char && <i class="nf" aria-hidden="true">{char}</i>}{name}</span>}
