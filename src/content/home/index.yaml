@@ -1,4 +1,4 @@
-headline: Slow pages bother me more than they probably should.
+headline: 'Full stack: from the product to the code'
 metrics:
   - before: 7-10s
     after: ~500ms
