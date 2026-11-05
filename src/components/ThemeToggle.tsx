@@ -1,14 +1,9 @@
-type Theme = 'dark' | 'light';
-
-function currentTheme(): Theme {
-  const set = document.documentElement.dataset.theme;
-  if (set === 'light' || set === 'dark') return set;
-  return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
+import { nextTheme } from '../lib/theme';
 
 export default function ThemeToggle() {
   function toggle() {
-    const next: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    const systemIsLight = matchMedia('(prefers-color-scheme: light)').matches;
+    const next = nextTheme(document.documentElement.dataset.theme, systemIsLight);
     document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem('theme', next);
@@ -17,7 +12,7 @@ export default function ThemeToggle() {
 
   return (
     <button type="button" className="el-iconbtn" aria-label="Switch theme" title="Switch theme" onClick={toggle}>
-      <i className="nf" aria-hidden="true">{''}</i>
+      <i className="nf" aria-hidden="true">{''}</i>
     </button>
   );
 }

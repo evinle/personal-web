@@ -4,6 +4,7 @@ import Chip from '../components/Chip.astro';
 import QualificationIcon from '../components/QualificationIcon.astro';
 import GanttYearLines from '../components/GanttYearLines.astro';
 import Terminal from '../components/terminal/Terminal';
+import { buildGanttAxis, ym } from '../lib/ganttAxis';
 import { buildTerminalCommands } from '../lib/terminalCommands';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
@@ -24,11 +25,6 @@ const stackGroups = (await getCollection('stack')).sort((a, b) => a.data.order -
 const technologies = await getCollection('technologies');
 const technologyById = new Map(technologies.map((t) => [t.id, t.data]));
 
-function ym(s: string) {
-  const [y, m = '1', d = '1'] = s.split('-');
-  return Number(y) * 12 + (Number(m) - 1) + (Number(d) - 1) / 30;
-}
-
 const projects = (await getCollection('projects')).sort((a, b) => ym(a.data.start) - ym(b.data.start));
 
 // Computed here, not inside the template's {projects.map(...)} block: astro-eslint-parser's
@@ -44,41 +40,24 @@ const projectTechnologiesById = new Map(
 );
 
 const today = new Date().toISOString().slice(0, 10);
-const projectEnds = projects.map((p) => (p.data.end ? ym(p.data.end) : ym(today)));
-// One month of margin before the first Project, matching the month after "now" at the other end.
-const firstStart = projects[0].data.start;
-const axisStart = ym(firstStart) - 1;
-const axisEnd = Math.max(ym(today), ...projectEnds) + 1;
-const span = axisEnd - axisStart;
-const pct = (s: string) => Math.max(0, Math.min(100, ((ym(s) - axisStart) / span) * 100));
+const { start: axisStart, span, pct, years, yearLines } = buildGanttAxis(
+  projects[0].data.start,
+  projects.map((project) => project.data.end ?? today),
+  today,
+);
 const nowPct = pct(today);
-
-const firstYear = Number(firstStart.slice(0, 4));
-const firstMonth = new Date(`${firstStart}-01T00:00:00Z`).toLocaleString('en', { month: 'short', timeZone: 'UTC' });
-
-// The first label marks where the first Project starts, so it names the month: that year is only
-// part-way through. It gets no line of its own, which would double up with the label column's divider.
-const years: Array<{ year: number; left: number; month?: string }> = [
-  { year: firstYear, left: pct(firstStart), month: firstMonth },
-];
-for (let y = firstYear + 1; y * 12 < axisEnd; y++) {
-  years.push({ year: y, left: ((y * 12 - axisStart) / span) * 100 });
-}
-const yearLines = years.filter((y) => !y.month);
 
 const whoamiSummary = `${whoami.role[0].toUpperCase()}${whoami.role.slice(1)} at ${whoami.at} since ${whoami.since}, based in ${whoami.based}.`;
 
-const terminalCommands = buildTerminalCommands(
-  {
-    whoami,
-    qualifications,
-    stack: stackGroups.map((group) => ({
-      name: group.data.name,
-      technologies: group.data.technologies.flatMap((ref) => technologyById.get(ref.id)?.label.toLowerCase() ?? []),
-    })),
-  },
-  new Date(),
-);
+const terminalCommands = buildTerminalCommands({
+  whoami,
+  qualifications,
+  stack: stackGroups.map((group) => ({
+    name: group.data.name,
+    technologies: group.data.technologies.flatMap((ref) => technologyById.get(ref.id)?.label.toLowerCase() ?? []),
+  })),
+  principles: principles.map((principle) => principle.data.title),
+});
 
 function barClass(project: { tone: string; end?: string; noteSide?: string }) {
   const modifiers = [
@@ -194,77 +173,11 @@ const parent = {
   </section>
 
   <script>
-    (function correctGanttToLiveDate() {
-      function ym(s: string) {
-        const [y, m = '1', d = '1'] = s.split('-');
-        return Number(y) * 12 + (Number(m) - 1) + (Number(d) - 1) / 30;
-      }
+    import { correctGanttToLiveDate, enableGanttNoteToggle } from '../lib/ganttEnhancements';
 
-      document.querySelectorAll<HTMLElement>('.el-gantt[data-axis-start]').forEach((gantt) => {
-        const axisStart = Number(gantt.dataset.axisStart);
-        const span = Number(gantt.dataset.axisSpan);
-        const today = new Date().toISOString().slice(0, 10);
-        const pct = Math.max(0, Math.min(100, ((ym(today) - axisStart) / span) * 100));
-
-        gantt.querySelectorAll<HTMLElement>('.el-now').forEach((el) => {
-          el.style.setProperty('--n', String(pct));
-        });
-        gantt.querySelectorAll<HTMLElement>('[data-end="now"]').forEach((el) => {
-          el.style.setProperty('--e', String(pct));
-        });
-      });
-    })();
-
-    (function enableGanttNoteToggle() {
-      // Matches --below-phone in design-system/tokens.css, the width notes collapse at.
-      const collapsed = matchMedia('(max-width: 599px)');
-
-      function noteOf(bar: Element) {
-        return document.getElementById(bar.getAttribute('aria-controls') ?? '');
-      }
-
-      function closeAll() {
-        document.querySelectorAll('.el-bar[aria-expanded="true"]').forEach((bar) => {
-          bar.setAttribute('aria-expanded', 'false');
-          noteOf(bar)?.classList.remove('is-open');
-        });
-      }
-
-      // Nudges the note rather than scrolling, so the chart doesn't move under the visitor's finger.
-      function keepInChart(note: HTMLElement) {
-        const chart = note.closest('.el-gantt-scroll')?.getBoundingClientRect();
-        if (!chart) return;
-        note.style.setProperty('--shift', '0px');
-        const box = note.getBoundingClientRect();
-        const margin = 8;
-        const overLeft = Math.max(0, chart.left + margin - box.left);
-        const overRight = Math.max(0, box.right - (chart.right - margin));
-        note.style.setProperty('--shift', `${overLeft - overRight}px`);
-        note.scrollIntoView({ block: 'nearest' });
-      }
-
-      function open(bar: Element) {
-        const note = noteOf(bar);
-        if (!note) return;
-        bar.setAttribute('aria-expanded', 'true');
-        note.classList.add('is-open');
-        keepInChart(note);
-      }
-
-      document.addEventListener('click', (event) => {
-        if (!collapsed.matches || !(event.target instanceof Element)) return;
-        const bar = event.target.closest('.el-bar[aria-controls]');
-        const wasOpen = bar?.getAttribute('aria-expanded') === 'true';
-        closeAll();
-        if (bar && !wasOpen) open(bar);
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') closeAll();
-      });
-
-      collapsed.addEventListener('change', closeAll);
-    })();
+    correctGanttToLiveDate(document, new Date().toISOString().slice(0, 10));
+    // Matches --below-phone in design-system/tokens.css, the width notes collapse at.
+    enableGanttNoteToggle(document, matchMedia('(max-width: 599px)'));
   </script>
 
   <section class="el-section" aria-labelledby="how">
