@@ -13,6 +13,13 @@ beforeEach(() => {
   localStorage.clear();
 });
 
+test('the switch shows its icon', () => {
+  stubMatchMedia();
+  render(<ThemeToggle />);
+
+  expect(screen.getByRole('button', { name: 'Switch theme' }).querySelector('.nf')).toHaveTextContent('');
+});
+
 test('a click reads the system theme, then applies and stores the next theme', () => {
   stubMatchMedia({ '(prefers-color-scheme: light)': true });
   render(<ThemeToggle />);

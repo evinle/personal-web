@@ -12,7 +12,7 @@ export default function ThemeToggle() {
 
   return (
     <button type="button" className="el-iconbtn" aria-label="Switch theme" title="Switch theme" onClick={toggle}>
-      <i className="nf" aria-hidden="true">{''}</i>
+      <i className="nf" aria-hidden="true">{''}</i>
     </button>
   );
 }
