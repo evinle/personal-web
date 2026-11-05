@@ -189,6 +189,24 @@ button.el-bar { border: 0; padding: 0; margin: 0; font: inherit; appearance: non
 .el-bar-note { position: absolute; bottom: calc(50% + 14px); left: calc(var(--s) * 1%); font-family: var(--font-mono); font-size: 12px; white-space: nowrap; color: var(--ink-muted); }
 .el-bar-note.left { left: auto; right: calc((100 - var(--e)) * 1%); }
 .el-bar-hint { display: none; }
+button.el-bar { cursor: pointer; }
+.el-gantt-label button.el-gantt-name { justify-self: start; padding: 0; border: 0; background: none; text-align: left; color: var(--mint); cursor: pointer; }
+button.el-gantt-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* A chip that opens a Note: a control, so its border is visible, unlike a plain chip's hairline. */
+button.el-stack { background: none; border-color: var(--ink-muted); cursor: pointer; }
+button.el-stack:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Native popover: the browser handles opening, Esc, clicking outside and the top layer. Without anchor
+   positioning it stays centred, the browser's default. Never set `display` here: that would show it closed. */
+.el-popover { box-sizing: border-box; width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: var(--space-4); background: var(--surface-raised); color: var(--ink); border: 1px solid var(--mint); border-radius: var(--radius-md); }
+@supports (position-area: bottom) {
+  /* Below or above its trigger, whichever has more room; max-height then scrolls within that side. */
+  .el-popover { inset: auto; margin: var(--space-2); max-height: calc(100% - var(--space-4)); position-area: bottom span-all; position-try-fallbacks: flip-block; position-try-order: most-height; }
+}
+.el-popover-section { margin: var(--space-4) 0 0; }
+.el-popover-section dt { margin: 0 0 var(--space-1); }
+.el-popover-section dd { margin: 0; }
 .el-now { position: absolute; top: 0; bottom: 0; left: calc(var(--n) * 1%); border-left: 1px dashed var(--cream); pointer-events: none; }
 .el-now span { position: absolute; top: 6px; right: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--cream); }
 .el-gantt-legend { display: flex; gap: var(--space-4); padding: var(--space-2) var(--space-4); border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
@@ -332,17 +350,15 @@ h3.el-h { margin: 0; }
   .el-gantt-label { position: sticky; left: 0; background: var(--surface-raised); z-index: 2; padding: var(--space-2); }
   .el-gantt-label.child { padding-left: var(--space-2); }
 
-  /* Bar notes collapse to tap-to-reveal, because the visible track is too narrow to read
-     them in one line. A mint [+] above the bar says so, and is part of the bar's button so
-     tapping either works. The open note takes the [+]'s place as a popup: above everything
-     in the chart including the pinned label (z-index 2), and nudged sideways by --shift
-     so it stays in view. Text and a mint border lift it off the panel; flat, so no shadow. */
-  button.el-bar { cursor: pointer; }
+  /* The visible track is too narrow to read notes in one line, so they move to the bar's popover.
+     A mint [+] above the bar says there's more, and is part of the bar's button so tapping either works. */
   .el-bar-hint { display: block; position: absolute; bottom: 100%; left: 0; padding: var(--space-1) 0; font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--mint); white-space: nowrap; }
   .el-bar.note-left .el-bar-hint { left: auto; right: 0; }
-  .el-bar[aria-expanded="true"] .el-bar-hint { display: none; }
   .el-bar-note { display: none; }
-  .el-bar-note.is-open { display: block; box-sizing: border-box; width: max-content; max-width: calc(100vw - 48px); transform: translateX(var(--shift, 0)); white-space: normal; background: var(--surface); border: 1px solid var(--mint); padding: var(--space-1) var(--space-2); color: var(--ink); line-height: 16px; z-index: 3; }
+  /* Nearly as wide as the screen, so centred on it rather than on the trigger. */
+  @supports (position-area: bottom) {
+    .el-popover { justify-self: center; margin-inline: 0; }
+  }
   .el-bar::after { content: ''; position: absolute; inset: -14px 0; }
 
   .el-tiles { grid-template-columns: 1fr; }

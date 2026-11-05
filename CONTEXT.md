@@ -17,8 +17,12 @@ One entry in the Experience timeline: a name, start/end dates, tone, a short out
 _Avoid_: Job, role, gig
 
 **Note**:
-Short prose attached to a Technology (experience with it) or a Project (outcome), shown in a Popover on click.
+Short prose attached to a Technology (experience with it) or a Project (outcome), shown in a Popover on click. A Project's Note also sits above its bar where the screen has room.
 _Avoid_: Description, comment, blurb
+
+**Popover**:
+A card opened from a button, beside it, and closed with Escape or by clicking outside. A Technology's opens its Note; a Project's opens its Note above its detail block.
+_Avoid_: Tooltip, modal
 
 **Principle**:
 One numbered entry in "How I work" — a short name plus explanation of how Evin approaches the job.

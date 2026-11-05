@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -53,4 +54,24 @@ test('build fails when a Project references a Technology id that does not exist'
     runBuild
   );
   assert.notEqual(result.status, 0, 'expected astro build to fail on an unknown Technology reference');
+});
+
+test('a Technology with a Note gets one popover its chips open, and one without stays a plain chip', () => {
+  const angular = path.join(repoRoot, 'src/content/technologies/angular.yaml');
+  const original = readFileSync(angular, 'utf8');
+  const outDir = mkdtempSync(path.join(tmpdir(), 'chip-notes-'));
+  writeFileSync(angular, `${original}note: A fixture note.\n`);
+  try {
+    const build = spawnSync('npx', ['astro', 'build', '--outDir', outDir], { cwd: repoRoot, encoding: 'utf8' });
+    assert.equal(build.status, 0, build.stderr);
+    const html = readFileSync(path.join(outDir, 'about/index.html'), 'utf8');
+
+    assert.ok(html.match(/popovertarget="technology-note-angular"/g).length > 1, 'expected chips in the Stack and the Projects');
+    assert.equal(html.match(/id="technology-note-angular"/g).length, 1);
+    assert.match(html, /A fixture note\./);
+    assert.doesNotMatch(html, /technology-note-kubernetes/);
+  } finally {
+    writeFileSync(angular, original);
+    rmSync(outDir, { recursive: true, force: true });
+  }
 });

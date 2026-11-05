@@ -25,8 +25,10 @@ async function boxOf(locator: Locator) {
 }
 
 const barOf = (page: Page, name: string) => page.getByRole('button', { name: `${name}: show details` });
-const noteOf = (page: Page, note: string) => page.getByText(note, { exact: true });
-const labelOf = (page: Page, name: string) => page.getByText(name, { exact: true }).locator('..');
+const chartOf = (page: Page) => page.getByTestId(testIds.aboutGantt);
+const noteOf = (page: Page, note: string) => chartOf(page).getByText(note, { exact: true });
+const nameOf = (page: Page, name: string) => chartOf(page).getByText(name, { exact: true });
+const labelOf = (page: Page, name: string) => nameOf(page, name).locator('..');
 const axisOf = (page: Page) => page.getByText('PROJECT', { exact: true }).locator('../..');
 const yearLines = (page: Page, year: number) =>
   page.getByTestId(testIds.aboutGanttYearLine).and(page.locator(`[data-year="${year}"]`));
@@ -34,12 +36,6 @@ const yearLines = (page: Page, year: number) =>
 async function expectAbove(note: Locator, bar: Locator) {
   const [noteBox, barBox] = [await boxOf(note), await boxOf(bar)];
   expect(noteBox.bottom).toBeLessThanOrEqual(barBox.top);
-}
-
-function coversItsCorners(el: Element) {
-  const { left, right, top, bottom } = el.getBoundingClientRect();
-  const corners = [[left + 1, top + 1], [right - 1, top + 1], [left + 1, bottom - 1], [right - 1, bottom - 1]];
-  return corners.every(([x, y]) => document.elementFromPoint(x, y) === el);
 }
 
 test('the nav fits at every width, without the page scrolling sideways', async ({ page }) => {
@@ -69,45 +65,45 @@ test('with room to show them, every note sits above its bar and inside the chart
   }
 });
 
-async function expectOpensOnTop(page: Page, { name, note }: (typeof PROJECTS)[number], width: number) {
-  const bar = barOf(page, name);
-  await bar.getByTestId(testIds.aboutGanttNoteHint).click();
-  await expectAbove(noteOf(page, note), bar);
+const openPopover = (page: Page) => page.locator('.el-popover:popover-open');
 
-  const box = await boxOf(noteOf(page, note));
-  expect(box.left).toBeGreaterThanOrEqual(0);
-  expect(box.right).toBeLessThanOrEqual(width);
-  expect(await noteOf(page, note).evaluate(coversItsCorners)).toBe(true);
+async function expectPopoverFits(page: Page, name: string, { width, height }: { width: number; height: number }) {
+  const trigger = barOf(page, name);
+  await trigger.dispatchEvent('click');
+  const [box, triggerBox] = [await boxOf(openPopover(page)), await boxOf(trigger)];
+
+  expect(box.left).toBeGreaterThanOrEqual(8);
+  expect(box.right).toBeLessThanOrEqual(width - 8);
+  expect(box.top).toBeGreaterThanOrEqual(0);
+  expect(box.bottom).toBeLessThanOrEqual(height);
+  // Next to what opened it, not across the page: below or above, without covering it.
+  const gap = box.top >= triggerBox.bottom ? box.top - triggerBox.bottom : triggerBox.top - box.bottom;
+  expect(gap).toBeGreaterThanOrEqual(0);
+  expect(gap).toBeLessThanOrEqual(32);
 
   await page.keyboard.press('Escape');
 }
 
-test('on a phone, an open note is above its bar, in view and on top of everything', async ({ page }) => {
-  for (const width of [375, 320]) {
-    await openAt(page, width);
-    for (const project of PROJECTS) await expectOpensOnTop(page, project, width);
+test('a Project card opens beside its bar and inside the screen, even on a short phone', async ({ page }) => {
+  for (const size of [{ width: 1280, height: 900 }, { width: 800, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
+    await page.setViewportSize(size);
+    if (!page.url().endsWith('/about')) await page.goto('/about');
+    for (const { name } of PROJECTS) {
+      await barOf(page, name).scrollIntoViewIfNeeded();
+      await expectPopoverFits(page, name, size);
+    }
   }
 });
 
 test.describe('in dark mode', () => {
   test.use({ colorScheme: 'dark' });
 
-  test('on a phone, an open note covers the label column in one line, stands out, and leaves the chart still', async ({ page }) => {
+  test('a Project card stands out from the page with readable text', async ({ page }) => {
     await openAt(page, 375);
-    const { name, note } = PROJECTS[2];
-    const scroller = page.getByTestId(testIds.aboutGantt).locator('..');
-    await scroller.evaluate((el) => { el.scrollLeft = 0; });
+    await barOf(page, PROJECTS[2].name).dispatchEvent('click');
 
-    await barOf(page, name).dispatchEvent('click');
-
-    const noteEl = noteOf(page, note);
-    const [noteBox, label] = [await boxOf(noteEl), await boxOf(labelOf(page, name))];
-    expect(noteBox.left).toBeLessThan(label.right);
-    expect(noteBox.bottom - noteBox.top).toBeLessThan(32);
-    expect(await scroller.evaluate((el) => el.scrollLeft)).toBe(0);
-    await expect(noteEl).toHaveCSS('color', 'rgb(228, 240, 251)');
-    await expect(noteEl).toHaveCSS('background-color', 'rgb(27, 30, 40)');
-    await expect(noteEl).toHaveCSS('border-top-color', 'rgb(93, 228, 199)');
+    await expect(openPopover(page)).toHaveCSS('color', 'rgb(228, 240, 251)');
+    await expect(openPopover(page)).toHaveCSS('border-top-color', 'rgb(93, 228, 199)');
   });
 });
 
@@ -154,7 +150,7 @@ async function expectBranchAligned(page: Page, name: string) {
   const label = labelOf(page, name);
   const [branch, nameBox, chips, labelBox] = await Promise.all([
     boxOf(label.getByTestId(testIds.aboutGanttBranch)),
-    boxOf(page.getByText(name, { exact: true })),
+    boxOf(nameOf(page, name)),
     boxOf(label.locator('.el-chips')),
     boxOf(label),
   ]);
