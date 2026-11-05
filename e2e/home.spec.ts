@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test('a visitor can read every section of the About page, built from the real content', async ({ page }) => {
-  await page.goto('/about');
+test('a visitor can read every section of the home page, built from the real content', async ({ page }) => {
+  await page.goto('/');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
+  await expect(page.getByText('Slow pages bother me more than they probably should.')).toBeVisible();
+  await expect(page.getByRole('region', { name: /Some numbers/ }).getByText('~500ms')).toBeVisible();
   await expect(page.getByRole('region', { name: /Experience/ }).getByRole('button', { name: 'devops-support', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /measure first/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bachelor of Science (Computing)' })).toBeVisible();

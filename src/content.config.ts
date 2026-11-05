@@ -88,6 +88,20 @@ const intro = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/intro' }),
 });
 
+const home = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/home' }),
+  schema: z.object({
+    headline: z.string(),
+    metrics: z.array(
+      z.object({
+        before: z.string(),
+        after: z.string(),
+        label: z.string(),
+      })
+    ),
+  }),
+});
+
 export const collections = {
   technologies,
   stack,
@@ -97,4 +111,5 @@ export const collections = {
   principles,
   contact,
   intro,
+  home,
 };

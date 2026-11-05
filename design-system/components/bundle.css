@@ -18,7 +18,10 @@
 .el-cursor { color: var(--cream-fill); }
 
 /* nav */
-.el-nav { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+/* Stays on screen, above the Gantt's pinned labels, with an opaque ground for content to pass under. */
+.el-nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) 0; background: var(--surface); border-bottom: 1px solid var(--line); }
+/* Keeps links to a section, and anything scrolled into view, from landing under the sticky nav. */
+html { --nav-height: 65px; scroll-padding-top: calc(var(--nav-height) + var(--space-4)); }
 .el-mark { font-family: var(--font-mono); font-weight: 600; font-size: 16px; color: var(--ink); }
 .el-mark b { color: var(--ink-muted); font-weight: 400; }
 .el-nav ul { display: flex; gap: var(--space-8); list-style: none; margin: 0; padding: 0; }
@@ -197,12 +200,18 @@ button.el-gantt-name:hover { text-decoration: underline; text-underline-offset: 
 button.el-stack { background: none; border-color: var(--ink-muted); cursor: pointer; }
 button.el-stack:hover { border-color: var(--ink); color: var(--ink); }
 
-/* Native popover: the browser handles opening, Esc, clicking outside and the top layer. Without anchor
-   positioning it stays centred, the browser's default. Never set `display` here: that would show it closed. */
-.el-popover { box-sizing: border-box; width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: var(--space-4); background: var(--surface-raised); color: var(--ink); border: 1px solid var(--mint); border-radius: var(--radius-md); }
+/* Native popover: the browser handles opening, Esc, clicking outside and the top layer. Never set `display`
+   here: that would show it closed. Without anchor positioning it centres in the space below the sticky nav. */
+.el-popover { box-sizing: border-box; width: min(420px, calc(100vw - 32px)); inset: var(--nav-height) 0 0; max-height: calc(100dvh - var(--nav-height) - var(--space-4)); overflow: auto; padding: var(--space-4); background: var(--surface-raised); color: var(--ink); border: 1px solid var(--mint); border-radius: var(--radius-md); }
 @supports (position-area: bottom) {
-  /* Below or above its trigger, whichever has more room; max-height then scrolls within that side. */
-  .el-popover { inset: auto; margin: var(--space-2); max-height: calc(100% - var(--space-4)); position-area: bottom span-all; position-try-fallbacks: flip-block; position-try-order: most-height; }
+  /* Below its trigger or above, whichever has more room, opening clear of the nav. max-height then scrolls
+     within that side. popoverEnhancements.ts closes it if the page then scrolls it into the nav. */
+  @position-try --el-popover-above {
+    position-area: top span-all;
+    margin-block: calc(var(--nav-height) + var(--space-2)) var(--space-2);
+    max-height: calc(100% - var(--nav-height) - var(--space-4));
+  }
+  .el-popover { inset: auto; margin: var(--space-2); max-height: calc(100% - var(--space-4)); position-area: bottom span-all; position-try-fallbacks: --el-popover-above; position-try-order: most-height; }
 }
 .el-popover-section { margin: var(--space-4) 0 0; }
 .el-popover-section dt { margin: 0 0 var(--space-1); }
@@ -331,9 +340,12 @@ h3.el-h { margin: 0; }
 @media (--below-phone) {
   .el-wrap { padding: 0 var(--space-4); }
 
+  html { --nav-height: 82px; }
+  .el-metrics { grid-template-columns: 1fr; }
+
   /* Links take their own scrolling row, so the theme switch moves up beside the wordmark to stay
      on screen. It's positioned against the nav, so the row's overflow doesn't clip it. */
-  .el-nav { position: relative; padding: var(--space-2) 0; flex-wrap: wrap; }
+  .el-nav { padding: var(--space-2) 0; flex-wrap: wrap; }
   .el-mark { line-height: 32px; }
   .el-nav-tools { position: absolute; top: var(--space-2); right: 0; margin-left: 0; }
   .el-nav ul { order: 3; flex-basis: 100%; gap: var(--space-4); padding-top: var(--space-2); margin-top: var(--space-2); border-top: 1px solid var(--line); overflow-x: auto; }

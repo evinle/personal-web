@@ -15,13 +15,20 @@ test('a visitor moves between pages with the nav, which marks where they are', a
     await expect(page.getByRole('heading', { level: 1, name: 'Under construction' })).toBeVisible();
   }
 
-  await page.getByRole('main').getByRole('link', { name: '/about' }).click();
-  await expect(navLink(page, 'about')).toHaveAttribute('aria-current', 'page');
+  await page.getByRole('main').getByRole('link', { name: '/home' }).click();
+  await expect(navLink(page, 'home')).toHaveAttribute('aria-current', 'page');
   await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
 });
 
-test('the footer opens external links in a new tab and leaves email alone', async ({ page }) => {
+test('the old About address leads home', async ({ page }) => {
   await page.goto('/about');
+
+  await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
+  expect(new URL(page.url()).pathname).toBe('/');
+});
+
+test('the footer opens external links in a new tab and leaves email alone', async ({ page }) => {
+  await page.goto('/');
   const footer = page.getByRole('contentinfo');
 
   for (const [name, href] of [['github', 'https://github.com/evinle'], ['npm', 'https://www.npmjs.com/~evinle']]) {

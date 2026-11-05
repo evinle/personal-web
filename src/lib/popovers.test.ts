@@ -1,5 +1,45 @@
 import { expect, test } from 'vitest';
-import { projectDetailSections, technologyChip, technologyNotes, technologyPopoverId } from './popovers';
+import {
+  MIN_READABLE_HEIGHT,
+  projectDetailSections,
+  shouldClosePopover,
+  technologyChip,
+  technologyNotes,
+  technologyPopoverId,
+} from './popovers';
+
+const VIEW = { top: 65, bottom: 800 };
+const closes = (top: number, height: number, openedHeight = 400) =>
+  shouldClosePopover(VIEW, { top, bottom: top + height, height }, openedHeight);
+
+test('a popover inside the view, even right up against either edge, stays open', () => {
+  expect(closes(200, 300)).toBe(false);
+  expect(closes(65, 735)).toBe(false);
+});
+
+test('a popover past the nav closes', () => {
+  expect(closes(64, 300)).toBe(true);
+  expect(closes(-300, 200)).toBe(true);
+});
+
+test('a popover past the bottom of the screen closes', () => {
+  expect(closes(600, 201)).toBe(true);
+  expect(closes(900, 200)).toBe(true);
+});
+
+test('a popover that has shrunk too small to read closes, and one still big enough stays', () => {
+  expect(closes(200, MIN_READABLE_HEIGHT - 1)).toBe(true);
+  expect(closes(200, MIN_READABLE_HEIGHT)).toBe(false);
+});
+
+test('a popover that opened small, like a short Note, stays open until it shrinks', () => {
+  expect(closes(200, 80, 80)).toBe(false);
+  expect(closes(200, 79, 80)).toBe(true);
+});
+
+test('a closed popover has no box, so it never closes', () => {
+  expect(closes(0, 0)).toBe(false);
+});
 
 test('a Technology with a Note opens its popover', () => {
   const chip = technologyChip('react', { label: 'React', icon: 'dev-react', note: 'Five years of it.' });

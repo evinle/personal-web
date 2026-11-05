@@ -44,6 +44,37 @@ export function stubIntersectionObserver() {
   };
 }
 
+/** jsdom has no ResizeObserver or layout. Lets a test say that the observed element changed size. */
+export function stubResizeObserver() {
+  const callbacks = new Set<ResizeObserverCallback>();
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      private readonly callback: ResizeObserverCallback;
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback;
+        callbacks.add(callback);
+      }
+
+      observe() {
+        return undefined;
+      }
+
+      disconnect() {
+        callbacks.delete(this.callback);
+      }
+    },
+  );
+  return {
+    notify() {
+      callbacks.forEach((callback) => {
+        Reflect.apply(callback, undefined, [[], undefined]);
+      });
+    },
+  };
+}
+
 /** jsdom doesn't implement scrollIntoView. */
 export function stubScrollIntoView() {
   const scrollIntoView = vi.fn();

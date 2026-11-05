@@ -4,6 +4,27 @@
 export const projectPopoverId = (projectId: string) => `project-detail-${projectId}`;
 export const technologyPopoverId = (technologyId: string) => `technology-note-${technologyId}`;
 
+/** Anchored to a bar, a popover shrinks as the bar scrolls towards an edge. Below this it's no use to read. */
+export const MIN_READABLE_HEIGHT = 120;
+
+interface PopoverBox {
+  top: number;
+  bottom: number;
+  height: number;
+}
+
+/**
+ * Whether an open popover should close: it has left the space between the nav and the bottom of the screen,
+ * or shrunk too small to read. One that opened small, like a short Note, isn't shrinking and stays open.
+ * A closed popover has no box, so it never closes.
+ */
+export function shouldClosePopover(view: { top: number; bottom: number }, popover: PopoverBox, openedHeight: number) {
+  if (popover.height === 0) return false;
+  const hasLeftView = popover.top < view.top || popover.bottom > view.bottom;
+  const hasShrunkTooSmall = popover.height < MIN_READABLE_HEIGHT && popover.height < openedHeight;
+  return hasLeftView || hasShrunkTooSmall;
+}
+
 interface Technology {
   label: string;
   icon?: string;

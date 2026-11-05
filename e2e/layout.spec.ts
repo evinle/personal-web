@@ -1,4 +1,5 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
+import { MIN_READABLE_HEIGHT } from '../src/lib/popovers';
 import { testIds } from '../src/testIds';
 
 // Layout checks: what only a real browser's layout engine can answer. Behaviour and state belong in
@@ -13,9 +14,13 @@ const PROJECTS = [
 ];
 const YEARS = [2022, 2023, 2024, 2025, 2026];
 
+async function openHome(page: Page) {
+  if (page.url() === 'about:blank') await page.goto('/');
+}
+
 async function openAt(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
-  if (!page.url().endsWith('/about')) await page.goto('/about');
+  await openHome(page);
 }
 
 async function boxOf(locator: Locator) {
@@ -47,7 +52,29 @@ test('the nav fits at every width, without the page scrolling sideways', async (
     // 16px is the smallest page gutter; past it the nav row clips the button.
     expect(theme.right).toBeLessThanOrEqual(width - 16);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBe(0);
-    await expect(nav.getByRole('link', { name: /about$/ })).toBeInViewport({ ratio: 1 });
+    await expect(nav.getByRole('link', { name: /projects$/ })).toBeInViewport({ ratio: 1 });
+  }
+});
+
+test('the nav stays at the top while scrolling, on top of the chart, and every section link lands below it', async ({ page }) => {
+  for (const width of [1280, 375, 320]) {
+    await openAt(page, width);
+    const nav = page.getByRole('navigation', { name: 'Main' });
+
+    await chartOf(page).scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollBy(0, 400));
+    const box = await boxOf(nav);
+    expect(box.top).toBe(0);
+    expect(await nav.evaluate((el) => {
+      const { left, right, bottom } = el.getBoundingClientRect();
+      return el.contains(document.elementFromPoint((left + right) / 2, bottom - 1));
+    })).toBe(true);
+
+    for (const id of ['exp', 'how', 'stack', 'contact']) {
+      await page.locator(`#${id}`).evaluate((el) => { location.hash = el.id; });
+      expect((await boxOf(page.locator(`#${id}`))).top).toBeGreaterThanOrEqual((await boxOf(nav)).bottom);
+    }
+    await page.evaluate(() => window.scrollTo(0, 0));
   }
 });
 
@@ -74,7 +101,7 @@ async function expectPopoverFits(page: Page, name: string, { width, height }: { 
 
   expect(box.left).toBeGreaterThanOrEqual(8);
   expect(box.right).toBeLessThanOrEqual(width - 8);
-  expect(box.top).toBeGreaterThanOrEqual(0);
+  expect(box.top).toBeGreaterThanOrEqual((await boxOf(page.getByRole('navigation', { name: 'Main' }))).bottom);
   expect(box.bottom).toBeLessThanOrEqual(height);
   // Next to what opened it, not across the page: below or above, without covering it.
   const gap = box.top >= triggerBox.bottom ? box.top - triggerBox.bottom : triggerBox.top - box.bottom;
@@ -87,11 +114,66 @@ async function expectPopoverFits(page: Page, name: string, { width, height }: { 
 test('a Project card opens beside its bar and inside the screen, even on a short phone', async ({ page }) => {
   for (const size of [{ width: 1280, height: 900 }, { width: 800, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
     await page.setViewportSize(size);
-    if (!page.url().endsWith('/about')) await page.goto('/about');
+    await openHome(page);
     for (const { name } of PROJECTS) {
       await barOf(page, name).scrollIntoViewIfNeeded();
       await expectPopoverFits(page, name, size);
     }
+  }
+});
+
+/** Waits two frames, because the browser reports an intersection in the frame after it happens. */
+const settle = (page: Page) =>
+  page.evaluate(() => new Promise((done) => {
+    requestAnimationFrame(() => requestAnimationFrame(done));
+  }));
+
+async function openProjectCard(page: Page, name: string) {
+  await barOf(page, name).scrollIntoViewIfNeeded();
+  await barOf(page, name).dispatchEvent('click');
+  await expect(openPopover(page)).toBeVisible();
+}
+
+/** Scrolls in steps until the card closes, checking it's still in view after every step it survives. */
+async function scrollUntilClosed(page: Page, by: number, expectInView: (card: Awaited<ReturnType<typeof boxOf>>) => void) {
+  for (let step = 0; step < 40 && (await openPopover(page).count()) > 0; step++) {
+    await page.evaluate((distance) => window.scrollBy(0, distance), by);
+    await settle(page);
+    if ((await openPopover(page).count()) > 0) {
+      const card = await boxOf(openPopover(page));
+      expectInView(card);
+      expect(card.bottom - card.top).toBeGreaterThanOrEqual(MIN_READABLE_HEIGHT);
+    }
+  }
+  await expect(openPopover(page)).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
+test('an open Project card closes when it reaches the nav, and never sits over it', async ({ page }) => {
+  for (const width of [1280, 375]) {
+    await openAt(page, width);
+    await openProjectCard(page, PROJECTS[0].name);
+    const nav = await boxOf(page.getByRole('navigation', { name: 'Main' }));
+
+    await scrollUntilClosed(page, 40, (card) => {
+      expect(card.top).toBeGreaterThanOrEqual(nav.bottom);
+    });
+  }
+});
+
+test('an open Project card survives a small scroll up, and closes when it passes the bottom of the screen', async ({ page }) => {
+  for (const { width, height } of [{ width: 1280, height: 900 }, { width: 375, height: 800 }]) {
+    await page.setViewportSize({ width, height });
+    await openHome(page);
+    await openProjectCard(page, PROJECTS[4].name);
+
+    await page.evaluate(() => window.scrollBy(0, -40));
+    await settle(page);
+    await expect(openPopover(page)).toBeVisible();
+
+    await scrollUntilClosed(page, -40, (card) => {
+      expect(card.bottom).toBeLessThanOrEqual(height);
+    });
   }
 });
 
@@ -100,6 +182,7 @@ test.describe('in dark mode', () => {
 
   test('a Project card stands out from the page with readable text', async ({ page }) => {
     await openAt(page, 375);
+    await barOf(page, PROJECTS[2].name).scrollIntoViewIfNeeded();
     await barOf(page, PROJECTS[2].name).dispatchEvent('click');
 
     await expect(openPopover(page)).toHaveCSS('color', 'rgb(228, 240, 251)');

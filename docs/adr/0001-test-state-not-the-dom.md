@@ -19,4 +19,4 @@ If a test needs a DOM to check logic, move the logic out rather than adding a fi
 
 ## Consequences
 
-Fixtures in wiring tests can drift from the markup `about.astro` really renders, so each inline-script wrapper needs at least one flow test on the built page. A test passing against the production build doesn't prove the dev server is serving the same code.
+Fixtures in wiring tests can drift from the markup `index.astro` really renders, so each inline-script wrapper needs at least one flow test on the built page. A test passing against the production build doesn't prove the dev server is serving the same code.

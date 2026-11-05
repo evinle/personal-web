@@ -8,7 +8,7 @@ test.use({ colorScheme: 'light' });
 
 test('a visitor switches theme, and the choice applies before paint on the next load', async ({ page }) => {
   // networkidle so the theme switch island has hydrated before it is clicked.
-  await page.goto('/about', { waitUntil: 'networkidle' });
+  await page.goto('/', { waitUntil: 'networkidle' });
   const body = page.locator('body');
   await expect(body).toHaveCSS('background-color', LIGHT);
 

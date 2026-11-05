@@ -7,7 +7,7 @@ A square (`radius-none`) panel on `surface-raised` with a title bar (`cod-termin
 
 ## Interactive terminal
 
-The About page's terminal is a React island, `src/components/terminal/Terminal.tsx`, with the same panel plus `el-term-cmds`, `el-term-cmd` and `el-term-cmd-bar`. Nothing is fetched and the visitor can't type: it replays commands whose outputs were rendered at build time.
+The home page's terminal is a React island, `src/components/terminal/Terminal.tsx`, with the same panel plus `el-term-cmds`, `el-term-cmd` and `el-term-cmd-bar`. Nothing is fetched and the visitor can't type: it replays commands whose outputs were rendered at build time.
 
 - **Commands.** `whoami` (plain lines), `cat stack.yaml` and `cat qualifications.yaml` (`YamlOutput`), `nvim how-i-work.md` (`EditorScreen`) and `curl -s .../status.json | jq` (`JsonOutput`). Outputs come from the content collections; only the file names and the URL are invented.
 - **Intro phrases.** A markdown link in the intro whose anchor matches a command's `anchor` runs that command when clicked, stops the rotation and scrolls the panel into view if needed. The phrase turns `mint` (`is-running`) while its command is active, including during the rotation. Without JavaScript it's a plain link to that section. Commands without a phrase are still reachable from their button.
