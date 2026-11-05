@@ -1,0 +1,11 @@
+headline: Slow pages bother me more than they probably should.
+metrics:
+  - before: 7-10s
+    after: ~500ms
+    label: Shift-scheduling query in EF Core, working set from 100k+ rows to ~200
+  - before: 5s
+    after: ~1s
+    label: Page-load freeze from duplicate RxJS emissions
+  - before: 8%
+    after: 40%
+    label: Test coverage, while still shipping features

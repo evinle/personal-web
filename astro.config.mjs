@@ -21,6 +21,9 @@ const tokensPath = fileURLToPath(new URL('./design-system/tokens.css', import.me
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
+  redirects: {
+    '/about': '/',
+  },
   vite: {
     css: {
       postcss: {

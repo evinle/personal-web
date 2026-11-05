@@ -4,6 +4,10 @@ Evin Le's personal site: an Astro static frame with small interactive islands, a
 
 ## Language
 
+**Home page**:
+The site's one full page, at `/`: who Evin is, measured results, Experience, Principles, Qualifications, Stack and contact. It takes the place of a separate About page until there's writing to give home its own job; `/about` redirects here.
+_Avoid_: About page, landing page
+
 **Technology**:
 An entry in a central registry (label, icon, optional Note) representing one tool, language or platform. Referenced by id from Stack groups and Projects so a Note only needs editing once.
 _Avoid_: Skill, tool, tech
@@ -62,7 +66,7 @@ _Avoid_: Visual test, flow test
 
 ## Terminal rotation
 
-The About page terminal rotates through five commands: `whoami`, `cat stack.yaml`, `nvim how-i-work.md`, `cat qualifications.yaml` and a `curl` for status (not `projects` — Project/Experience data is shown in the Gantt timeline, not the terminal).
+The home page terminal rotates through five commands: `whoami`, `cat stack.yaml`, `nvim how-i-work.md`, `cat qualifications.yaml` and a `curl` for status (not `projects` — Project/Experience data is shown in the Gantt timeline, not the terminal).
 
 **Intro phrase**:
 A link in the intro that runs a terminal command instead of navigating, and lights up while that command is active. Without JavaScript it links to the matching section.

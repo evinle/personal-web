@@ -5,7 +5,7 @@ test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 
   test('a visitor still gets the first output, and intro phrases link to their sections', async ({ page }) => {
-    await page.goto('/about');
+    await page.goto('/');
     const screen = page.getByTestId(testIds.aboutTerminalScreen);
     await expect(screen.getByText('evinle', { exact: true })).toBeVisible();
     await expect(screen.getByText('cat stack.yaml', { exact: true })).toBeHidden();
@@ -25,7 +25,7 @@ test.describe('without JavaScript', () => {
 async function openPausedAbout(page: Page) {
   await page.clock.install({ time: new Date('2026-06-01T00:00:00Z') });
   await page.clock.pauseAt(new Date('2026-06-01T00:00:01Z'));
-  await page.goto('/about');
+  await page.goto('/');
   // The command buttons are disabled until the island has hydrated.
   await expect(page.getByRole('button', { name: 'whoami' })).toBeEnabled();
   return page.getByTestId(testIds.aboutTerminalScreen);

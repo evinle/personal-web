@@ -64,7 +64,7 @@ test('a Technology with a Note gets one popover its chips open, and one without 
   try {
     const build = spawnSync('npx', ['astro', 'build', '--outDir', outDir], { cwd: repoRoot, encoding: 'utf8' });
     assert.equal(build.status, 0, build.stderr);
-    const html = readFileSync(path.join(outDir, 'about/index.html'), 'utf8');
+    const html = readFileSync(path.join(outDir, 'index.html'), 'utf8');
 
     assert.ok(html.match(/popovertarget="technology-note-angular"/g).length > 1, 'expected chips in the Stack and the Projects');
     assert.equal(html.match(/id="technology-note-angular"/g).length, 1);
