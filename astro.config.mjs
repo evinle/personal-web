@@ -20,6 +20,9 @@ const tokensPath = fileURLToPath(new URL('./design-system/tokens.css', import.me
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://evinle.app',
+  // Matches html_handling "drop-trailing-slash" in wrangler.jsonc, so dev rejects the URLs production redirects.
+  trailingSlash: 'never',
   integrations: [react()],
   redirects: {
     '/about': '/',
