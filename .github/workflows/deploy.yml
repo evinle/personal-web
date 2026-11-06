@@ -29,6 +29,8 @@ jobs:
       - run: npm run test:e2e
       - uses: cloudflare/wrangler-action@v3
         with:
+          # The action's default (3.90) doesn't read wrangler.jsonc, so it asks for a Worker script.
+          wranglerVersion: '4.158.0'
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
