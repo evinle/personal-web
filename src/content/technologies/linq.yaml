@@ -1,1 +1,3 @@
 label: LINQ
+proficiency: Comfortable
+note: "An excellent language feature, and querying type-safe interfaces in such a concise, SQL-like way is a marvel. It can cost some performance though, and a complex enough query leaves you at the mercy of the query translator."

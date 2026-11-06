@@ -1,1 +1,3 @@
 label: Hono
+proficiency: Comfortable
+note: "A very good framework if you want a complete end-to-end type-safe TypeScript stack. In my experience it was fine, comparable with tRPC but with more batteries included."

@@ -1,1 +1,3 @@
 label: React Query
+proficiency: Strong
+note: "Honestly what makes data fetching in React bearable at all, because there's no more useEffect in every component calling fetch and handling state, errors and retries by hand. Query key invalidation on mutations is great too. No notes."

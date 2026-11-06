@@ -119,6 +119,17 @@ test('a Project card opens beside its bar and inside the screen, even on a short
   }
 });
 
+test('a Technology Note opens beside its chip and inside the screen, even on a short phone', async ({ page }) => {
+  for (const size of [{ width: 1280, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
+    await page.setViewportSize(size);
+    await openHome(page);
+    // The longest Note, in the Stack's first and last groups.
+    for (const name of ['rxjs', 'postgresql']) {
+      await expectPopoverFits(page, page.getByRole('region', { name: /Stack/ }).getByRole('button', { name, exact: true }), size);
+    }
+  }
+});
+
 test('a row\'s Technologies open beside their count and inside the screen', async ({ page }) => {
   for (const size of [{ width: 899, height: 900 }, { width: 375, height: 800 }, { width: 320, height: 568 }]) {
     await page.setViewportSize(size);
@@ -171,6 +182,36 @@ test('an open Project card closes when it reaches the nav, and never sits over i
       expect(card.top).toBeGreaterThanOrEqual(nav.bottom);
     });
   }
+});
+
+test('an open Technology Note from a Gantt row closes when it reaches the nav, and never sits over it', async ({ page }) => {
+  await openAt(page, 1280);
+  const chip = labelOf(page, PROJECTS[0].name).getByRole('button', { name: 'angular', exact: true });
+  await chip.scrollIntoViewIfNeeded();
+  await chip.dispatchEvent('click');
+  await expect(openPopover(page)).toBeVisible();
+  const nav = await boxOf(page.getByRole('navigation', { name: 'Main' }));
+
+  await scrollUntilClosed(page, 40, (card) => {
+    expect(card.top).toBeGreaterThanOrEqual(nav.bottom);
+  });
+});
+
+test('a row\'s Technologies and a Note opened from them both close when scrolled into the nav', async ({ page }) => {
+  await openAt(page, 899);
+  const count = labelOf(page, PROJECTS[0].name).getByRole('button', { name: /technologies$/ });
+  await count.scrollIntoViewIfNeeded();
+  await count.dispatchEvent('click');
+  await openPopover(page).getByRole('button', { name: 'angular', exact: true }).dispatchEvent('click');
+  await expect(openPopover(page)).toHaveCount(2);
+  const nav = await boxOf(page.getByRole('navigation', { name: 'Main' }));
+
+  for (let step = 0; step < 40 && (await openPopover(page).count()) > 0; step++) {
+    await page.evaluate(() => window.scrollBy(0, 40));
+    await settle(page);
+    for (const card of await openPopover(page).all()) expect((await boxOf(card)).top).toBeGreaterThanOrEqual(nav.bottom);
+  }
+  await expect(openPopover(page)).toHaveCount(0);
 });
 
 test('an open Project card survives a small scroll up, and closes when it passes the bottom of the screen', async ({ page }) => {

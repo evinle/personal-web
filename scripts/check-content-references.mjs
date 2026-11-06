@@ -25,7 +25,7 @@ const technologyIds = new Set(readYamlIds(path.join(repoRoot, 'src/content/techn
 function checkTechnologyReferences(collection) {
   const errors = [];
   for (const { id, data } of readYamlEntries(path.join(repoRoot, `src/content/${collection}`))) {
-    for (const technologyId of data.technologies ?? []) {
+    for (const technologyId of [...(data.technologies ?? []), ...(data.alsoUsed ?? [])]) {
       if (!technologyIds.has(technologyId)) {
         errors.push(
           `${collection}/${id}.yaml references unknown Technology id "${technologyId}"`

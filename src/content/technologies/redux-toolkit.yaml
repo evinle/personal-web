@@ -1,2 +1,4 @@
 label: Redux Toolkit
 icon: dev-redux
+proficiency: Comfortable
+note: "Very pleasant to write compared to base Redux, with a great experience out of the box. The thunks and async model are a bit complex for my liking."

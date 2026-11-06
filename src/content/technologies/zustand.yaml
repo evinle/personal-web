@@ -1,1 +1,3 @@
 label: Zustand
+proficiency: Familiar
+note: "Nice, minimal state management. I prefer it over RTK for its simplicity, because it's hard to go wrong with it."

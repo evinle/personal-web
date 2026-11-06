@@ -1,2 +1,4 @@
 label: .NET
 icon: md-dot_net
+proficiency: Comfortable
+note: "A solid, stable enterprise framework that scales well with a growing codebase, with a great package ecosystem and many integrations. It can even run serverless, which we did on one project, though cold start time could be better."

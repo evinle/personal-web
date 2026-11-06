@@ -1,1 +1,3 @@
 label: MediatR
+proficiency: Familiar
+note: "I'm not too familiar with it, but it could be very powerful if you need to attach a lot of custom behaviours to different routes. That comes at the cost of indirection and needing to handle error propagation properly."

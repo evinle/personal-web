@@ -1,2 +1,4 @@
 label: "C#"
 icon: md-language_csharp
+proficiency: Comfortable
+note: "Pretty much only used with .NET. For me it's Java but more flexible, taking in Java's lessons and what developers asked for, adding things like lambdas, better async and generics."

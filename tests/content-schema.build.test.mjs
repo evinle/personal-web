@@ -56,22 +56,44 @@ test('build fails when a Project references a Technology id that does not exist'
   assert.notEqual(result.status, 0, 'expected astro build to fail on an unknown Technology reference');
 });
 
+test('build fails when a Project lists an unknown Technology id as also used', () => {
+  const projects = path.join(repoRoot, 'src/content/projects/devops-support.yaml');
+  const original = readFileSync(projects, 'utf8');
+  writeFileSync(projects, `${original}alsoUsed:\n  - nonexistent-technology-id\n`);
+  try {
+    assert.notEqual(runBuild().status, 0, 'expected astro build to fail on an unknown Technology reference');
+  } finally {
+    writeFileSync(projects, original);
+  }
+});
+
+test('build fails on a Proficiency that is not Strong, Comfortable or Familiar', () => {
+  const solace = path.join(repoRoot, 'src/content/technologies/solace.yaml');
+  const original = readFileSync(solace, 'utf8');
+  writeFileSync(solace, `${original}proficiency: Expert\n`);
+  try {
+    assert.notEqual(runBuild().status, 0, 'expected astro build to fail on an unknown Proficiency');
+  } finally {
+    writeFileSync(solace, original);
+  }
+});
+
 test('a Technology with a Note gets one popover its chips open, and one without stays a plain chip', () => {
-  const angular = path.join(repoRoot, 'src/content/technologies/angular.yaml');
-  const original = readFileSync(angular, 'utf8');
+  const kubernetes = path.join(repoRoot, 'src/content/technologies/kubernetes.yaml');
+  const original = readFileSync(kubernetes, 'utf8');
   const outDir = mkdtempSync(path.join(tmpdir(), 'chip-notes-'));
-  writeFileSync(angular, `${original}note: A fixture note.\n`);
+  writeFileSync(kubernetes, `${original}note: A fixture note.\n`);
   try {
     const build = spawnSync('npx', ['astro', 'build', '--outDir', outDir], { cwd: repoRoot, encoding: 'utf8' });
     assert.equal(build.status, 0, build.stderr);
     const html = readFileSync(path.join(outDir, 'index.html'), 'utf8');
 
-    assert.ok(html.match(/popovertarget="technology-note-angular"/g).length > 1, 'expected chips in the Stack and the Projects');
-    assert.equal(html.match(/id="technology-note-angular"/g).length, 1);
+    assert.ok(html.match(/popovertarget="technology-note-kubernetes"/g).length > 1, 'expected chips in the Stack and the Projects');
+    assert.equal(html.match(/id="technology-note-kubernetes"/g).length, 1);
     assert.match(html, /A fixture note\./);
-    assert.doesNotMatch(html, /technology-note-kubernetes/);
+    assert.doesNotMatch(html, /technology-note-solace/);
   } finally {
-    writeFileSync(angular, original);
+    writeFileSync(kubernetes, original);
     rmSync(outDir, { recursive: true, force: true });
   }
 });

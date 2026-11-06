@@ -14,3 +14,6 @@ technologies:
   - ms-sql
   - ag-grid
   - angular-material
+alsoUsed:
+  - csharp
+  - sql

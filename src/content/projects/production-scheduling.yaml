@@ -12,3 +12,9 @@ technologies:
   - typescript
   - dotnet
   - mongodb
+alsoUsed:
+  - rxjs
+  - ag-grid
+  - csharp
+  - sql
+  - snowflake

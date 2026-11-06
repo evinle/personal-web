@@ -1,2 +1,4 @@
 label: PostgreSQL
 icon: dev-postgresql
+proficiency: Comfortable
+note: "The best overall option, with a lot of nice extensions and very good performance. Just a solid DBMS."

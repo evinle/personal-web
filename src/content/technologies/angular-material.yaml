@@ -1,1 +1,3 @@
 label: Angular Material
+proficiency: Comfortable
+note: "Polished, and awesome for quick, good-looking UIs if you stay inside the boundaries it defines. In my experience it's less customisable than MUI, and we had trouble building complex custom grid layouts with it."

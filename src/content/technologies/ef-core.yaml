@@ -1,1 +1,3 @@
 label: EF Core
+proficiency: Comfortable
+note: "A type-safe ORM that's pretty much symbiotic with .NET, with easy migrations and rollbacks. If migrations handled views and materialised views, it'd be a 10/10."

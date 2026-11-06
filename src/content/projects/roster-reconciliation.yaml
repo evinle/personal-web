@@ -13,3 +13,15 @@ technologies:
   - typescript
   - dotnet
   - postgresql
+alsoUsed:
+  - react-query
+  - redux-toolkit
+  - mui
+  - ef-core
+  - linq
+  - mediatr
+  - fluent-validation
+  - csharp
+  - sql
+  - playwright
+  - aws
