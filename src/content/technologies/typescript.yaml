@@ -1,2 +1,4 @@
 label: TypeScript
 icon: dev-typescript
+proficiency: Strong
+note: "The absolute GOAT and the saviour of JavaScript, with types that are flexible and robust but simple to define and extend, even integrating with classes. The Go rewrite also makes it meaningfully faster on large codebases, which I'm excited for."

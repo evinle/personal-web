@@ -1,2 +1,4 @@
 label: MUI
 icon: md-material_ui
+proficiency: Strong
+note: "Very customisable and hard to make look bad, so if it's sometimes a bit boring I take that as a sign of how good it is. Breaking out into custom components can get a bit tricky with typed generic props, but it's not a huge issue."

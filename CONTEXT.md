@@ -9,23 +9,35 @@ The site's one full page, at `/`: who Evin is, measured results, Experience, Pri
 _Avoid_: About page, landing page
 
 **Technology**:
-An entry in a central registry (label, icon, optional Note) representing one tool, language or platform. Referenced by id from Stack groups and Projects so a Note only needs editing once.
+An entry in a central registry representing one tool, language, platform or practice. It has a label, and can have an icon, a Proficiency and a Technology Note. Stack groups and Projects refer to it, so its details only need editing once.
 _Avoid_: Skill, tool, tech
+
+**Proficiency**:
+How well Evin knows a Technology: Strong, Comfortable or Familiar. Practices don't have one.
+_Avoid_: Skill level, rating
+
+**Project count**:
+How many Projects on the site used a Technology. Always worked out from the Projects, never written by hand. A Technology on no Project has no Project count, rather than a count of zero.
+_Avoid_: Experience, usage
 
 **Stack**:
 The set of Technology groups shown in the "Stack" section (e.g. languages, react, angular), each listing Technology ids.
 _Avoid_: Toolkit, skills list
 
 **Project**:
-One entry in the Experience timeline: a name, start/end dates, tone, a short outcome Note, a detail block (problem, fix, result), and the Technology ids used. Rendered as a Gantt bar.
+One entry in the Experience timeline: a name, start/end dates, tone, a Project Note, a detail block (problem, fix, result), and the Technologies it used. Rendered as a Gantt bar.
 _Avoid_: Job, role, gig
 
-**Note**:
-Short prose attached to a Technology (experience with it) or a Project (outcome), shown in a Popover on click. A Project's Note also sits above its bar where the screen has room.
+**Technology Note**:
+Evin's own thoughts on a Technology, in a sentence or two. A Technology with one opens a Popover from its chip; one without stays a plain chip.
+_Avoid_: Description, comment, blurb
+
+**Project Note**:
+A Project's outcome in a short line, set above its bar where the screen has room and at the top of its Popover.
 _Avoid_: Description, comment, blurb
 
 **Popover**:
-A card opened from a button, beside it, and closed with Escape or by clicking outside. A Technology's opens its Note; a Project's opens its Note above its detail block.
+A card opened from a button, beside it, and closed with Escape or by clicking outside. A Technology's shows its Proficiency, Project count and Technology Note; a Project's shows its Project Note above its detail block.
 _Avoid_: Tooltip, modal
 
 **Principle**:

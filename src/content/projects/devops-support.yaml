@@ -13,3 +13,11 @@ technologies:
   - kubernetes
   - solace
   - azure
+alsoUsed:
+  - rxjs
+  - ag-grid
+  - typescript
+  - csharp
+  - sql
+  - ms-sql
+  - snowflake

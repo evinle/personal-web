@@ -196,9 +196,10 @@ button.el-bar { cursor: pointer; }
 .el-gantt-label button.el-gantt-name { justify-self: start; padding: 0; border: 0; background: none; text-align: left; color: var(--mint); cursor: pointer; }
 button.el-gantt-name:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-/* A chip that opens a Note: a control, so its border is visible, unlike a plain chip's hairline. */
-button.el-stack { background: none; border-color: var(--ink-muted); cursor: pointer; }
-button.el-stack:hover { border-color: var(--ink); color: var(--ink); }
+/* A chip that opens a Technology Note. Underlined like the "N technologies" button, so it reads as clickable without hover. */
+button.el-stack { background: none; cursor: pointer; }
+button.el-stack .el-stack-name { text-decoration: underline; text-underline-offset: 3px; }
+button.el-stack:hover, button.el-stack:focus-visible { border-color: var(--mint); color: var(--ink); }
 
 /* Native popover: the browser handles opening, Esc, clicking outside and the top layer. Never set `display`
    here: that would show it closed. Without anchor positioning it centres in the space below the sticky nav. */

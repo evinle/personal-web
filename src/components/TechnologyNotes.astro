@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import Popover from './Popover.astro';
+import { technologyNotes } from '../lib/popovers';
+
+/** The popovers that TechnologyChips open. Include it once on any page that shows chips. */
+const projects = (await getCollection('projects')).map(({ data }) => data);
+const notes = technologyNotes(await getCollection('technologies'), projects);
+---
+
+{notes.map(({ id, title, note, proficiency, tone, projects }) => (
+  <Popover id={id} title={title}>
+    {(proficiency || projects) && (
+      <p class="small el-text el-muted" style="margin:0">
+        {proficiency && <span class={tone}>{proficiency}</span>}
+        {proficiency && projects && ' · '}
+        {projects}
+      </p>
+    )}
+    <p class="body el-text" style="margin:var(--space-4) 0 0">{note}</p>
+  </Popover>
+))}

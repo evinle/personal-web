@@ -1,5 +1,6 @@
 import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { PROFICIENCIES } from './lib/popovers';
 
 const technologies = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/technologies' }),
@@ -7,6 +8,7 @@ const technologies = defineCollection({
     label: z.string(),
     icon: z.string().optional(),
     note: z.string().optional(),
+    proficiency: z.enum(PROFICIENCIES).optional(),
   }),
 });
 
@@ -34,6 +36,8 @@ const projects = defineCollection({
       result: z.string(),
     }),
     technologies: z.array(reference('technologies')),
+    // Counted towards a Technology's Project count, but not shown as a chip on the row.
+    alsoUsed: z.array(reference('technologies')).optional(),
   }),
 });
 

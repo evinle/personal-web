@@ -26,10 +26,16 @@ export function shouldClosePopover(view: { top: number; bottom: number }, popove
   return hasLeftView || hasShrunkTooSmall;
 }
 
+// From most to least, coloured from mint down to muted.
+const PROFICIENCY_TONES = { Strong: 'el-mint', Comfortable: 'el-blue', Familiar: 'el-muted' } as const;
+export const PROFICIENCIES = ['Strong', 'Comfortable', 'Familiar'] as const;
+type Proficiency = (typeof PROFICIENCIES)[number];
+
 interface Technology {
   label: string;
   icon?: string;
   note?: string;
+  proficiency?: Proficiency;
 }
 
 /** A Technology's chip. Only a Technology with a Note opens a popover, so nobody is offered an empty one. */
@@ -37,16 +43,39 @@ export function technologyChip(id: string, { label, icon, note }: Technology) {
   return { label, icon, popoverTarget: note ? technologyPopoverId(id) : undefined };
 }
 
-/** One popover per Technology with a Note, however many chips open it, so a Note is only rendered once. */
-export function technologyNotes(technologies: ReadonlyArray<{ id: string; data: Technology }>) {
-  return technologies.flatMap(({ id, data: { label, note } }) =>
-    note ? [{ id: technologyPopoverId(id), title: label, note }] : [],
-  );
+/**
+ * One popover per Technology with a Note, however many chips open it, so a Note is only rendered once.
+ * A Technology on no Project has no count, rather than "0 projects".
+ */
+export function technologyNotes(technologies: ReadonlyArray<{ id: string; data: Technology }>, projects: readonly CountedProject[]) {
+  return technologies.flatMap(({ id, data: { label, note, proficiency } }) => {
+    if (!note) return [];
+    const count = projectCount(id, projects);
+    return [{
+      id: technologyPopoverId(id),
+      title: label,
+      note,
+      proficiency,
+      tone: proficiency && PROFICIENCY_TONES[proficiency],
+      projects: count ? countLabel(count, 'project', 'projects') : undefined,
+    }];
+  });
 }
 
-/** What a Project row says on a small screen, in place of its chips. */
-export function technologyCountLabel(count: number) {
-  return `${count} ${count === 1 ? 'technology' : 'technologies'}`;
+interface CountedProject {
+  technologies: ReadonlyArray<{ id: string }>;
+  alsoUsed?: ReadonlyArray<{ id: string }>;
+}
+
+/** How many Projects used a Technology, whether it's on their chips or only listed as also used. */
+export function projectCount(technologyId: string, projects: readonly CountedProject[]) {
+  return projects.filter(({ technologies, alsoUsed = [] }) =>
+    [...technologies, ...alsoUsed].some(({ id }) => id === technologyId),
+  ).length;
+}
+
+export function countLabel(count: number, singular: string, plural: string) {
+  return `${count} ${count === 1 ? singular : plural}`;
 }
 
 interface ProjectDetail {

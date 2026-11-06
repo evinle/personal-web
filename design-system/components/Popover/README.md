@@ -1,6 +1,6 @@
 # Popover
 
-A card that opens next to the button that triggered it, for a Technology's Note or a Project's detail. Styled like Card, with a `mint` border to lift it off the panels below; flat, so no shadow.
+A card that opens next to the button that triggered it, for a Technology Note or a Project's detail. Styled like Card, with a `mint` border to lift it off the panels below; flat, so no shadow.
 
 ```html
 <button type="button" popovertarget="note-react">react</button>

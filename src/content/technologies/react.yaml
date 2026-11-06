@@ -1,2 +1,4 @@
 label: React
 icon: dev-react
+proficiency: Strong
+note: "The classic, with JSX and hooks that feel so good to write, and I think a good baseline for other frameworks. More can go wrong than in Angular though, like setting variables during render, missing dependencies and infinite renders, and it scales worse."

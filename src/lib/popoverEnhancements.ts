@@ -33,12 +33,14 @@ export function closePopoversOutOfView(doc: Document) {
     };
   }
 
-  let stopWatching: () => void = () => undefined;
+  // One per open popover, since a Technology Note can open from inside another popover and both stay open.
+  const stopWatching = new Map<Element, () => void>();
 
   // Capture, because toggle doesn't bubble. A closing popover has no box and needs no watching.
   doc.addEventListener('toggle', ({ target }) => {
-    if (!(target instanceof Element) || target.getBoundingClientRect().height === 0) return;
-    stopWatching();
-    stopWatching = watch(target);
+    if (!(target instanceof Element)) return;
+    stopWatching.get(target)?.();
+    stopWatching.delete(target);
+    if (target.getBoundingClientRect().height > 0) stopWatching.set(target, watch(target));
   }, true);
 }

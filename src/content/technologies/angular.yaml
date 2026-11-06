@@ -1,2 +1,4 @@
 label: Angular
 icon: dev-angular
+proficiency: Strong
+note: "A stable, enterprise-ready framework that scales well because of its dependency injection, TypeScript-first approach, scaffolding and modules. I also like where it's heading, with signals bringing cleaner syntax and better performance as it moves away from zone.js."

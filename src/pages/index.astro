@@ -1,19 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import Chip from '../components/Chip.astro';
 import Popover from '../components/Popover.astro';
+import TechnologyChips from '../components/TechnologyChips.astro';
+import TechnologyNotes from '../components/TechnologyNotes.astro';
 import QualificationIcon from '../components/QualificationIcon.astro';
 import GanttYearLines from '../components/GanttYearLines.astro';
 import Terminal from '../components/terminal/Terminal';
 import { buildGanttAxis, ym } from '../lib/ganttAxis';
-import {
-  projectDetailSections,
-  projectPopoverId,
-  projectTechnologiesPopoverId,
-  technologyChip,
-  technologyCountLabel,
-  technologyNotes,
-} from '../lib/popovers';
+import { countLabel, projectDetailSections, projectPopoverId, projectTechnologiesPopoverId } from '../lib/popovers';
 import { buildTerminalCommands } from '../lib/terminalCommands';
 import { getCollection, getEntry, render } from 'astro:content';
 import { testIds } from '../testIds';
@@ -34,7 +28,6 @@ const principles = (await getCollection('principles')).sort((a, b) => a.data.ord
 const stackGroups = (await getCollection('stack')).sort((a, b) => a.data.order - b.data.order);
 const technologies = await getCollection('technologies');
 const technologyById = new Map(technologies.map((t) => [t.id, t.data]));
-const chipById = new Map(technologies.map((t) => [t.id, technologyChip(t.id, t.data)]));
 
 const projects = (await getCollection('projects')).sort((a, b) => ym(a.data.start) - ym(b.data.start));
 
@@ -152,18 +145,13 @@ const parent = {
             <div class="el-gantt-label child branched">
               <span class="el-gantt-branch" aria-hidden="true" data-testid={testIds.aboutGanttBranch}>{i === projects.length - 1 ? '└─' : '├─'}</span>
               <button type="button" class="name el-gantt-name" popovertarget={popoverId}>{project.data.name}</button>
-              <span class="el-chips">
-                {project.data.technologies.map((ref) => {
-                  const chip = chipById.get(ref.id);
-                  return chip ? <Chip {...chip} /> : null;
-                })}
-              </span>
+              <TechnologyChips technologies={project.data.technologies} />
               <button
                 type="button"
                 class="el-gantt-tech-count"
                 popovertarget={projectTechnologiesPopoverId(project.id)}
-                aria-label={`${project.data.name}: ${technologyCountLabel(project.data.technologies.length)}`}
-              >{technologyCountLabel(project.data.technologies.length)}</button>
+                aria-label={`${project.data.name}: ${countLabel(project.data.technologies.length, 'technology', 'technologies')}`}
+              >{countLabel(project.data.technologies.length, 'technology', 'technologies')}</button>
             </div>
             <div class="el-gantt-track el-gantt-track-years">
               <GanttYearLines years={yearLines} />
@@ -210,12 +198,7 @@ const parent = {
     ))}
     {projects.map((project) => (
       <Popover id={projectTechnologiesPopoverId(project.id)} label={`${project.data.name} technologies`}>
-        <span class="el-chips">
-          {project.data.technologies.map((ref) => {
-            const chip = chipById.get(ref.id);
-            return chip ? <Chip {...chip} /> : null;
-          })}
-        </span>
+        <TechnologyChips technologies={project.data.technologies} />
       </Popover>
     ))}
   </section>
@@ -292,22 +275,11 @@ const parent = {
       {stackGroups.map((group) => (
         <>
           <dt style="color:var(--ink-muted)">{group.data.name}</dt>
-          <dd style="margin:0">
-            <span class="el-chips">
-              {group.data.technologies.map((ref) => {
-                const chip = chipById.get(ref.id);
-                return chip ? <Chip {...chip} /> : null;
-              })}
-            </span>
-          </dd>
+          <dd style="margin:0"><TechnologyChips technologies={group.data.technologies} /></dd>
         </>
       ))}
     </dl>
-    {technologyNotes(technologies).map(({ id, title, note }) => (
-      <Popover id={id} title={title}>
-        <p class="body el-text" style="margin:0">{note}</p>
-      </Popover>
-    ))}
+    <TechnologyNotes />
   </section>
 
   <section class="el-section" aria-labelledby="contact">

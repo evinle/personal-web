@@ -13,3 +13,9 @@ technologies:
   - typescript
   - hono
   - prisma
+alsoUsed:
+  - react-query
+  - zustand
+  - mui
+  - zod
+  - bryntum

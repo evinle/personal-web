@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import Chip from './Chip.astro';
+import { technologyChip } from '../lib/popovers';
+
+/** A list of Technology chips. Chips with a Technology Note open it, so a page using this also needs TechnologyNotes. */
+interface Props {
+  technologies: ReadonlyArray<{ id: string }>;
+}
+
+const byId = new Map((await getCollection('technologies')).map((t) => [t.id, technologyChip(t.id, t.data)]));
+const chips = Astro.props.technologies.flatMap(({ id }) => byId.get(id) ?? []);
+---
+
+<span class="el-chips">{chips.map((chip) => <Chip {...chip} />)}</span>

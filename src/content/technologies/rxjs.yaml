@@ -1,2 +1,4 @@
 label: RxJS
 icon: dev-rxjs
+proficiency: Strong
+note: "Really powerful for combining and processing streams of input, and I sometimes prefer it to React because it expresses reactive dependencies without a big dependency array polluting the code. It can get a little verbose though, and if you use too many operators your memory usage can explode."

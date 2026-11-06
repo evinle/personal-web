@@ -1,17 +1,18 @@
 import { expect, test } from 'vitest';
 import {
   MIN_READABLE_HEIGHT,
+  projectCount,
   projectDetailSections,
   shouldClosePopover,
+  countLabel,
   technologyChip,
-  technologyCountLabel,
   technologyNotes,
   technologyPopoverId,
 } from './popovers';
 
-test('a Project row counts its Technologies, in the singular for one', () => {
-  expect(technologyCountLabel(1)).toBe('1 technology');
-  expect(technologyCountLabel(5)).toBe('5 technologies');
+test('counts read in the singular for one', () => {
+  expect(countLabel(1, 'technology', 'technologies')).toBe('1 technology');
+  expect(countLabel(5, 'technology', 'technologies')).toBe('5 technologies');
 });
 
 const VIEW = { top: 65, bottom: 800 };
@@ -59,12 +60,50 @@ test('a Technology without a Note, or with an empty one, is a plain chip', () =>
 });
 
 test('only Technologies with a Note get a popover, with the id their chips point at', () => {
-  const notes = technologyNotes([
-    { id: 'react', data: { label: 'React', note: 'Five years of it.' } },
-    { id: 'zod', data: { label: 'Zod' } },
-  ]);
+  const notes = technologyNotes(
+    [
+      { id: 'react', data: { label: 'React', note: 'Five years of it.' } },
+      { id: 'zod', data: { label: 'Zod' } },
+    ],
+    [],
+  );
 
-  expect(notes).toEqual([{ id: technologyChip('react', { label: 'React', note: 'x' }).popoverTarget, title: 'React', note: 'Five years of it.' }]);
+  expect(notes.map(({ id, title, note }) => ({ id, title, note }))).toEqual([
+    { id: technologyChip('react', { label: 'React', note: 'x' }).popoverTarget, title: 'React', note: 'Five years of it.' },
+  ]);
+});
+
+test('a Technology popover gives its Proficiency a colour from mint down to muted, and its Project count', () => {
+  const projects = [{ technologies: [{ id: 'react' }, { id: 'zod' }] }, { technologies: [{ id: 'react' }] }];
+  const notes = technologyNotes(
+    [
+      { id: 'react', data: { label: 'React', note: 'n', proficiency: 'Strong' } },
+      { id: 'zod', data: { label: 'Zod', note: 'n', proficiency: 'Comfortable' } },
+      { id: 'mediatr', data: { label: 'MediatR', note: 'n', proficiency: 'Familiar' } },
+      { id: 'adrs', data: { label: 'ADRs', note: 'n' } },
+    ],
+    projects,
+  );
+
+  expect(notes.map(({ proficiency, tone, projects }) => [proficiency, tone, projects])).toEqual([
+    ['Strong', 'el-mint', '2 projects'],
+    ['Comfortable', 'el-blue', '1 project'],
+    ['Familiar', 'el-muted', undefined],
+    [undefined, undefined, undefined],
+  ]);
+});
+
+test('a Project count includes Projects that only list a Technology as also used, and counts each Project once', () => {
+  const projects = [
+    { technologies: [{ id: 'react' }], alsoUsed: [{ id: 'zod' }] },
+    { technologies: [{ id: 'angular' }], alsoUsed: [{ id: 'zod' }, { id: 'zod' }] },
+    { technologies: [{ id: 'zod' }], alsoUsed: [{ id: 'zod' }] },
+    { technologies: [{ id: 'react' }] },
+  ];
+
+  expect(projectCount('zod', projects)).toBe(3);
+  expect(projectCount('react', projects)).toBe(2);
+  expect(projectCount('rxjs', projects)).toBe(0);
 });
 
 test('a Project card reads problem, fix, result, going from pink to mint', () => {

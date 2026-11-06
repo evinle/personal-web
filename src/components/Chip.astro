@@ -13,5 +13,5 @@ const name = label.toLowerCase();
 ---
 
 {popoverTarget
-  ? <button type="button" class="el-stack" popovertarget={popoverTarget}>{char && <i class="nf" aria-hidden="true">{char}</i>}{name}</button>
+  ? <button type="button" class="el-stack" popovertarget={popoverTarget}>{char && <i class="nf" aria-hidden="true">{char}</i>}<span class="el-stack-name">{name}</span></button>
   : <span class="el-stack">{char && <i class="nf" aria-hidden="true">{char}</i>}{name}</span>}
