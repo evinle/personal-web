@@ -27,6 +27,11 @@ test('a Project ending after today sets the end of the axis instead', () => {
   expect(pct('2027-04')).toBe(100);
 });
 
+test('an axis that ends right on a new year gets no line on its edge', () => {
+  const { years } = buildGanttAxis('2022-06', ['2026-12'], TODAY);
+  expect(years.map(({ year }) => year)).not.toContain(2027);
+});
+
 test('positions hold to the ends of the axis', () => {
   expect(axis.pct('2000-01')).toBe(0);
   expect(axis.pct('2099-01-01')).toBe(100);

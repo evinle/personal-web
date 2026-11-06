@@ -27,11 +27,12 @@ function setUp() {
   const placeCard = (top: number, height = 200) =>
     vi.spyOn(card, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, height));
   closePopoversOutOfView(doc);
+  const toggle = () => card.dispatchEvent(new Event('toggle'));
   const open = () => {
     placeCard(200);
-    card.dispatchEvent(new Event('toggle'));
+    toggle();
   };
-  return { hidePopover, open, placeCard, position, size };
+  return { hidePopover, open, placeCard, position, size, toggle };
 }
 
 test('an opened popover stays open while it fits, and closes once it reaches the nav', () => {
@@ -64,6 +65,19 @@ test('an opened popover closes once it shrinks too small to read, seen by the si
   size.notify();
 
   expect(hidePopover).toHaveBeenCalledOnce();
+});
+
+test('closing a popover stops its watcher, so it can reopen smaller without the old size closing it', () => {
+  const { hidePopover, open, placeCard, size, toggle } = setUp();
+  open();
+  placeCard(0, 0);
+  toggle();
+
+  placeCard(200, 80);
+  toggle();
+  size.notify();
+
+  expect(hidePopover).not.toHaveBeenCalled();
 });
 
 test('nothing closes before a popover has opened', () => {

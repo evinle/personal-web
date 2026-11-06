@@ -10,7 +10,8 @@ import {
   technologyPopoverId,
 } from './popovers';
 
-test('counts read in the singular for one', () => {
+test('counts read in the singular for one, and only for one', () => {
+  expect(countLabel(0, 'technology', 'technologies')).toBe('0 technologies');
   expect(countLabel(1, 'technology', 'technologies')).toBe('1 technology');
   expect(countLabel(5, 'technology', 'technologies')).toBe('5 technologies');
 });
@@ -114,6 +115,5 @@ test('a Project card reads problem, fix, result, going from pink to mint', () =>
     ['FIX', 'cache'],
     ['RESULT', 'fast'],
   ]);
-  expect(sections[0].tone).toBe('el-pink');
-  expect(sections[1].tone).toBe('el-mint');
+  expect(sections.map(({ tone }) => tone)).toEqual(['el-pink', 'el-mint', 'el-mint']);
 });

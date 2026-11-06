@@ -109,7 +109,8 @@ test('pausing while a command is typing lets it finish, then settles', () => {
 });
 
 test('resuming gives a settled output a full hold, then moves on', () => {
-  const state = resumed(paused(INITIAL_STATE));
+  // Paused near the end of its hold, so a resume that kept the leftover time would move on early.
+  const state = resumed(paused(after(HOLD_MS - 200)));
   expect(state).toMatchObject({ phase: 'hold', rotating: true, index: 0 });
 
   expect(after(HOLD_MS - 100, state).phase).toBe('hold');
