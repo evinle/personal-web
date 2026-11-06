@@ -21,6 +21,7 @@ export default async function globalSetup() {
     // no server was running
   }
   execSync('npm run build', { stdio: 'inherit' });
-  execSync('npx astro preview --port 4322', { stdio: 'inherit' });
+  // Astro only backgrounds on its own when it detects an AI agent; in CI it would block here forever.
+  execSync('npx astro preview --port 4322 --background', { stdio: 'inherit' });
   await waitForServer('http://localhost:4322/', 15_000);
 }
