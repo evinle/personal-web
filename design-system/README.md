@@ -17,7 +17,7 @@ The design system for Evin Le's personal site. The subject is going deep: taking
 - `pink` is the problem: the "before" value, hot paths, wasted work in diagrams.
 - `blue` is structure: tags, keywords in code, commit hashes, depth labels.
 - `cream` is signal, used small: the `## ` heading marks, numbers in code, the nav's `> ` marker.
-- Every accent comes in two forms. The plain token (`mint`) is for TEXT and is darkened in light to stay above 4.5:1. The `-fill` token (`mint-fill`) is for SHAPES and backgrounds: the primary button, cover bands, diagram marbles, the cursor. In light the fills are Poimandres White's full neons; text on any fill is `on-fill`.
+- Every accent comes in two forms. The plain token (`mint`) is for TEXT and is darkened in light to stay above 4.5:1. The `-fill` token (`mint-fill`) is for SHAPES: cover bands, Gantt bars, diagram marbles, the cursor. The primary button is the exception: a solid `mint` background with `on-mint` text (dark ink in dark, white in light), so its label stays crisp. In light the fills are Poimandres White's neons toned down a step (`#1fbf9c`, `#e5528f`, `#2aa5d8`, `#efc25a`) so they read as colour, not glare.
 - Before → after always reads `pink` → `mint`.
 - `line` is for hairlines only; it is below 3:1, so controls get a visible border from `ink-muted`.
 
@@ -81,7 +81,7 @@ No logo yet: the wordmark is `/home/evinle` set in the mono face at 600, the `/h
 Build pages from the components in `components/bundle.js` (`window.EvinLe`, React 18), never by hand-writing the markup. Each component renders the `el-*` classes in `components/bundle.css`, which reads every value from the tokens.
 
 - **Foundations:** `Glyph` (Nerd Font icon by name), `Heading` (1 display, 2 with `## `, 3 mono title), `Text` (body, lead, small), `Label` (uppercase mono metadata), `Link` (inline, mono, external), `InlineCode`.
-- **Actions:** `Button` (primary mint fill once per view, otherwise outline), `IconButton` (glyph + required label).
+- **Actions:** `Button` (primary is solid `mint` with `on-mint` text, once per view; otherwise outline), `IconButton` (glyph + required label).
 - **Tags:** `Chip` (glyph looked up from the label, text only when there is none), `ChipList`.
 - **Containers:** `Card` (raised, `radius-md`), `Section` (heading + action), `Terminal` (square, with `Prompt` and `Cursor`; the command always sits in the body, never the title bar), `JsonOutput` (jq-coloured JSON for terminal output), `KeyValueList`, `Page`.
 - **Content:** `CodeBlock` (numbered, one highlighted line), `Metric` / `Metrics` (before in `pink` → after in `mint`), `Investigation` (symptom → cause → fix → result, each step deeper), `PostList`, `Aside` ("one layer down"), `DecisionRecord`, `Table`.
