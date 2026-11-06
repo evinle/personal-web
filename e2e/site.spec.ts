@@ -27,6 +27,15 @@ test('the old About address leads home', async ({ page }) => {
   expect(new URL(page.url()).pathname).toBe('/');
 });
 
+test('an unknown address shows the not-found page and leads home', async ({ page }) => {
+  const response = await page.goto('/no-such-page');
+
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('heading', { level: 1, name: 'Not found' })).toBeVisible();
+  await page.getByRole('main').getByRole('link', { name: '/home' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
+});
+
 test('the footer opens external links in a new tab and leaves email alone', async ({ page }) => {
   await page.goto('/');
   const footer = page.getByRole('contentinfo');

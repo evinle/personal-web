@@ -1,0 +1,12 @@
+// Static assets only: no Worker script, Cloudflare serves dist/ directly.
+{
+  "name": "personal-web",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Serves projects/index.html at /projects and redirects /projects/ there, matching the site's links.
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [{ "pattern": "evinle.app", "custom_domain": true }]
+}
