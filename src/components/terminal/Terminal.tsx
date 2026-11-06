@@ -60,7 +60,7 @@ function Prompt() {
 
 function Cursor({ pressed }: Readonly<{ pressed: boolean }>) {
   return (
-    <span className={`el-cursor${pressed ? ' is-pressed' : ''}`} data-testid={testIds.aboutTerminalCursor}>
+    <span className={`el-cursor${pressed ? ' is-pressed' : ''}`} data-testid={testIds.terminalCursor}>
       ▍
     </span>
   );
@@ -83,7 +83,7 @@ function ShellCell({ output, view }: Readonly<{ output: TerminalOutput; view: Sc
   return (
     <span className="el-term-cell">
       <Prompt />
-      <span data-testid={testIds.aboutTerminalTyped}>{view.typed}</span>
+      <span data-testid={testIds.terminalTyped}>{view.typed}</span>
       {view.caret === 'line' && <Cursor pressed={view.caretPressed} />}
       {'\n'}
       {view.caret === 'below' && <Cursor pressed={false} />}
@@ -162,7 +162,7 @@ function CommandButton({ name, active, chosen, counting, paused, disabled, onCli
         <span
           className={`el-term-cmd-bar${paused ? ' is-paused' : ''}`}
           style={{ animationDuration: `${HOLD_MS}ms` }}
-          data-testid={testIds.aboutTerminalProgress}
+          data-testid={testIds.terminalProgress}
         />
       )}
     </button>
@@ -250,7 +250,7 @@ export default function Terminal({ commands }: Readonly<{ commands: TerminalComm
           <RotationToggle rotating={state.rotating} disabled={!hydrated} onPause={timeline.pause} onResume={timeline.resume} />
         )}
       </div>
-      <pre className="el-term-body code el-term-screen" aria-hidden="true" data-testid={testIds.aboutTerminalScreen}>
+      <pre className="el-term-body code el-term-screen" aria-hidden="true" data-testid={testIds.terminalScreen}>
         {commands.map((command, i) =>
           i === state.index ? (
             <ActiveCell key={command.name} command={command} view={screenView(command, state)} />

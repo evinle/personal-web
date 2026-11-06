@@ -45,7 +45,7 @@ html { --nav-height: 65px; scroll-padding-top: calc(var(--nav-height) + var(--sp
 /* buttons */
 .el-btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 14px; line-height: 22px; border: 1px solid var(--ink-muted); color: var(--ink); background: transparent; cursor: pointer; }
 .el-page a.el-btn { color: var(--ink); text-decoration: none; }
-.el-page a.el-btn-primary, .el-btn-primary { background: var(--mint-fill); border-color: var(--mint-fill); color: var(--on-fill); }
+.el-page a.el-btn-primary, .el-btn-primary { background: var(--mint); border-color: var(--mint); color: var(--on-mint); }
 
 /* terminal panel */
 .el-term { background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-none); overflow: hidden; box-sizing: border-box; max-width: 480px; width: 100%; }
@@ -178,7 +178,7 @@ code.el-inline { font-family: var(--font-mono); font-size: .9em; background: var
 .el-gantt-axis .el-gantt-yearline { border-left-color: var(--ink-muted); }
 .el-gantt-year { position: absolute; bottom: 10px; transform: translateX(6px); white-space: nowrap; font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
 .el-gantt-year-first { transform: none; }
-.el-bar { position: absolute; top: 50%; height: 20px; transform: translateY(-50%); left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--blue-fill); border-radius: var(--radius-none); }
+.el-bar { position: absolute; top: calc(50% - 10px); height: 20px; left: calc(var(--s) * 1%); width: calc((var(--e) - var(--s)) * 1%); background: var(--blue-fill); border-radius: var(--radius-none); }
 button.el-bar { border: 0; padding: 0; margin: 0; font: inherit; appearance: none; background: var(--blue-fill); }
 .el-bar.react { background: var(--mint-fill); }
 .el-bar.ongoing { background: linear-gradient(to right, var(--blue-fill) 85%, transparent); }

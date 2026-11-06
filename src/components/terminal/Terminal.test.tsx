@@ -41,26 +41,26 @@ function run(ms: number) {
 }
 
 function activeCell() {
-  const cell = screen.getByTestId(testIds.aboutTerminalScreen).querySelector('.el-term-cell:not(.is-inactive)');
+  const cell = screen.getByTestId(testIds.terminalScreen).querySelector('.el-term-cell:not(.is-inactive)');
   if (!cell) throw new Error('No active cell');
   return cell;
 }
 
 const button = (name: string) => screen.getByRole('button', { name });
-const progressBar = () => screen.getByTestId(testIds.aboutTerminalProgress);
+const progressBar = () => screen.getByTestId(testIds.terminalProgress);
 const phrase = (name: string) => screen.getByRole('link', { name });
 
 test('it shows the first command, with its screen hidden from assistive technology and its buttons not', () => {
   mount();
   expect(activeCell()).toHaveTextContent('$ whoami');
   expect(activeCell()).toHaveTextContent('evinle');
-  expect(screen.getByTestId(testIds.aboutTerminalScreen)).toHaveAttribute('aria-hidden', 'true');
+  expect(screen.getByTestId(testIds.terminalScreen)).toHaveAttribute('aria-hidden', 'true');
   expect(button('stack')).toBeEnabled();
 });
 
 test('every other output stays in the screen, invisible, so the panel is as tall as the longest', () => {
   mount();
-  const hidden = screen.getByTestId(testIds.aboutTerminalScreen).querySelectorAll('.el-term-cell.is-inactive');
+  const hidden = screen.getByTestId(testIds.terminalScreen).querySelectorAll('.el-term-cell.is-inactive');
   expect(hidden).toHaveLength(commands.length - 1);
 });
 
@@ -79,7 +79,7 @@ test('clicking a command runs it, and the timeline re-renders the screen', () =>
 
 test('the editor renders in place of the shell, with a hidden copy holding its height until then', () => {
   mount();
-  const hiddenEditor = () => screen.getByTestId(testIds.aboutTerminalScreen).querySelector('.el-vim.is-inactive');
+  const hiddenEditor = () => screen.getByTestId(testIds.terminalScreen).querySelector('.el-vim.is-inactive');
 
   fireEvent.click(button('how-i-work'));
   expect(hiddenEditor()).toBeInTheDocument();
@@ -100,7 +100,7 @@ test('the toggle is an icon that pauses, then resumes, the timeline', () => {
 
   fireEvent.click(button('Pause rotation'));
   expect(iconOf(button('Resume rotation'))).not.toBe(pauseIcon);
-  expect(screen.queryByTestId(testIds.aboutTerminalProgress)).not.toBeInTheDocument();
+  expect(screen.queryByTestId(testIds.terminalProgress)).not.toBeInTheDocument();
 
   fireEvent.click(button('Resume rotation'));
   expect(progressBar()).toBeInTheDocument();
@@ -156,7 +156,7 @@ test('with reduced motion nothing runs, no toggle is offered, and a click swaps 
 
   run(60_000);
   expect(activeCell()).toHaveTextContent('evinle');
-  expect(screen.queryByTestId(testIds.aboutTerminalProgress)).not.toBeInTheDocument();
+  expect(screen.queryByTestId(testIds.terminalProgress)).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /rotation/ })).not.toBeInTheDocument();
 
   fireEvent.click(button('stack'));

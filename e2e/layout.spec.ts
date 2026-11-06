@@ -30,13 +30,13 @@ async function boxOf(locator: Locator) {
 }
 
 const barOf = (page: Page, name: string) => page.getByRole('button', { name: `${name}: show details` });
-const chartOf = (page: Page) => page.getByTestId(testIds.aboutGantt);
+const chartOf = (page: Page) => page.getByTestId(testIds.gantt);
 const noteOf = (page: Page, note: string) => chartOf(page).getByText(note, { exact: true });
 const nameOf = (page: Page, name: string) => chartOf(page).getByText(name, { exact: true });
 const labelOf = (page: Page, name: string) => nameOf(page, name).locator('..');
 const axisOf = (page: Page) => page.getByText('PROJECT', { exact: true }).locator('../..');
 const yearLines = (page: Page, year: number) =>
-  page.getByTestId(testIds.aboutGanttYearLine).and(page.locator(`[data-year="${year}"]`));
+  page.getByTestId(testIds.ganttYearLine).and(page.locator(`[data-year="${year}"]`));
 
 async function expectAbove(note: Locator, bar: Locator) {
   const [noteBox, barBox] = [await boxOf(note), await boxOf(bar)];
@@ -88,7 +88,7 @@ test('with room to show them, every note sits above its bar and inside the chart
       expect(noteBox.left).toBeGreaterThanOrEqual(track.left);
       expect(noteBox.right).toBeLessThanOrEqual(track.right);
     }
-    await expect(page.getByTestId(testIds.aboutGanttNoteHint).first()).toBeHidden();
+    await expect(page.getByTestId(testIds.ganttNoteHint).first()).toBeHidden();
   }
 });
 
@@ -270,7 +270,7 @@ test('the first label lines up with the first bar, and drops the month on a phon
 test('no axis label overlaps the next, and "now" sits left of its line', async ({ page }) => {
   for (const width of [1280, 900, 899, 600, 599, 375, 320]) {
     await openAt(page, width);
-    const marker = page.getByTestId(testIds.aboutGanttNowMarker);
+    const marker = page.getByTestId(testIds.ganttNowMarker);
     const now = marker.getByText('now', { exact: true });
 
     const boxes = [];
@@ -285,7 +285,7 @@ test('no axis label overlaps the next, and "now" sits left of its line', async (
 async function expectBranchAligned(page: Page, name: string) {
   const label = labelOf(page, name);
   const [branch, nameBox, chips, labelBox] = await Promise.all([
-    boxOf(label.getByTestId(testIds.aboutGanttBranch)),
+    boxOf(label.getByTestId(testIds.ganttBranch)),
     boxOf(nameOf(page, name)),
     boxOf(label.locator('.el-chips, .el-gantt-tech-count').locator('visible=true')),
     boxOf(label),
@@ -313,7 +313,7 @@ test('below 900px, each Project row is a compact name and count, with room for w
       expect(count.bottom - count.top).toBeLessThan(26);
       expect(count.right).toBeLessThanOrEqual(label.right);
 
-      const above = width < 600 ? barOf(page, name).getByTestId(testIds.aboutGanttNoteHint) : noteOf(page, note);
+      const above = width < 600 ? barOf(page, name).getByTestId(testIds.ganttNoteHint) : noteOf(page, note);
       expect((await boxOf(above)).top).toBeGreaterThanOrEqual(label.top);
     }
   }
@@ -324,7 +324,7 @@ test('branches sit left of the name, with the name and chips aligned and fitting
     await openAt(page, width);
     for (const { name } of PROJECTS) await expectBranchAligned(page, name);
   }
-  const branches = await page.getByTestId(testIds.aboutGanttBranch).allTextContents();
+  const branches = await page.getByTestId(testIds.ganttBranch).allTextContents();
   expect(branches).toEqual(['├─', '├─', '├─', '├─', '└─']);
 });
 
@@ -344,7 +344,7 @@ test('YAML lists wrap between items and stay inside their column', async ({ page
   // An item only splits when it's longer than a whole line of values, which narrows with the screen.
   for (const [width, longestWhole] of [[1280, 40], [800, 40], [375, 25], [320, 20]]) {
     await openAt(page, width);
-    const lists = page.getByTestId(testIds.aboutTerminalScreen).locator('.yml-flow');
+    const lists = page.getByTestId(testIds.terminalScreen).locator('.yml-flow');
     const layout = await lists.evaluateAll(measureYamlLists, longestWhole);
 
     expect(layout.splitItems).toEqual([]);
@@ -365,7 +365,7 @@ test.describe('with reduced motion', () => {
   test('the panel keeps its height through every output, with the editor filling it', async ({ page }) => {
     await openAt(page, 1280);
     await expect(page.getByRole('button', { name: 'whoami' })).toBeEnabled();
-    const screen = page.getByTestId(testIds.aboutTerminalScreen);
+    const screen = page.getByTestId(testIds.terminalScreen);
     const height = (await screen.boundingBox())?.height;
 
     for (const name of ['stack', 'how-i-work', 'qualifications', 'status', 'whoami']) {

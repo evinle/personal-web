@@ -5,6 +5,8 @@ test('a visitor can read every section of the home page, built from the real con
 
   await expect(page.getByRole('heading', { level: 1, name: 'Evin Le' })).toBeVisible();
   await expect(page.getByText('Full stack: from the product to the code')).toBeVisible();
+  // The terminal is hidden from screen readers, so what it says has to be on the page as well.
+  await expect(page.getByText('Full stack engineer at Visagio Australia since 2022, based in Brisbane, QLD.', { exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: /Some numbers/ }).getByText('~500ms')).toBeVisible();
   await expect(page.getByRole('region', { name: /Experience/ }).getByRole('button', { name: 'devops-support', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /measure first/ })).toBeVisible();

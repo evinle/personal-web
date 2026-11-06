@@ -8,6 +8,7 @@ function navLink(page: Page, label: string) {
 test('a visitor moves between pages with the nav, which marks where they are', async ({ page }) => {
   await page.goto('/');
   await expect(navLink(page, 'home')).toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: /github/i })).toHaveCount(0);
 
   for (const label of ['writing', 'projects']) {
     await navLink(page, label).click();

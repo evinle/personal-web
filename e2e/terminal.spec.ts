@@ -6,7 +6,7 @@ test.describe('without JavaScript', () => {
 
   test('a visitor still gets the first output, and intro phrases link to their sections', async ({ page }) => {
     await page.goto('/');
-    const screen = page.getByTestId(testIds.aboutTerminalScreen);
+    const screen = page.getByTestId(testIds.terminalScreen);
     await expect(screen.getByText('evinle', { exact: true })).toBeVisible();
     await expect(screen.getByText('cat stack.yaml', { exact: true })).toBeHidden();
 
@@ -28,7 +28,7 @@ async function openPausedAbout(page: Page) {
   await page.goto('/');
   // The command buttons are disabled until the island has hydrated.
   await expect(page.getByRole('button', { name: 'whoami' })).toBeEnabled();
-  return page.getByTestId(testIds.aboutTerminalScreen);
+  return page.getByTestId(testIds.terminalScreen);
 }
 
 test('a visitor clicks an intro phrase, and the terminal runs its command without leaving the intro', async ({ page }) => {
