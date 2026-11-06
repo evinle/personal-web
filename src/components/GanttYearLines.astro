@@ -9,5 +9,5 @@ const { years } = Astro.props;
 ---
 
 {years.map((y) => (
-  <span class="el-gantt-yearline" style={`left:${y.left}%`} data-year={y.year} data-testid={testIds.aboutGanttYearLine} />
+  <span class="el-gantt-yearline" style={`left:${y.left}%`} data-year={y.year} data-testid={testIds.ganttYearLine} />
 ))}

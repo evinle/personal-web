@@ -109,7 +109,7 @@ const parent = {
       class="el-gantt"
       role="group"
       aria-label={`Timeline of projects at ${whoami.at} from ${projects[0].data.start} to now.`}
-      data-testid={testIds.aboutGantt}
+      data-testid={testIds.gantt}
       data-axis-start={axisStart}
       data-axis-span={span}
     >
@@ -120,7 +120,7 @@ const parent = {
           {years.map((y) => (
             <span class={`el-gantt-year${y.month ? ' el-gantt-year-first' : ''}`} style={`left:${y.left}%`}>{y.month && <span class="el-gantt-year-month">{y.month} </span>}{y.year}</span>
           ))}
-          <div class="el-now" data-testid={testIds.aboutGanttNowMarker} style={`--n:${nowPct}`}><span>now</span></div>
+          <div class="el-now" data-testid={testIds.ganttNowMarker} style={`--n:${nowPct}`}><span>now</span></div>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ const parent = {
         return (
           <div class="el-gantt-row">
             <div class="el-gantt-label child branched">
-              <span class="el-gantt-branch" aria-hidden="true" data-testid={testIds.aboutGanttBranch}>{i === projects.length - 1 ? '└─' : '├─'}</span>
+              <span class="el-gantt-branch" aria-hidden="true" data-testid={testIds.ganttBranch}>{i === projects.length - 1 ? '└─' : '├─'}</span>
               <button type="button" class="name el-gantt-name" popovertarget={popoverId}>{project.data.name}</button>
               <TechnologyChips technologies={project.data.technologies} />
               <button
@@ -159,13 +159,13 @@ const parent = {
                 type="button"
                 class={barClass(project.data)}
                 data-end={project.data.end ? undefined : 'now'}
-                data-testid={project.data.end ? undefined : testIds.aboutGanttOngoingBar}
+                data-testid={project.data.end ? undefined : testIds.ganttOngoingBar}
                 style={`--s:${s};--e:${e}`}
                 title={project.data.name}
                 popovertarget={popoverId}
                 aria-label={`${project.data.name}: show details`}
               >
-                <span class="el-bar-hint" aria-hidden="true" data-testid={testIds.aboutGanttNoteHint}>[+]</span>
+                <span class="el-bar-hint" aria-hidden="true" data-testid={testIds.ganttNoteHint}>[+]</span>
               </button>
               {project.data.note && (
                 <span

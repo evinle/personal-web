@@ -57,7 +57,7 @@ test('at 900px a row lists its Technologies, with no count, and its card doesn\'
   await page.setViewportSize({ width: 900, height: 900 });
   await page.goto('/');
   await expect(experience(page).getByRole('button', { name: 'devops-support: 5 technologies' })).toBeHidden();
-  await expect(experience(page).getByTestId(testIds.aboutGantt).getByText('kubernetes', { exact: true })).toBeVisible();
+  await expect(experience(page).getByTestId(testIds.gantt).getByText('kubernetes', { exact: true })).toBeVisible();
 
   await nameOf(page).click();
 
@@ -71,7 +71,7 @@ test.describe('just below 900px', () => {
 
   test('a row\'s count opens only its Technologies, and its bar opens only the detail', async ({ page }) => {
     await page.goto('/');
-    await expect(experience(page).getByTestId(testIds.aboutGantt).getByText('kubernetes', { exact: true })).toBeHidden();
+    await expect(experience(page).getByTestId(testIds.gantt).getByText('kubernetes', { exact: true })).toBeHidden();
     const popover = page.locator('.el-popover:popover-open');
 
     await page.getByRole('button', { name: 'devops-support: 5 technologies' }).click();
@@ -95,7 +95,7 @@ test.describe('on a phone', () => {
     const popover = page.locator('.el-popover:popover-open');
     await expect(popover).toHaveCount(0);
 
-    await bar.getByTestId(testIds.aboutGanttNoteHint).click();
+    await bar.getByTestId(testIds.ganttNoteHint).click();
 
     await expect(popover.getByText('JSON Schema UI, 30+ model types', { exact: true })).toBeVisible();
     await expect(popover.getByText('PROBLEM', { exact: true })).toBeVisible();
@@ -107,6 +107,6 @@ test('the now line and ongoing bars follow the visitor\'s date, not the build da
   await page.goto('/');
 
   const propertyOf = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name).trim();
-  expect(await page.getByTestId(testIds.aboutGanttNowMarker).evaluate(propertyOf, '--n')).toBe('100');
-  expect(await page.getByTestId(testIds.aboutGanttOngoingBar).evaluate(propertyOf, '--e')).toBe('100');
+  expect(await page.getByTestId(testIds.ganttNowMarker).evaluate(propertyOf, '--n')).toBe('100');
+  expect(await page.getByTestId(testIds.ganttOngoingBar).evaluate(propertyOf, '--e')).toBe('100');
 });

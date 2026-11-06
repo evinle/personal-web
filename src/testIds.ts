@@ -2,14 +2,14 @@
 // e2e tests locate elements via page.getByTestId(testIds.x) instead of
 // hardcoding the string in both places.
 export const testIds = {
-  aboutGantt: 'about-gantt',
-  aboutGanttNowMarker: 'about-gantt-now-marker',
-  aboutGanttOngoingBar: 'about-gantt-ongoing-bar',
-  aboutGanttNoteHint: 'about-gantt-note-hint',
-  aboutGanttYearLine: 'about-gantt-year-line',
-  aboutGanttBranch: 'about-gantt-branch',
-  aboutTerminalScreen: 'about-terminal-screen',
-  aboutTerminalProgress: 'about-terminal-progress',
-  aboutTerminalTyped: 'about-terminal-typed',
-  aboutTerminalCursor: 'about-terminal-cursor',
+  gantt: 'gantt',
+  ganttNowMarker: 'gantt-now-marker',
+  ganttOngoingBar: 'gantt-ongoing-bar',
+  ganttNoteHint: 'gantt-note-hint',
+  ganttYearLine: 'gantt-year-line',
+  ganttBranch: 'gantt-branch',
+  terminalScreen: 'terminal-screen',
+  terminalProgress: 'terminal-progress',
+  terminalTyped: 'terminal-typed',
+  terminalCursor: 'terminal-cursor',
 } as const;
