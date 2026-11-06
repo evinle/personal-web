@@ -28,11 +28,10 @@ function setUp() {
     vi.spyOn(card, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, height));
   closePopoversOutOfView(doc);
   const toggle = () => card.dispatchEvent(new Event('toggle'));
-  const open = () => {
+  return { hidePopover, open: () => {
     placeCard(200);
     toggle();
-  };
-  return { hidePopover, open, placeCard, position, size, toggle };
+  }, placeCard, position, size, toggle };
 }
 
 test('an opened popover stays open while it fits, and closes once it reaches the nav', () => {
